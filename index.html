@@ -136,6 +136,7 @@ table.stack{width:100%;border-collapse:collapse;font-size:14px}
 .stack tr.total td{font-weight:600;border-bottom:0;border-top:2px solid var(--line-strong)}
 .stack tr.neg td:last-child{color:var(--ink-2)}
 .stack td.ind{padding-left:16px;color:var(--ink-2)}
+.stack tr.muted-row td{color:var(--ink-3)}
 .bar{height:10px;display:flex;gap:2px;border-radius:3px;overflow:hidden;margin-top:6px}
 .bar i{display:block;height:100%}
 .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--ink-2);margin-top:8px}
@@ -150,6 +151,7 @@ svg.chart{width:100%;height:auto;display:block}
 .chart .grid{stroke:var(--line);stroke-width:1}
 .chart .ref{stroke:var(--ink);stroke-width:1.5;stroke-dasharray:6 4;opacity:.75}
 .chart .ref-lbl{fill:var(--ink);font-weight:500}
+.chart .panel-lbl{fill:var(--ink-2);font-family:"IBM Plex Sans",sans-serif;font-size:12px;font-weight:500;letter-spacing:.02em}
 .chart .ln.mstr{stroke:var(--mstr)}
 .chart .ln{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
 .chart .ln.ev{stroke:var(--ev)}
@@ -240,8 +242,8 @@ details.inputs[open] summary{border-bottom:1px solid var(--line)}
       <div><div class="k">Bitcoin</div><div class="v num" id="s-btc">—</div><div class="s" id="s-btc-sub">—</div></div>
       <div><div class="k">BTC held</div><div class="v num" id="s-hold">—</div><div class="s" id="s-hold-sub">—</div></div>
       <div><div class="k">BTC per 1,000 sh</div><div class="v num" id="s-bps">—</div><div class="s" id="s-bps-sub">—</div></div>
-      <div><div class="k">Break-even BTC</div><div class="v num" id="s-be">—</div><div class="s">BTC price at which EV mNAV = 1.0×</div></div>
-      <div><div class="k">Senior claims / BTC NAV</div><div class="v num" id="s-lev">—</div><div class="s">converts + preferreds</div></div>
+      <div><div class="k">Parity BTC price</div><div class="v num" id="s-be">—</div><div class="s" id="s-be-sub">where the enterprise is worth exactly its coins</div></div>
+      <div><div class="k">Wipeout BTC price</div><div class="v num" id="s-wipe">—</div><div class="s" id="s-wipe-sub">—</div></div>
     </div>
   </section>
 
@@ -349,16 +351,16 @@ details.inputs[open] summary{border-bottom:1px solid var(--line)}
   <section class="panel">
     <div class="chart-head">
       <div>
-        <h2>MSTR price vs market-cap mNAV</h2>
+        <h2>Share price against the ratio</h2>
         <div class="legend" style="margin-top:6px">
           <span><i style="background:var(--mstr)"></i>MSTR price</span>
           <span><i style="background:var(--mcap)"></i>Market cap mNAV</span>
-          <span style="color:var(--ink-3)">both rebased to 100 at the start of the range selected above · log scale</span>
+          <span style="color:var(--ink-3)">shared time axis, separate scales · follows the range selected above</span>
         </div>
       </div>
     </div>
     <div class="chart-wrap">
-      <svg class="chart" id="chart2" viewBox="0 0 1100 300" role="img" aria-label="MSTR price and market-cap mNAV, indexed"></svg>
+      <svg class="chart" id="chart2" viewBox="0 0 1100 460" role="img" aria-label="MSTR price and market-cap mNAV, indexed"></svg>
       <div class="tip" id="tip2"></div>
     </div>
     <p class="chart-note" id="chart2-note"></p>
@@ -437,16 +439,39 @@ function eff() {
     isOverridden: k => (S.ov && S.ov[k] != null) || (S.local && S.local[k] != null),
   };
 }
+// The share basis decides how the convertible notes are treated, and the two must agree.
+// Strategy's "assumed diluted" count already contains the shares those notes would convert
+// into, so adding their principal back as debt counts them twice — once as equity and once
+// as a liability — and inflates enterprise value. So:
+//   diluted  -> if-converted: the notes are already in the share count, so they are not debt
+//   basic    -> debt basis:   the notes are not in the share count, so they are debt at par
+// At today's price every conversion price is well out of the money, which makes the basic
+// (debt) view the economically honest one; the toggle still lets you see the other.
 function calc(e, mstr, btc, basis, netCash) {
-  const sh = basis === "basic" ? e.basic : e.dil;
+  const ifConverted = basis !== "basic";
+  const sh = ifConverted ? e.dil : e.basic;
   if (!(e.hold>0) || !(sh>0) || !(mstr>0) || !(btc>0)) return null;
   const btcnav = e.hold * btc;
   const mcap = mstr * sh;
-  const ev = mcap + (e.debt||0) + (e.pref||0) - (netCash ? (e.cash||0) : 0);
-  return { sh, btcnav, mcap, ev, mc: mcap/btcnav, evm: (e.debt==null||e.pref==null) ? null : ev/btcnav,
-    senior: (e.debt||0)+(e.pref||0),
-    breakEven: (e.debt==null||e.pref==null) ? null : ev / e.hold,
-    bps: e.hold / sh * 1000 };
+  const convAsDebt = ifConverted ? 0 : (e.debt || 0);
+  const cash = netCash ? (e.cash || 0) : 0;
+  const ev = mcap + convAsDebt + (e.pref || 0) - cash;
+  const known = e.debt != null && e.pref != null;
+  // Claims ranking ahead of the common. Wipeout always counts the notes as debt whatever
+  // the display basis: if bitcoin has fallen far enough to threaten the equity, nothing is
+  // converting into it.
+  const seniorHard = (e.debt || 0) + (e.pref || 0) - (e.cash || 0);
+  return {
+    sh, btcnav, mcap, ev, ifConverted, convAsDebt,
+    mc: mcap / btcnav,
+    evm: known ? ev / btcnav : null,
+    senior: convAsDebt + (e.pref || 0),
+    seniorHard,
+    breakEven: known ? ev / e.hold : null,   // BTC price at which EV mNAV returns to 1.0
+    wipeout: known ? seniorHard / e.hold : null, // BTC price at which the coins stop covering the stack
+    residual: known ? btcnav - seniorHard : null, // bitcoin actually behind the common
+    bps: e.hold / sh * 1000,
+  };
 }
 function impliedPrice(e, target, btc, basis, netCash) {
   const sh = basis === "basic" ? e.basic : e.dil;
@@ -474,7 +499,9 @@ function render() {
   $("ev-val").textContent = live ? fmt.bn(live.ev) : "—";
   $("mc-val").textContent = live ? fmt.bn(live.mcap) : "—";
   $("btcnav-val").textContent = live ? fmt.bn(live.btcnav) : "—";
-  $("ev-formula").textContent = `(price × ${S.basis==="basic"?"basic":"diluted"} shares + converts + preferreds${S.netCash?" − USD reserve":""}) ÷ (BTC held × BTC price)`;
+  $("ev-formula").textContent = live && live.ifConverted
+    ? `(price × diluted shares + preferreds${S.netCash?" − USD reserve":""}) ÷ (BTC held × BTC price) — notes already in the share count`
+    : `(price × basic shares + converts + preferreds${S.netCash?" − USD reserve":""}) ÷ (BTC held × BTC price)`;
   // strip
   $("s-mstr").textContent = fmt.usd2(mstr);
   // MSTR has no live intraday feed here, so label the tile with the session it actually
@@ -489,7 +516,13 @@ function render() {
   $("s-bps").textContent = live ? live.bps.toFixed(3) + " BTC" : "—";
   $("s-bps-sub").textContent = live ? `${fmt.int(live.bps*1e5)} sats/share · ${S.basis==="basic"?"basic":"diluted"}` : "";
   $("s-be").textContent = live && live.breakEven ? fmt.usd0(live.breakEven) : "—";
-  $("s-lev").textContent = live ? fmt.x2(live.senior/live.btcnav) : "—";
+  $("s-be-sub").textContent = live && live.breakEven
+    ? `${fmt.pct(live.breakEven / btc - 1)} from here · EV mNAV = 1.0×`
+    : "where the enterprise is worth exactly its coins";
+  $("s-wipe").textContent = live && live.wipeout ? fmt.usd0(live.wipeout) : "—";
+  $("s-wipe-sub").textContent = live && live.wipeout
+    ? `${fmt.pct(live.wipeout / btc - 1)} from spot · ${fmt.bn(live.seniorHard)} ranks ahead of the common`
+    : "";
 
   // scenario
   const kB = S.kBtc, kM = S.kMstr;
@@ -529,7 +562,7 @@ function renderStack(e, live) {
   const tb = $("stack-body");
   if (!live) { tb.innerHTML = `<tr><td colspan="2" style="color:var(--ink-3)">Waiting for data…</td></tr>`; return; }
   rows.push(`<tr><td>Equity — market cap<small>${fmt.int(live.sh)} ${S.basis==="basic"?"basic":"assumed diluted"} shares × ${fmt.usd2(e.mstrLive)}</small></td><td class="num">${fmt.bn(live.mcap)}</td></tr>`);
-  rows.push(`<tr><td>Convertible notes (principal)${e.isOverridden("debtTotal")?"<small>overridden</small>":""}</td><td class="num">${fmt.bn(e.debt)}</td></tr>`);
+  rows.push(`<tr${live.ifConverted?' class="muted-row"':''}><td>Convertible notes (principal)${live.ifConverted?"<small>already inside the diluted share count above — not added again</small>":""}${e.isOverridden("debtTotal")?"<small>overridden</small>":""}</td><td class="num">${live.ifConverted?"—":fmt.bn(e.debt)}</td></tr>`);
   if (!e.isOverridden("debtTotal") && d.converts) for (const c of d.converts) rows.push(`<tr><td class="ind">${c.name}<small>conv. ${fmt.usd2(c.convPrice)}${e.mstrLive && c.convPrice ? (e.mstrLive>=c.convPrice?" · in the money":` · ${fmt.pct(c.convPrice/e.mstrLive-1)} away`):""}</small></td><td class="num" style="color:var(--ink-2)">${fmt.bn(c.principal)}</td></tr>`);
   rows.push(`<tr><td>Perpetual preferreds (notional)${e.isOverridden("prefTotal")?"<small>overridden</small>":""}</td><td class="num">${fmt.bn(e.pref)}</td></tr>`);
   if (!e.isOverridden("prefTotal") && d.preferreds) for (const p of d.preferreds) rows.push(`<tr><td class="ind">${p.series}<small>${p.label||""}${p.note?" · "+p.note:""}</small></td><td class="num" style="color:var(--ink-2)">${fmt.bn(p.notional)}</td></tr>`);
@@ -537,11 +570,14 @@ function renderStack(e, live) {
   rows.push(`<tr class="total"><td>Enterprise value</td><td class="num">${fmt.bn(live.ev)}</td></tr>`);
   rows.push(`<tr class="total"><td>Bitcoin NAV<small>${fmt.int(e.hold)} BTC × ${fmt.usd0(e.btcLive)}</small></td><td class="num">${fmt.bn(live.btcnav)}</td></tr>`);
   tb.innerHTML = rows.join("");
-  const tot = live.mcap + (e.debt||0) + (e.pref||0);
-  $("stack-bar").innerHTML = [["var(--ink-2)",live.mcap],["var(--ev)",e.debt||0],["var(--accent)",e.pref||0]].map(([c,v])=>`<i style="background:${c};width:${(v/tot*100).toFixed(2)}%"></i>`).join("");
+  const barDebt = live.convAsDebt;
+  const tot = live.mcap + barDebt + (e.pref||0);
+  $("stack-bar").innerHTML = [["var(--ink-2)",live.mcap],["var(--ev)",barDebt],["var(--accent)",e.pref||0]].map(([c,v])=>`<i style="background:${c};width:${(v/tot*100).toFixed(2)}%"></i>`).join("");
   const dates = [d.convertsAsOf && `converts ${fmt.date(d.convertsAsOf)}`, d.preferredsAsOf && `preferreds ${fmt.date(d.preferredsAsOf)}`, d.usdReserveAsOf && `reserve ${fmt.date(d.usdReserveAsOf)}`].filter(Boolean).join(" · ");
   $("stack-asof").textContent = dates;
-  $("stack-note").textContent = live.senior && e.cash!=null ? `Senior claims of ${fmt.bn(live.senior)} sit ahead of common; the USD reserve covers roughly ${(e.cash/ (d.annualCashObligations||1.66e9)).toFixed(1)} years of preferred dividends and note interest at the current run-rate.` : "";
+  $("stack-note").textContent = live.residual != null
+    ? `Net of the ${fmt.bn(live.seniorHard)} ranking ahead of it, the bitcoin actually behind the common is ${fmt.bn(live.residual)} — against a market cap of ${fmt.bn(live.mcap)}, or ${fmt.x2(live.mcap/live.residual)} of it. The USD reserve is earmarked for about ${(e.cash/(d.annualCashObligations||1.66e9)).toFixed(1)} years of preferred dividends and note interest, so treat it as prefunded cost rather than spare cash.`
+    : "";
 }
 
 function renderInputs(e) {
@@ -562,10 +598,15 @@ function renderInputs(e) {
 
 // ---------- chart ----------
 function seriesFor(pt, basis, netCash) {
-  const sh = basis==="basic" ? pt.basic : pt.dil;
+  const ifConverted = basis !== "basic";
+  const sh = ifConverted ? pt.dil : pt.basic;
   if (!(pt.hold>0 && sh>0 && pt.mstr>0 && pt.btc>0)) return {mc:null, ev:null};
   const nav = pt.hold*pt.btc, mcap = pt.mstr*sh;
-  const ev = (pt.debt!=null && pt.pref!=null) ? (mcap + pt.debt + pt.pref - (netCash ? (pt.cash||0) : 0))/nav : null;
+  // Same convertible-note rule as calc() — the history must be computed the same way as
+  // the headline or the last point would not sit on the line.
+  const ev = (pt.debt!=null && pt.pref!=null)
+    ? (mcap + (ifConverted ? 0 : pt.debt) + pt.pref - (netCash ? (pt.cash||0) : 0))/nav
+    : null;
   return { mc: mcap/nav, ev };
 }
 let chartPts = [];
@@ -646,58 +687,133 @@ function renderChart() {
   hit.addEventListener("pointermove", move);
   hit.addEventListener("pointerleave", () => { cross.style.display="none"; tip.style.display="none"; });
 }
-// MSTR price vs market-cap mNAV, both rebased to 100 at the start of the selected range (one axis, no dual scale)
+// MSTR price and market-cap mNAV, stacked on a shared time axis.
+//
+// These are different kinds of quantity — a price that has ranged from $13 to $422, and a
+// ratio that lives between about 0.7 and 8 — so they get separate panels rather than one
+// plot with two y-axes. Overlaying them would mean choosing where to put each axis, and
+// that choice alone decides whether the two lines appear to track or diverge. Stacked, each
+// series is read in its own real units and compared by looking up and down the same date.
 function renderPriceChart(xs) {
-  const svg = $("chart2"); const W=1100, H=300, L=52, R=18, T=16, B=34;
-  const pts = chartPts;
-  const i0 = pts.findIndex(p => p.mstr>0 && p.mc!=null);
-  if (i0 < 0 || pts.length - i0 < 2) { svg.innerHTML = ""; $("chart2-note").textContent = ""; return; }
-  const base = pts[i0];
-  const idx = pts.map(p => ({ price: p.mstr>0 ? p.mstr/base.mstr*100 : null, mnav: p.mc!=null ? p.mc/base.mc*100 : null }));
-  const x0 = xs[0], x1 = xs[xs.length-1];
-  const vals = idx.flatMap(v => [v.price, v.mnav]).filter(v => v!=null && isFinite(v));
-  // log scale: a doubling is the same height everywhere, so a 10x stock move doesn't flatten the ratio line
-  let lo = Math.log(Math.min(100, ...vals)), hi = Math.log(Math.max(100, ...vals)); const pad = (hi-lo)*0.08 || 0.1; lo -= pad; hi += pad;
-  const X = t => L + (t-x0)/(x1-x0||1)*(W-L-R), Y = v => T + (hi-Math.log(v))/(hi-lo)*(H-T-B);
+  const svg = $("chart2");
+  const W = 1100, L = 64, R = 18;
+  const AT = 26, AH = 168;              // price panel top / height
+  const BT = AT + AH + 60, BH = 150;    // mNAV panel
+  const H = BT + BH + 44;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+
+  const pts = chartPts.filter(p => p.mstr > 0 && p.mc != null);
+  if (pts.length < 2) { svg.innerHTML = ""; $("chart2-note").textContent = ""; return; }
+  const t = pts.map(p => new Date(p.d).getTime());
+  const x0 = t[0], x1 = t[t.length - 1];
+  const X = v => L + (v - x0) / (x1 - x0 || 1) * (W - L - R);
+
+  // Price: log, because a 30x range on a linear axis flattens everything before 2024.
+  const prices = pts.map(p => p.mstr);
+  const pLo = Math.log(Math.min(...prices) * 0.9), pHi = Math.log(Math.max(...prices) * 1.1);
+  const YA = v => AT + (pHi - Math.log(v)) / (pHi - pLo) * AH;
+
+  // mNAV: linear, and always include 1.0 so parity stays on screen.
+  const ms = pts.map(p => p.mc);
+  let mLo = Math.min(1, ...ms), mHi = Math.max(1, ...ms);
+  const pad = (mHi - mLo) * 0.1 || 0.1; mLo -= pad; mHi += pad;
+  const YB = v => BT + (mHi - v) / (mHi - mLo) * BH;
+
   let g = "";
-  const ticks = []; for (let v = 100; Math.log(v) >= lo; v /= 2) ticks.unshift(v); for (let v = 200; Math.log(v) <= hi; v *= 2) ticks.push(v);
-  for (const v of ticks) if (v !== 100) g += `<line class="grid" x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${L-8}" y="${Y(v)+4}" text-anchor="end">${v>=10?Math.round(v):v.toFixed(1)}</text>`;
-  g += `<text x="${L-8}" y="${Y(100)+4}" text-anchor="end">100</text>`;
-  g += `<line class="ref" x1="${L}" x2="${W-R}" y1="${Y(100)}" y2="${Y(100)}"/><text class="ref-lbl" x="${W-R}" y="${Y(100)-6}" text-anchor="end">start of range = 100</text>`;
+
+  // price ticks on a 1/2/5 ladder
+  const ladder = [];
+  for (let e = -1; e <= 4; e++) for (const m of [1, 1.5, 2, 3, 5, 7]) ladder.push(m * Math.pow(10, e));
+  for (const v of ladder) {
+    if (Math.log(v) < pLo || Math.log(v) > pHi) continue;
+    g += `<line class="grid" x1="${L}" x2="${W - R}" y1="${YA(v).toFixed(1)}" y2="${YA(v).toFixed(1)}"/>`
+       + `<text x="${L - 8}" y="${(YA(v) + 4).toFixed(1)}" text-anchor="end">$${v >= 1 ? v : v.toFixed(1)}</text>`;
+  }
+  for (const v of niceTicks(mLo, mHi, 4)) {
+    g += `<line class="grid" x1="${L}" x2="${W - R}" y1="${YB(v).toFixed(1)}" y2="${YB(v).toFixed(1)}"/>`
+       + `<text x="${L - 8}" y="${(YB(v) + 4).toFixed(1)}" text-anchor="end">${v.toFixed(2)}×</text>`;
+  }
+  g += `<line class="ref" x1="${L}" x2="${W - R}" y1="${YB(1).toFixed(1)}" y2="${YB(1).toFixed(1)}"/>`
+     + `<text class="ref-lbl" x="${W - R}" y="${(YB(1) - 6).toFixed(1)}" text-anchor="end">parity 1.00×</text>`;
+
+  // shared month ticks, drawn once under the lower panel
   const months = [];
-  for (let d = new Date(x0); d.getTime() <= x1; d.setMonth(d.getMonth()+1)) { const m = new Date(d.getFullYear(), d.getMonth()+1, 1); if (m.getTime() >= x0 && m.getTime() <= x1) months.push(new Date(m)); }
-  const step = Math.max(1, Math.ceil(months.length/8));
-  const longRange = (x1-x0) > 400*86400000;
-  months.forEach((m,i) => { if (i%step===0) g += `<text x="${X(m.getTime())}" y="${H-10}" text-anchor="middle">${longRange ? m.toLocaleDateString("en-GB",{month:"short",year:"2-digit"}) : m.toLocaleDateString("en-GB",{month:"short", year: m.getMonth()===0?"2-digit":undefined})}</text>`; });
-  const path = key => { let s="", on=false; idx.forEach((v,i)=>{ const y=v[key]; if(y==null||!isFinite(y)){on=false;return;} s += (on?"L":"M") + X(xs[i]).toFixed(1)+" "+Y(y).toFixed(1)+" "; on=true; }); return s; };
-  g += `<path class="ln mcap" d="${path("mnav")}"/><path class="ln mstr" d="${path("price")}"/>`;
-  const last = idx[idx.length-1], lx = X(xs[xs.length-1]);
-  if (last.mnav!=null) g += `<circle class="pt" cx="${lx}" cy="${Y(last.mnav)}" r="4" fill="var(--mcap)"/>`;
-  if (last.price!=null) g += `<circle class="pt" cx="${lx}" cy="${Y(last.price)}" r="4" fill="var(--mstr)"/>`;
-  g += `<g id="cross2" style="display:none"><line class="cross" y1="${T}" y2="${H-B}"/><circle class="pt" r="4" fill="var(--mcap)"/><circle class="pt" r="4" fill="var(--mstr)"/></g>`;
-  g += `<rect x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}" fill="transparent" id="hit2"/>`;
-  svg.innerHTML = g;
-  const pc = (last.price-100), mc = (last.mnav-100);
-  $("chart2-note").textContent = `Since ${fmt.date(base.d)}: MSTR ${fmt.pct(pc/100)} (${fmt.usd2(base.mstr)} → ${fmt.usd2(pts[pts.length-1].mstr)}), market-cap mNAV ${fmt.pct(mc/100)} (${fmt.x(base.mc)} → ${fmt.x(pts[pts.length-1].mc)}). The gap between the two lines is what bitcoin's own move and share issuance did to the ratio.`;
-  const hit = $("hit2"), cross = $("cross2"), tip = $("tip2");
-  hit.addEventListener("pointermove", ev => {
-    const r = svg.getBoundingClientRect(); const px = (ev.clientX - r.left) * (W / r.width);
-    let best = 0, bd = Infinity; xs.forEach((t,i)=>{ const d = Math.abs(X(t)-px); if (d<bd){bd=d;best=i;} });
-    const p = pts[best], v = idx[best], cx = X(xs[best]);
-    cross.style.display = ""; const ln = cross.querySelector("line"); ln.setAttribute("x1",cx); ln.setAttribute("x2",cx);
-    const cs = cross.querySelectorAll("circle");
-    cs[0].style.display = v.mnav!=null?"":"none"; if(v.mnav!=null){cs[0].setAttribute("cx",cx);cs[0].setAttribute("cy",Y(v.mnav));}
-    cs[1].style.display = v.price!=null?"":"none"; if(v.price!=null){cs[1].setAttribute("cx",cx);cs[1].setAttribute("cy",Y(v.price));}
-    tip.style.display = "block";
-    tip.innerHTML = `<div class="d">${fmt.date(p.d)}${p.live?" · live":p.res==="w"?" · weekly close":""}</div>
-      <div class="r"><span><i style="background:var(--mstr)"></i>MSTR</span><span class="num">${fmt.usd2(p.mstr)} · ${v.price!=null?Math.round(v.price):"—"}</span></div>
-      <div class="r"><span><i style="background:var(--mcap)"></i>Mkt-cap mNAV</span><span class="num">${fmt.x(p.mc)} · ${v.mnav!=null?Math.round(v.mnav):"—"}</span></div>
-      <div class="r"><span>BTC</span><span class="num">${fmt.usd0(p.btc)}</span></div>`;
-    const left = (cx / W) * r.width; const tw = tip.offsetWidth || 200;
-    tip.style.left = Math.min(Math.max(0, left + 14), r.width - tw) + "px"; tip.style.top = "8px";
+  for (let d = new Date(x0); d.getTime() <= x1; d.setMonth(d.getMonth() + 1)) {
+    const m = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+    if (m.getTime() >= x0 && m.getTime() <= x1) months.push(new Date(m));
+  }
+  const longRange = (x1 - x0) > 400 * 86400000;
+  const step = Math.max(1, Math.ceil(months.length / 9));
+  months.forEach((m, i) => {
+    if (i % step) return;
+    g += `<text x="${X(m.getTime()).toFixed(1)}" y="${H - 12}" text-anchor="middle">${
+      longRange ? m.toLocaleDateString("en-GB", { month: "short", year: "2-digit" })
+                : m.toLocaleDateString("en-GB", { month: "short" })}</text>`;
   });
-  hit.addEventListener("pointerleave", () => { cross.style.display="none"; tip.style.display="none"; });
+
+  const line = (key, Y) => {
+    let d = "", on = false;
+    pts.forEach((p, i) => {
+      const v = key === "mstr" ? p.mstr : p.mc;
+      if (v == null || !isFinite(v)) { on = false; return; }
+      d += (on ? "L" : "M") + X(t[i]).toFixed(1) + " " + Y(v).toFixed(1) + " ";
+      on = true;
+    });
+    return d;
+  };
+  g += `<path class="ln mstr" d="${line("mstr", YA)}"/>`;
+  g += `<path class="ln mcap" d="${line("mc", YB)}"/>`;
+
+  const last = pts[pts.length - 1], lx = X(t[t.length - 1]);
+  g += `<circle class="pt" cx="${lx.toFixed(1)}" cy="${YA(last.mstr).toFixed(1)}" r="4" fill="var(--mstr)"/>`;
+  g += `<circle class="pt" cx="${lx.toFixed(1)}" cy="${YB(last.mc).toFixed(1)}" r="4" fill="var(--mcap)"/>`;
+
+  // panel captions, so each scale is unambiguous without consulting the legend
+  g += `<text class="panel-lbl" x="${L}" y="${AT - 9}">MSTR share price (log scale)</text>`;
+  g += `<text class="panel-lbl" x="${L}" y="${BT - 9}">Market-cap mNAV</text>`;
+
+  g += `<g id="cross3" style="display:none">`
+     + `<line class="cross" y1="${AT}" y2="${BT + BH}"/>`
+     + `<circle class="pt" r="4" fill="var(--mstr)"/><circle class="pt" r="4" fill="var(--mcap)"/></g>`;
+  g += `<rect x="${L}" y="${AT}" width="${W - L - R}" height="${BT + BH - AT}" fill="transparent" id="hit3"/>`;
+  svg.innerHTML = g;
+
+  const first = pts[0];
+  const shFirst = S.basis === "basic" ? first.basic : first.dil;
+  const shLast = S.basis === "basic" ? last.basic : last.dil;
+  $("chart2-note").textContent =
+    `Since ${fmt.date(first.d)}: MSTR ${fmt.usd2(first.mstr)} → ${fmt.usd2(last.mstr)} (${fmt.pct(last.mstr / first.mstr - 1)}), `
+    + `bitcoin ${fmt.usd0(first.btc)} → ${fmt.usd0(last.btc)} (${fmt.pct(last.btc / first.btc - 1)}), `
+    + `shares ${fmt.pct(shLast / shFirst - 1)}, holdings ${fmt.pct(last.hold / first.hold - 1)} — `
+    + `market-cap mNAV ${fmt.x(first.mc)} → ${fmt.x(last.mc)} (${fmt.pct(last.mc / first.mc - 1)}). `
+    + `The panels share a time axis but not a scale. The ratio moves with the bitcoin price and the share count `
+    + `as well as the stock, which is why the two lines need not travel together.`;
+
+  const hit = $("hit3"), cross = $("cross3"), tip = $("tip2");
+  hit.addEventListener("pointermove", ev => {
+    const r = svg.getBoundingClientRect();
+    const px = (ev.clientX - r.left) * (W / r.width);
+    let best = 0, bd = Infinity;
+    t.forEach((v, i) => { const dd = Math.abs(X(v) - px); if (dd < bd) { bd = dd; best = i; } });
+    const p = pts[best], cx = X(t[best]);
+    cross.style.display = "";
+    const ln = cross.querySelector("line"); ln.setAttribute("x1", cx); ln.setAttribute("x2", cx);
+    const cs = cross.querySelectorAll("circle");
+    cs[0].setAttribute("cx", cx); cs[0].setAttribute("cy", YA(p.mstr));
+    cs[1].setAttribute("cx", cx); cs[1].setAttribute("cy", YB(p.mc));
+    tip.style.display = "block";
+    tip.innerHTML = `<div class="d">${fmt.date(p.d)}${p.live ? " · live" : p.res === "w" ? " · weekly close" : ""}</div>
+      <div class="r"><span><i style="background:var(--mstr)"></i>MSTR</span><span class="num">${fmt.usd2(p.mstr)}</span></div>
+      <div class="r"><span><i style="background:var(--mcap)"></i>Mkt-cap mNAV</span><span class="num">${fmt.x(p.mc)}</span></div>
+      <div class="r"><span>BTC</span><span class="num">${fmt.usd0(p.btc)}</span></div>
+      <div class="r"><span>BTC held</span><span class="num">${fmt.int(p.hold)}</span></div>`;
+    const left = (cx / W) * r.width, tw = tip.offsetWidth || 200;
+    tip.style.left = Math.min(Math.max(0, left + 14), r.width - tw) + "px";
+    tip.style.top = "8px";
+  });
+  hit.addEventListener("pointerleave", () => { cross.style.display = "none"; tip.style.display = "none"; });
 }
+
 function niceTicks(lo, hi, n) {
   const span = hi-lo, raw = span/n, mag = Math.pow(10, Math.floor(Math.log10(raw)));
   const step = [1,2,2.5,5,10].map(m=>m*mag).find(s => span/s <= n) || mag*10;
