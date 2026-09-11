@@ -1,0 +1,84 @@
+{
+  "updatedAt": "2026-09-11T04:50:00Z",
+  "updatedBy": "initial seed",
+  "btcHoldings": 845050,
+  "holdingsAsOf": "2026-08-30",
+  "holdingsSource": "Form 8-K filed 31 Aug 2026 (sec.gov)",
+  "avgCostPerBtc": 75412,
+  "basicShares": 420497000,
+  "dilutedShares": 450121000,
+  "sharesAsOf": "2026-09-07",
+  "sharesSource": "strategy.com/shares (Class A 400,857k + Class B 19,640k; ADSO 450,121k)",
+  "converts": [
+    {
+      "name": "0.625% Conv. Notes due 2028",
+      "principal": 1010000000,
+      "convPrice": 183.19
+    },
+    {
+      "name": "0% Conv. Notes due 2029",
+      "principal": 1500000000,
+      "convPrice": 672.4
+    },
+    {
+      "name": "0% Conv. Notes due 2030 (A)",
+      "principal": 800000000,
+      "convPrice": 149.77
+    },
+    {
+      "name": "0% Conv. Notes due 2030 (B)",
+      "principal": 2000000000,
+      "convPrice": 433.43
+    },
+    {
+      "name": "0.875% Conv. Notes due 2031",
+      "principal": 603700000,
+      "convPrice": 232.72
+    },
+    {
+      "name": "2.25% Conv. Notes due 2032",
+      "principal": 800000000,
+      "convPrice": 204.33
+    }
+  ],
+  "convertsAsOf": "2026-06-30",
+  "preferreds": [
+    {
+      "series": "STRC",
+      "label": "Variable Rate Series A Perpetual Stretch",
+      "notional": 10200000000,
+      "note": "$10.49bn at 30 Jun 2026 less disclosed buybacks to 30 Aug"
+    },
+    {
+      "series": "STRF",
+      "label": "10.00% Series A Perpetual Strife",
+      "notional": 1280000000
+    },
+    {
+      "series": "STRK",
+      "label": "8.00% Series A Perpetual Strike",
+      "notional": 1400000000
+    },
+    {
+      "series": "STRD",
+      "label": "10.00% Series A Perpetual Stride",
+      "notional": 1400000000
+    },
+    {
+      "series": "STRE",
+      "label": "10.00% Series A Perpetual Stream (EUR)",
+      "notional": 884100000
+    }
+  ],
+  "preferredsAsOf": "2026-06-30",
+  "usdReserve": 5100000000,
+  "usdReserveAsOf": "2026-08-30",
+  "mstrPrice": 135.6,
+  "btcPrice": 78907.5,
+  "pricesAsOf": "2026-09-09T20:05:00Z",
+  "pricesSource": "seeded from IBKR close 9 Sep 2026; replaced by the daily job on its first run",
+  "mstrCloseDate": "2026-09-09",
+  "review": [],
+  "problems": [],
+  "capitalStackStale": false
+}

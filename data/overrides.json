@@ -1,0 +1,7 @@
+{
+  "_comment": "Hand-edited corrections applied on top of data/current.json. Edit this file on github.com and the site updates in about a minute. Delete a key to go back to the filed figure.",
+  "_example": {
+    "btcHoldings": 850000,
+    "dilutedShares": 455000000
+  }
+}

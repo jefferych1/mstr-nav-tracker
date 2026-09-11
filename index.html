@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MSTR NAV Tracker</title>
+<meta name="description" content="Strategy Inc. (MSTR) market value versus the bitcoin on its balance sheet — mNAV on an enterprise-value and market-cap basis, updated automatically each weekday.">
+<meta name="color-scheme" content="light dark">
+<style>
+/* Baseline the artifact host used to provide; needed now the page stands alone. */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+img{max-width:100%}
+/* Must beat id-level rules such as #notices{display:grid}. */
+[hidden]{display:none!important}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f5f4ef; --surface:#fdfcf9; --surface-2:#eeede7; --line:#d9d8d0; --line-strong:#b9b8ae;
+  --ink:#15171c; --ink-2:#4f5259; --ink-3:#7b7e86;
+  --accent:#c9611f; --accent-soft:#f6e4d6;
+  --ev:#2a78d6; --mcap:#1baf7a; --btc:#eb6834; --mstr:#4a3aa7;
+  --good:#1f7a3a; --bad:#b3362e; --warn:#b07500;
+  --focus:#2a78d6;
+  --radius:6px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#13151a; --surface:#1b1e24; --surface-2:#232730; --line:#2e323b; --line-strong:#454a55;
+    --ink:#ecebe5; --ink-2:#b6b8be; --ink-3:#83868f;
+    --accent:#e6884a; --accent-soft:#33261c;
+    --ev:#3987e5; --mcap:#199e70; --btc:#d95926; --mstr:#9085e9;
+    --good:#4fbf6f; --bad:#e66767; --warn:#d9a021;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#13151a; --surface:#1b1e24; --surface-2:#232730; --line:#2e323b; --line-strong:#454a55;
+  --ink:#ecebe5; --ink-2:#b6b8be; --ink-3:#83868f;
+  --accent:#e6884a; --accent-soft:#33261c;
+  --ev:#3987e5; --mcap:#199e70; --btc:#d95926; --mstr:#9085e9;
+  --good:#4fbf6f; --bad:#e66767; --warn:#d9a021;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
+.num{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3{margin:0;font-weight:500;text-wrap:balance}
+h1{font-family:"Newsreader",Georgia,serif;font-size:34px;line-height:1.1;letter-spacing:-.01em}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:600}
+a{color:inherit}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 24px 64px;display:grid;gap:28px}
+
+/* masthead */
+.mast{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:18px}
+.mast p{margin:6px 0 0;color:var(--ink-2);max-width:62ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:12.5px;color:var(--ink-2)}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--ink-3);flex:none}
+.chip.live .dot{background:var(--good);box-shadow:0 0 0 3px color-mix(in oklab,var(--good) 25%,transparent)}
+.chip.stale .dot{background:var(--warn)}
+.chip.off .dot{background:var(--bad)}
+.chip b{font-weight:600;color:var(--ink)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.25fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.hero > div{background:var(--surface);padding:22px 24px}
+.hero .label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);font-weight:500}
+.hero .label .sw{width:10px;height:10px;border-radius:2px;flex:none}
+.big{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:64px;line-height:1;margin:10px 0 6px;letter-spacing:-.02em}
+.hero .sub{font-size:13.5px;color:var(--ink-2)}
+.hero .sub .num{font-weight:500}
+.prem{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12.5px;font-weight:600;margin-left:6px;vertical-align:middle}
+.prem.up{background:color-mix(in oklab,var(--good) 14%,transparent);color:var(--good)}
+.prem.down{background:color-mix(in oklab,var(--bad) 14%,transparent);color:var(--bad)}
+.formula{margin-top:10px;font-size:12px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace}
+
+.strip{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-top:0;border-radius:0 0 var(--radius) var(--radius);overflow:hidden}
+.hero{border-radius:var(--radius) var(--radius) 0 0}
+.strip > div{background:var(--surface);padding:14px 16px}
+.strip .k{font-size:12px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em}
+.strip .v{font-size:20px;margin-top:4px}
+.strip .s{font-size:12px;color:var(--ink-2);margin-top:2px}
+
+/* two-col */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;display:grid;gap:18px;align-content:start}
+.panel-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.panel-head .hint{font-size:12.5px;color:var(--ink-3)}
+
+/* controls */
+.ctl{display:grid;gap:8px}
+.ctl-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.ctl-row label{font-weight:500}
+.ctl-row .val{display:flex;align-items:baseline;gap:8px}
+.ctl-row input[type=number]{width:120px;padding:5px 8px;border:1px solid var(--line-strong);border-radius:4px;background:var(--surface);text-align:right}
+.ctl-row .delta{font-size:12.5px;color:var(--ink-3);min-width:64px;text-align:right}
+input[type=range]{width:100%;accent-color:var(--accent);margin:0}
+.ticks{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-3)}
+.btn{padding:6px 12px;border:1px solid var(--line-strong);border-radius:4px;background:var(--surface);font-size:13px}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.small{padding:3px 9px;font-size:12px}
+.seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:4px;overflow:hidden}
+.seg button{padding:4px 10px;border:0;background:var(--surface);font-size:12.5px;color:var(--ink-2)}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.toggle{display:flex;align-items:center;gap:8px;font-size:13.5px}
+.toggle input{accent-color:var(--accent)}
+
+.scenario-out{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.scenario-out > div{background:var(--surface-2);padding:12px 14px}
+.scenario-out .k{font-size:12px;color:var(--ink-3)}
+.scenario-out .v{font-size:22px;margin-top:2px}
+.scenario-out .s{font-size:12px;color:var(--ink-2)}
+
+.implied{display:grid;gap:10px}
+.implied table{width:100%;border-collapse:collapse;font-size:14px}
+.implied td{padding:8px 0;border-top:1px solid var(--line)}
+.implied td:last-child,.implied td:nth-child(2){text-align:right}
+.implied td.sw{width:14px;padding-right:8px}
+.implied .sw i{display:inline-block;width:10px;height:10px;border-radius:2px}
+
+/* capital stack */
+table.stack{width:100%;border-collapse:collapse;font-size:14px}
+.stack th{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);font-weight:600;text-align:left;padding:0 0 8px;border-bottom:1px solid var(--line)}
+.stack th:last-child,.stack td:last-child{text-align:right}
+.stack td{padding:7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.stack td small{display:block;color:var(--ink-3);font-size:12px}
+.stack tr.total td{font-weight:600;border-bottom:0;border-top:2px solid var(--line-strong)}
+.stack tr.neg td:last-child{color:var(--ink-2)}
+.stack td.ind{padding-left:16px;color:var(--ink-2)}
+.bar{height:10px;display:flex;gap:2px;border-radius:3px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--ink-2);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+
+/* chart */
+.chart-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.chart-wrap{position:relative}
+svg.chart{width:100%;height:auto;display:block}
+.chart text{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--ink-3)}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .ref{stroke:var(--ink);stroke-width:1.5;stroke-dasharray:6 4;opacity:.75}
+.chart .ref-lbl{fill:var(--ink);font-weight:500}
+.chart .ln.mstr{stroke:var(--mstr)}
+.chart .ln{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.chart .ln.ev{stroke:var(--ev)}
+.chart .ln.mcap{stroke:var(--mcap)}
+.chart .area{fill:var(--mcap);opacity:.06}
+.chart .cross{stroke:var(--ink-3);stroke-width:1}
+.chart .pt{stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line-strong);border-radius:4px;padding:8px 10px;font-size:12.5px;box-shadow:0 4px 14px rgba(0,0,0,.12);min-width:180px;display:none}
+.tip .d{color:var(--ink-3);margin-bottom:4px}
+.tip .r{display:flex;justify-content:space-between;gap:14px}
+.tip .r span:first-child{display:inline-flex;align-items:center;gap:6px}
+.tip i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.chart-note{font-size:12.5px;color:var(--ink-3);margin:0}
+
+/* inputs */
+details.inputs{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+details.inputs summary{padding:16px 22px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;list-style:none}
+details.inputs summary::-webkit-details-marker{display:none}
+details.inputs summary .hint{font-size:12.5px;color:var(--ink-3);font-weight:400}
+details.inputs[open] summary{border-bottom:1px solid var(--line)}
+.inputs-body{padding:18px 22px 22px;display:grid;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 20px}
+.field{display:grid;gap:4px}
+.field label{font-size:12.5px;color:var(--ink-2)}
+.field input{padding:7px 9px;border:1px solid var(--line-strong);border-radius:4px;background:var(--surface);text-align:right}
+.field small{font-size:11.5px;color:var(--ink-3)}
+.field.ov input{border-color:var(--accent);background:var(--accent-soft)}
+.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.status{font-size:12.5px;color:var(--ink-3)}
+.method{font-size:13.5px;color:var(--ink-2);max-width:78ch;display:grid;gap:8px}
+.method p{margin:0}
+.method code{font-family:"IBM Plex Mono",monospace;font-size:12.5px;background:var(--surface-2);padding:1px 5px;border-radius:3px}
+.sources{font-size:12.5px;color:var(--ink-3);line-height:1.7}
+
+#notices{display:grid;gap:8px}
+.notice{background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--radius);padding:10px 14px;font-size:13.5px;color:var(--ink)}
+.notice.bad{background:color-mix(in oklab,var(--bad) 12%,transparent);border-color:var(--bad)}
+.field input[readonly]{background:var(--surface-2);color:var(--ink-2);cursor:default}
+.status code{font-family:"IBM Plex Mono",monospace;font-size:12px;background:var(--surface-2);padding:1px 5px;border-radius:3px}
+@media (max-width:900px){
+  .hero,.cols,.scenario-out{grid-template-columns:1fr}
+  .strip{grid-template-columns:repeat(3,1fr)}
+  .grid3{grid-template-columns:1fr 1fr}
+  .big{font-size:52px}
+}
+@media (max-width:560px){
+  .strip,.grid3{grid-template-columns:1fr 1fr}
+  .wrap{padding:20px 16px 48px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .chip .dot{transition:background .3s}
+}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div>
+      <h1>MSTR NAV Tracker</h1>
+      <p>Strategy Inc. (Nasdaq: MSTR) — market value versus the bitcoin on its balance sheet. Bitcoin price live in your browser, MSTR at the last close; holdings and capital structure refreshed automatically from SEC filings.</p>
+    </div>
+    <div class="chips">
+      <span class="chip" id="chip-prices"><span class="dot"></span><span>Prices <b>loading…</b></span></span>
+      <span class="chip" id="chip-data"><span class="dot"></span><span>Filings data <b>loading…</b></span></span>
+    </div>
+  </header>
+
+  <div id="notices" hidden></div>
+
+  <section>
+    <div class="hero">
+      <div>
+        <div class="label"><span class="sw" style="background:var(--ev)"></span>mNAV — enterprise value basis</div>
+        <div class="big" id="ev-mnav">—</div>
+        <div class="sub"><span id="ev-prem"></span> EV <span class="num" id="ev-val">—</span> ÷ BTC NAV <span class="num" id="btcnav-val">—</span></div>
+        <div class="formula" id="ev-formula">(price × shares + converts + preferreds − USD reserve) ÷ (BTC held × BTC price)</div>
+      </div>
+      <div>
+        <div class="label"><span class="sw" style="background:var(--mcap)"></span>mNAV — market cap basis</div>
+        <div class="big" id="mc-mnav">—</div>
+        <div class="sub"><span id="mc-prem"></span> Market cap <span class="num" id="mc-val">—</span> ÷ BTC NAV</div>
+        <div class="formula">(price × shares) ÷ (BTC held × BTC price)</div>
+      </div>
+    </div>
+    <div class="strip">
+      <div><div class="k">MSTR</div><div class="v num" id="s-mstr">—</div><div class="s" id="s-mstr-sub">—</div></div>
+      <div><div class="k">Bitcoin</div><div class="v num" id="s-btc">—</div><div class="s" id="s-btc-sub">—</div></div>
+      <div><div class="k">BTC held</div><div class="v num" id="s-hold">—</div><div class="s" id="s-hold-sub">—</div></div>
+      <div><div class="k">BTC per 1,000 sh</div><div class="v num" id="s-bps">—</div><div class="s" id="s-bps-sub">—</div></div>
+      <div><div class="k">Break-even BTC</div><div class="v num" id="s-be">—</div><div class="s">BTC price at which EV mNAV = 1.0×</div></div>
+      <div><div class="k">Senior claims / BTC NAV</div><div class="v num" id="s-lev">—</div><div class="s">converts + preferreds</div></div>
+    </div>
+  </section>
+
+  <section class="cols">
+    <div class="panel" id="scenario">
+      <div class="panel-head">
+        <h2>Scenario</h2>
+        <div class="actions">
+          <div class="seg" role="group" aria-label="Share count basis">
+            <button id="basis-dil" aria-pressed="true">Assumed diluted</button>
+            <button id="basis-basic" aria-pressed="false">Basic</button>
+          </div>
+          <button class="btn small" id="reset">Reset to live</button>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <div class="ctl-row">
+          <label for="btc-in">Bitcoin price</label>
+          <div class="val"><span class="delta num" id="btc-delta"></span><input class="num" id="btc-in" type="number" step="100" min="1" inputmode="decimal"></div>
+        </div>
+        <input type="range" id="btc-rng" min="0" max="1000" value="500" aria-label="Bitcoin price slider">
+        <div class="ticks num"><span id="btc-lo"></span><span>live</span><span id="btc-hi"></span></div>
+      </div>
+
+      <div class="ctl">
+        <div class="ctl-row">
+          <label for="mstr-in">MSTR price</label>
+          <div class="val"><span class="delta num" id="mstr-delta"></span><input class="num" id="mstr-in" type="number" step="0.5" min="0.01" inputmode="decimal"></div>
+        </div>
+        <input type="range" id="mstr-rng" min="0" max="1000" value="500" aria-label="MSTR price slider">
+        <div class="ticks num"><span id="mstr-lo"></span><span>live</span><span id="mstr-hi"></span></div>
+      </div>
+
+      <label class="toggle"><input type="checkbox" id="netcash" checked> Net the USD reserve out of enterprise value</label>
+
+      <div class="scenario-out">
+        <div><div class="k">Scenario mNAV (EV)</div><div class="v num" id="sc-ev">—</div><div class="s" id="sc-ev-s"></div></div>
+        <div><div class="k">Scenario mNAV (market cap)</div><div class="v num" id="sc-mc">—</div><div class="s" id="sc-mc-s"></div></div>
+      </div>
+
+      <div class="implied">
+        <div class="ctl-row">
+          <label for="tgt-in"><strong>Target mNAV → implied MSTR price</strong></label>
+          <div class="val"><input class="num" id="tgt-in" type="number" step="0.01" min="0.05" value="1.00" style="width:90px"><span style="color:var(--ink-3)">×</span></div>
+        </div>
+        <input type="range" id="tgt-rng" min="30" max="300" value="100" aria-label="Target mNAV slider">
+        <div class="ticks num"><span>0.30×</span><span>1.00×</span><span>3.00×</span></div>
+        <table>
+          <tbody>
+            <tr><td class="sw"><i style="background:var(--ev)"></i></td><td style="text-align:left">Implied price, EV basis</td><td class="num" id="imp-ev">—</td><td class="num" id="imp-ev-d">—</td></tr>
+            <tr><td class="sw"><i style="background:var(--mcap)"></i></td><td style="text-align:left">Implied price, market cap basis</td><td class="num" id="imp-mc">—</td><td class="num" id="imp-mc-d">—</td></tr>
+          </tbody>
+        </table>
+        <p class="chart-note" id="imp-note">Uses the scenario bitcoin price above; change vs the scenario MSTR price.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Capital stack vs bitcoin</h2>
+        <span class="hint" id="stack-asof"></span>
+      </div>
+      <table class="stack">
+        <thead><tr><th>Layer</th><th>US$</th></tr></thead>
+        <tbody id="stack-body"></tbody>
+      </table>
+      <div>
+        <div class="bar" id="stack-bar"></div>
+        <div class="legend">
+          <span><i style="background:var(--ink-2)"></i>Equity (market cap)</span>
+          <span><i style="background:var(--ev)"></i>Convertible notes</span>
+          <span><i style="background:var(--accent)"></i>Preferreds</span>
+        </div>
+      </div>
+      <p class="chart-note" id="stack-note"></p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="chart-head">
+      <div>
+        <h2>mNAV history</h2>
+        <div class="legend" style="margin-top:6px">
+          <span id="lg-ev" hidden><i style="background:var(--ev)"></i>EV basis</span>
+          <span><i style="background:var(--mcap)"></i>Market cap basis</span>
+          <span><i style="background:transparent;border-top:2px dashed var(--ink);height:0;opacity:.75"></i>1.00× (parity)</span>
+        </div>
+      </div>
+      <div class="seg" role="group" aria-label="Range" id="range">
+        <button data-r="90" aria-pressed="false">3M</button>
+        <button data-r="180" aria-pressed="false">6M</button>
+        <button data-r="365" aria-pressed="true">1Y</button>
+        <button data-r="1095" aria-pressed="false">3Y</button>
+        <button data-r="0" aria-pressed="false">Since Aug 2020</button>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <svg class="chart" id="chart" viewBox="0 0 1100 340" role="img" aria-label="mNAV history line chart"></svg>
+      <div class="tip" id="tip"></div>
+    </div>
+    <p class="chart-note" id="chart-note"></p>
+  </section>
+
+  <section class="panel">
+    <div class="chart-head">
+      <div>
+        <h2>MSTR price vs market-cap mNAV</h2>
+        <div class="legend" style="margin-top:6px">
+          <span><i style="background:var(--mstr)"></i>MSTR price</span>
+          <span><i style="background:var(--mcap)"></i>Market cap mNAV</span>
+          <span style="color:var(--ink-3)">both rebased to 100 at the start of the range selected above · log scale</span>
+        </div>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <svg class="chart" id="chart2" viewBox="0 0 1100 300" role="img" aria-label="MSTR price and market-cap mNAV, indexed"></svg>
+      <div class="tip" id="tip2"></div>
+    </div>
+    <p class="chart-note" id="chart2-note"></p>
+  </section>
+
+  <details class="inputs" id="inputs">
+    <summary><h2 style="display:inline">Inputs &amp; overrides</h2><span class="hint">What the daily and filings jobs last published · override any of them in data/overrides.json</span></summary>
+    <div class="inputs-body">
+      <div class="grid3" id="fields">
+        <div class="field"><label for="f-hold">Bitcoin held</label><input class="num" id="f-hold" data-k="btcHoldings" type="number" step="1"><small id="src-hold"></small></div>
+        <div class="field"><label for="f-basic">Basic shares (Class A + B)</label><input class="num" id="f-basic" data-k="basicShares" type="number" step="1000"><small id="src-shares"></small></div>
+        <div class="field"><label for="f-dil">Assumed diluted shares</label><input class="num" id="f-dil" data-k="dilutedShares" type="number" step="1000"><small>Basic + converts + STRK conversions + options/RSUs</small></div>
+        <div class="field"><label for="f-debt">Convertible notes, principal US$</label><input class="num" id="f-debt" data-k="debtTotal" type="number" step="1000000"><small id="src-debt"></small></div>
+        <div class="field"><label for="f-pref">Preferreds, notional US$</label><input class="num" id="f-pref" data-k="prefTotal" type="number" step="1000000"><small id="src-pref"></small></div>
+        <div class="field"><label for="f-cash">USD reserve US$</label><input class="num" id="f-cash" data-k="usdReserve" type="number" step="1000000"><small id="src-cash"></small></div>
+      </div>
+      <div class="actions">
+        <span class="status" id="save-status">These are the published figures. To correct one, edit <code>data/overrides.json</code> in the repository — the site picks it up about a minute later.</span>
+      </div>
+      <div class="method">
+        <p><strong>Method.</strong> BTC NAV = bitcoin held × bitcoin price. Market-cap mNAV = (MSTR price × shares) ÷ BTC NAV. EV mNAV adds convertible-note principal and preferred notional to market cap and, when the toggle is on, nets the USD reserve, following Strategy's own presentation on strategy.com. "Assumed diluted" is Strategy's ADSO figure (basic plus all converts, STRK conversions, options and RSUs, regardless of moneyness).</p>
+        <p><strong>History.</strong> The series starts on 11 August 2020, the day of Strategy's first bitcoin purchase (21,454 BTC). Prices are actual closes — daily from StatMuse for Aug 2020–Sep 2021 and from IBKR since Sep 2025, weekly closes from IBKR in between; share counts are interpolated between year-end figures on strategy.com/shares, so the historical ratio is a close approximation rather than a filed number. Bitcoin holdings follow the announced purchase history.</p>
+        <p><strong>Refresh.</strong> A scheduled job runs every weekday after the US close, records MSTR's closing price and the bitcoin price, and appends a point to the history. A second job walks each new Strategy 8-K and updates bitcoin holdings, the USD reserve and the share count; the convertible and preferred balances move only at a 10-Q, which raises a flag at the top of this page rather than being scraped. The bitcoin price on this page also refreshes live in your browser, so the headline ratio moves with bitcoin between closes. Nothing here needs anyone to log in or approve anything.</p>
+        <p class="sources" id="sources"></p>
+      </div>
+    </div>
+  </details>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const fmt = {
+  usd0: n => n==null||!isFinite(n) ? "—" : "$" + Math.round(n).toLocaleString("en-US"),
+  usd2: n => n==null||!isFinite(n) ? "—" : "$" + n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}),
+  bn: n => n==null||!isFinite(n) ? "—" : "$" + (n/1e9).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}) + "bn",
+  x: n => n==null||!isFinite(n) ? "—" : n.toFixed(3).replace(/0$/,"") + "×",
+  x2: n => n==null||!isFinite(n) ? "—" : n.toFixed(2) + "×",
+  int: n => n==null||!isFinite(n) ? "—" : Math.round(n).toLocaleString("en-US"),
+  pct: n => n==null||!isFinite(n) ? "" : (n>=0?"+":"") + (n*100).toFixed(1) + "%",
+  date: s => { if(!s) return "—"; const d = new Date(s); if(isNaN(d)) return s; return d.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}); },
+  time: s => { const d = new Date(s); return isNaN(d)?"":d.toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}); }
+};
+
+// ---------- state ----------
+const S = {
+  data: null,          // state/current from db
+  ov: null,            // state/overrides from db
+  local: {},           // unsaved edits in the inputs panel
+  live: { mstr:null, btc:null, mstrTs:null, btcTs:null, mstrChg:null, err:null },
+  basis: "dil",        // "dil" | "basic"
+  netCash: true,
+  kBtc: 1, kMstr: 1,   // scenario multipliers on the live price
+  target: 1.0,
+  range: 365,
+  history: [],         // [{d, mstr, btc, hold, basic, dil, debt, pref, cash, est}]
+};
+
+const DEFAULTS = {}; // no hardcoded figures — everything comes from the store or the connector
+
+function eff() {
+  // effective inputs: db current ← overrides ← local edits
+  const d = S.data || {};
+  const o = Object.assign({}, S.ov || {}, S.local || {});
+  const debtTotal = o.debtTotal ?? (d.converts ? d.converts.reduce((a,c)=>a+(c.principal||0),0) : null);
+  const prefTotal = o.prefTotal ?? (d.preferreds ? d.preferreds.reduce((a,p)=>a+(p.notional||0),0) : null);
+  return {
+    hold: o.btcHoldings ?? d.btcHoldings ?? null,
+    basic: o.basicShares ?? d.basicShares ?? null,
+    dil: o.dilutedShares ?? d.dilutedShares ?? null,
+    debt: debtTotal, pref: prefTotal,
+    cash: o.usdReserve ?? d.usdReserve ?? null,
+    mstrLive: S.live.mstr ?? d.mstrPrice ?? null,
+    btcLive: S.live.btc ?? d.btcPrice ?? null,
+    isOverridden: k => (S.ov && S.ov[k] != null) || (S.local && S.local[k] != null),
+  };
+}
+function calc(e, mstr, btc, basis, netCash) {
+  const sh = basis === "basic" ? e.basic : e.dil;
+  if (!(e.hold>0) || !(sh>0) || !(mstr>0) || !(btc>0)) return null;
+  const btcnav = e.hold * btc;
+  const mcap = mstr * sh;
+  const ev = mcap + (e.debt||0) + (e.pref||0) - (netCash ? (e.cash||0) : 0);
+  return { sh, btcnav, mcap, ev, mc: mcap/btcnav, evm: (e.debt==null||e.pref==null) ? null : ev/btcnav,
+    senior: (e.debt||0)+(e.pref||0),
+    breakEven: (e.debt==null||e.pref==null) ? null : ev / e.hold,
+    bps: e.hold / sh * 1000 };
+}
+function impliedPrice(e, target, btc, basis, netCash) {
+  const sh = basis === "basic" ? e.basic : e.dil;
+  const btcnav = e.hold * btc;
+  const mc = target * btcnav / sh;
+  const ev = (e.debt==null||e.pref==null) ? null : (target*btcnav - (e.debt||0) - (e.pref||0) + (netCash?(e.cash||0):0)) / sh;
+  return { mc, ev };
+}
+
+// ---------- render ----------
+function premChip(m) {
+  if (m==null||!isFinite(m)) return "";
+  const p = m-1; const cls = p>=0 ? "up":"down";
+  return `<span class="prem ${cls}">${p>=0?"premium":"discount"} ${fmt.pct(Math.abs(p)).replace("+","")}</span>`;
+}
+function render() {
+  const e = eff();
+  const mstr = e.mstrLive, btc = e.btcLive;
+  const live = calc(e, mstr, btc, S.basis, S.netCash);
+  // hero
+  $("ev-mnav").textContent = live ? fmt.x(live.evm) : "—";
+  $("mc-mnav").textContent = live ? fmt.x(live.mc) : "—";
+  $("ev-prem").innerHTML = live ? premChip(live.evm) : "";
+  $("mc-prem").innerHTML = live ? premChip(live.mc) : "";
+  $("ev-val").textContent = live ? fmt.bn(live.ev) : "—";
+  $("mc-val").textContent = live ? fmt.bn(live.mcap) : "—";
+  $("btcnav-val").textContent = live ? fmt.bn(live.btcnav) : "—";
+  $("ev-formula").textContent = `(price × ${S.basis==="basic"?"basic":"diluted"} shares + converts + preferreds${S.netCash?" − USD reserve":""}) ÷ (BTC held × BTC price)`;
+  // strip
+  $("s-mstr").textContent = fmt.usd2(mstr);
+  $("s-mstr-sub").textContent = S.live.mstr!=null ? (S.live.mstrChg!=null ? `${fmt.pct(S.live.mstrChg/100)} today · IBKR live` : "IBKR live") : (S.data?.pricesAsOf ? `stored ${fmt.time(S.data.pricesAsOf)}` : "—");
+  $("s-btc").textContent = fmt.usd0(btc);
+  $("s-btc-sub").textContent = S.live.btc!=null ? "IBKR live (OSL)" : (S.data?.pricesAsOf ? `stored ${fmt.time(S.data.pricesAsOf)}` : "—");
+  $("s-hold").textContent = fmt.int(e.hold);
+  $("s-hold-sub").textContent = S.data?.holdingsAsOf ? `as of ${fmt.date(S.data.holdingsAsOf)}${e.isOverridden("btcHoldings")?" · overridden":""}` : "";
+  $("s-bps").textContent = live ? live.bps.toFixed(3) + " BTC" : "—";
+  $("s-bps-sub").textContent = live ? `${fmt.int(live.bps*1e5)} sats/share · ${S.basis==="basic"?"basic":"diluted"}` : "";
+  $("s-be").textContent = live && live.breakEven ? fmt.usd0(live.breakEven) : "—";
+  $("s-lev").textContent = live ? fmt.x2(live.senior/live.btcnav) : "—";
+
+  // scenario
+  const kB = S.kBtc, kM = S.kMstr;
+  const sBtc = btc ? btc*kB : null, sMstr = mstr ? mstr*kM : null;
+  if (btc) { $("btc-in").value = Math.round(sBtc); $("btc-lo").textContent = fmt.usd0(btc*0.3); $("btc-hi").textContent = fmt.usd0(btc*3); $("btc-rng").value = kToSlider(kB); $("btc-delta").textContent = kB===1?"live":fmt.pct(kB-1); }
+  if (mstr) { $("mstr-in").value = (sMstr).toFixed(2); $("mstr-lo").textContent = fmt.usd0(mstr*0.3); $("mstr-hi").textContent = fmt.usd0(mstr*3); $("mstr-rng").value = kToSlider(kM); $("mstr-delta").textContent = kM===1?"live":fmt.pct(kM-1); }
+  const sc = calc(e, sMstr, sBtc, S.basis, S.netCash);
+  $("sc-ev").textContent = sc ? fmt.x(sc.evm) : "—";
+  $("sc-mc").textContent = sc ? fmt.x(sc.mc) : "—";
+  $("sc-ev-s").textContent = sc && live && sc.evm!=null ? `${fmt.pct((sc.evm/live.evm)-1)} vs live · EV ${fmt.bn(sc.ev)}` : "";
+  $("sc-mc-s").textContent = sc && live ? `${fmt.pct((sc.mc/live.mc)-1)} vs live · BTC NAV ${fmt.bn(sc.btcnav)}` : "";
+  // implied
+  $("tgt-in").value = S.target.toFixed(2); $("tgt-rng").value = Math.round(S.target*100);
+  if (sc) {
+    const ip = impliedPrice(e, S.target, sBtc, S.basis, S.netCash);
+    $("imp-ev").textContent = ip.ev==null ? "—" : fmt.usd2(Math.max(0,ip.ev));
+    $("imp-mc").textContent = fmt.usd2(ip.mc);
+    $("imp-ev-d").textContent = ip.ev==null ? "" : fmt.pct(ip.ev/sMstr-1);
+    $("imp-mc-d").textContent = fmt.pct(ip.mc/sMstr-1);
+  }
+  renderStack(e, live);
+  renderChart();
+  renderInputs(e);
+}
+function kToSlider(k){ // 0.3x..3x on a log scale, 0..1000, 500 = 1x
+  const lo=Math.log(0.3), hi=Math.log(3), mid=Math.log(1);
+  return k<=1 ? Math.round(500*(Math.log(k)-lo)/(mid-lo)) : Math.round(500+500*(Math.log(k)-mid)/(hi-mid));
+}
+function sliderToK(v){
+  const lo=Math.log(0.3), hi=Math.log(3);
+  return v<=500 ? Math.exp(lo+(v/500)*(0-lo)) : Math.exp(0+((v-500)/500)*(hi-0));
+}
+
+function renderStack(e, live) {
+  const d = S.data || {};
+  const rows = [];
+  const tb = $("stack-body");
+  if (!live) { tb.innerHTML = `<tr><td colspan="2" style="color:var(--ink-3)">Waiting for data…</td></tr>`; return; }
+  rows.push(`<tr><td>Equity — market cap<small>${fmt.int(live.sh)} ${S.basis==="basic"?"basic":"assumed diluted"} shares × ${fmt.usd2(e.mstrLive)}</small></td><td class="num">${fmt.bn(live.mcap)}</td></tr>`);
+  rows.push(`<tr><td>Convertible notes (principal)${e.isOverridden("debtTotal")?"<small>overridden</small>":""}</td><td class="num">${fmt.bn(e.debt)}</td></tr>`);
+  if (!e.isOverridden("debtTotal") && d.converts) for (const c of d.converts) rows.push(`<tr><td class="ind">${c.name}<small>conv. ${fmt.usd2(c.convPrice)}${e.mstrLive && c.convPrice ? (e.mstrLive>=c.convPrice?" · in the money":` · ${fmt.pct(c.convPrice/e.mstrLive-1)} away`):""}</small></td><td class="num" style="color:var(--ink-2)">${fmt.bn(c.principal)}</td></tr>`);
+  rows.push(`<tr><td>Perpetual preferreds (notional)${e.isOverridden("prefTotal")?"<small>overridden</small>":""}</td><td class="num">${fmt.bn(e.pref)}</td></tr>`);
+  if (!e.isOverridden("prefTotal") && d.preferreds) for (const p of d.preferreds) rows.push(`<tr><td class="ind">${p.series}<small>${p.label||""}${p.note?" · "+p.note:""}</small></td><td class="num" style="color:var(--ink-2)">${fmt.bn(p.notional)}</td></tr>`);
+  rows.push(`<tr class="neg"><td>Less: USD reserve${S.netCash?"":" (not netted)"}${e.isOverridden("usdReserve")?"<small>overridden</small>":""}</td><td class="num">${S.netCash?"(":""}${fmt.bn(e.cash)}${S.netCash?")":""}</td></tr>`);
+  rows.push(`<tr class="total"><td>Enterprise value</td><td class="num">${fmt.bn(live.ev)}</td></tr>`);
+  rows.push(`<tr class="total"><td>Bitcoin NAV<small>${fmt.int(e.hold)} BTC × ${fmt.usd0(e.btcLive)}</small></td><td class="num">${fmt.bn(live.btcnav)}</td></tr>`);
+  tb.innerHTML = rows.join("");
+  const tot = live.mcap + (e.debt||0) + (e.pref||0);
+  $("stack-bar").innerHTML = [["var(--ink-2)",live.mcap],["var(--ev)",e.debt||0],["var(--accent)",e.pref||0]].map(([c,v])=>`<i style="background:${c};width:${(v/tot*100).toFixed(2)}%"></i>`).join("");
+  const dates = [d.convertsAsOf && `converts ${fmt.date(d.convertsAsOf)}`, d.preferredsAsOf && `preferreds ${fmt.date(d.preferredsAsOf)}`, d.usdReserveAsOf && `reserve ${fmt.date(d.usdReserveAsOf)}`].filter(Boolean).join(" · ");
+  $("stack-asof").textContent = dates;
+  $("stack-note").textContent = live.senior && e.cash!=null ? `Senior claims of ${fmt.bn(live.senior)} sit ahead of common; the USD reserve covers roughly ${(e.cash/ (d.annualCashObligations||1.66e9)).toFixed(1)} years of preferred dividends and note interest at the current run-rate.` : "";
+}
+
+function renderInputs(e) {
+  const d = S.data || {};
+  const map = { btcHoldings: e.hold, basicShares: e.basic, dilutedShares: e.dil, debtTotal: e.debt, prefTotal: e.pref, usdReserve: e.cash };
+  for (const inp of document.querySelectorAll("#fields input")) {
+    const k = inp.dataset.k;
+    if (document.activeElement !== inp) inp.value = map[k] ?? "";
+    inp.closest(".field").classList.toggle("ov", e.isOverridden(k));
+  }
+  $("src-hold").textContent = d.holdingsSource ? `${d.holdingsSource} · as of ${fmt.date(d.holdingsAsOf)}` : "";
+  $("src-shares").textContent = d.sharesSource ? `${d.sharesSource} · ${fmt.date(d.sharesAsOf)}` : "";
+  $("src-debt").textContent = d.convertsAsOf ? `Sum of ${d.converts?.length||0} series · 10-Q as of ${fmt.date(d.convertsAsOf)}` : "";
+  $("src-pref").textContent = d.preferredsAsOf ? `Sum of ${d.preferreds?.length||0} series · as of ${fmt.date(d.preferredsAsOf)}` : "";
+  $("src-cash").textContent = d.usdReserveAsOf ? `8-K USD Reserve · as of ${fmt.date(d.usdReserveAsOf)}` : "";
+  $("sources").innerHTML = d.updatedAt ? `Store last updated ${fmt.time(d.updatedAt)}${d.updatedBy?" by "+d.updatedBy:""}.${S.ov?.savedAt ? ` Overrides saved ${fmt.time(S.ov.savedAt)}${S.ov.note?" — "+S.ov.note:""}.`:""}` : "";
+}
+
+// ---------- chart ----------
+function seriesFor(pt, basis, netCash) {
+  const sh = basis==="basic" ? pt.basic : pt.dil;
+  if (!(pt.hold>0 && sh>0 && pt.mstr>0 && pt.btc>0)) return {mc:null, ev:null};
+  const nav = pt.hold*pt.btc, mcap = pt.mstr*sh;
+  const ev = (pt.debt!=null && pt.pref!=null) ? (mcap + pt.debt + pt.pref - (netCash ? (pt.cash||0) : 0))/nav : null;
+  return { mc: mcap/nav, ev };
+}
+let chartPts = [];
+function renderChart() {
+  const svg = $("chart"); const W=1100, H=340, L=52, R=18, T=16, B=34;
+  const all = S.history.slice().sort((a,b)=>a.d<b.d?-1:1);
+  const e = eff();
+  // append a live point for today if we have live prices
+  const today = new Date().toISOString().slice(0,10);
+  const liveCalc = calc(e, e.mstrLive, e.btcLive, S.basis, S.netCash);
+  let pts = all.filter(p => !S.range || (Date.now() - new Date(p.d).getTime()) <= S.range*86400000);
+  if (liveCalc && !(pts.length && pts[pts.length-1].d === today)) pts = pts.concat([{ d: today, mstr:e.mstrLive, btc:e.btcLive, hold:e.hold, basic:e.basic, dil:e.dil, debt:e.debt, pref:e.pref, cash:e.cash, live:true }]);
+  chartPts = pts.map(p => Object.assign({}, p, seriesFor(p, S.basis, S.netCash)));
+  if (chartPts.length < 2) { svg.innerHTML = `<text x="${W/2}" y="${H/2}" text-anchor="middle">History will build here as the daily task records closes.</text>`; $("chart-note").textContent=""; return; }
+  const xs = chartPts.map(p => new Date(p.d).getTime());
+  const x0 = xs[0], x1 = xs[xs.length-1];
+  const vals = chartPts.flatMap(p => [p.mc, (chartPts.filter(q=>q.ev!=null && !q.live).length >= 5) ? p.ev : null]).filter(v => v!=null && isFinite(v));
+  let lo = Math.min(1, ...vals), hi = Math.max(1, ...vals);
+  const pad = (hi-lo)*0.08 || 0.1; lo -= pad; hi += pad;
+  const X = t => L + (t-x0)/(x1-x0||1)*(W-L-R);
+  const Y = v => T + (hi-v)/(hi-lo)*(H-T-B);
+  // ticks
+  const yt = niceTicks(lo, hi, 5);
+  let g = "";
+  for (const v of yt) g += `<line class="grid" x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${L-8}" y="${Y(v)+4}" text-anchor="end">${v.toFixed(2)}×</text>`;
+  g += `<line class="ref" x1="${L}" x2="${W-R}" y1="${Y(1)}" y2="${Y(1)}"/><text class="ref-lbl" x="${W-R}" y="${Y(1)-6}" text-anchor="end">parity 1.00×</text>`;
+  // x ticks: monthly
+  const months = [];
+  for (let d = new Date(x0); d.getTime() <= x1; d.setMonth(d.getMonth()+1)) { const m = new Date(d.getFullYear(), d.getMonth()+1, 1); if (m.getTime() >= x0 && m.getTime() <= x1) months.push(new Date(m)); }
+  const step = Math.max(1, Math.ceil(months.length/8));
+  const longRange = (x1-x0) > 400*86400000;
+  months.forEach((m,i) => { if (i%step===0) g += `<text x="${X(m.getTime())}" y="${H-10}" text-anchor="middle">${longRange ? m.toLocaleDateString("en-GB",{month:"short",year:"2-digit"}) : m.toLocaleDateString("en-GB",{month:"short", year: m.getMonth()===0?"2-digit":undefined})}</text>`; });
+  // paths
+  const path = key => { let s="", on=false; chartPts.forEach((p,i)=>{ const v=p[key]; if(v==null||!isFinite(v)){on=false;return;} s += (on?"L":"M") + X(xs[i]).toFixed(1)+" "+Y(v).toFixed(1)+" "; on=true; }); return s; };
+  const EV_MIN = 5; // show the EV series only once the daily task has recorded a working week of real capital-stack data
+  const evPts = chartPts.filter(p=>p.ev!=null && !p.live).length;
+  const showEv = evPts >= EV_MIN;
+  $("lg-ev").hidden = !showEv;
+  const mcPath = path("mc"), evPath = showEv ? path("ev") : "";
+  const firstMc = chartPts.findIndex(p=>p.mc!=null);
+  const lastIdx = chartPts.length-1;
+  let area = "";
+  if (mcPath) area = `<path class="area" d="${mcPath} L${X(xs[lastIdx])} ${Y(lo)} L${X(xs[firstMc])} ${Y(lo)} Z"/>`;
+  g += area + `<path class="ln mcap" d="${mcPath}"/><path class="ln ev" d="${evPath}"/>`;
+  // end markers
+  const lp = chartPts[lastIdx];
+  if (lp.mc!=null) g += `<circle class="pt" cx="${X(xs[lastIdx])}" cy="${Y(lp.mc)}" r="4" fill="var(--mcap)"/>`;
+  if (showEv && lp.ev!=null) g += `<circle class="pt" cx="${X(xs[lastIdx])}" cy="${Y(lp.ev)}" r="4" fill="var(--ev)"/>`;
+  g += `<g id="cross" style="display:none"><line class="cross" y1="${T}" y2="${H-B}"/><circle class="pt" r="4" fill="var(--mcap)"/><circle class="pt" r="4" fill="var(--ev)"/></g>`;
+  g += `<rect x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}" fill="transparent" id="hit"/>`;
+  svg.innerHTML = g;
+  const evCount = chartPts.filter(p=>p.ev!=null).length, estCount = chartPts.filter(p=>p.est).length;
+  const wk = chartPts.filter(p=>p.res==="w").length;
+  const early = chartPts.length && chartPts[0].d < "2021-06-01";
+  $("chart-note").textContent = `${chartPts.length} points${wk? ` (${wk} weekly closes for Sep 2021–Sep 2025, daily elsewhere)`:""} · ${S.basis==="basic"?"basic":"assumed diluted"} shares${estCount? ` · backfilled points use actual split-adjusted MSTR and BTC closes with share counts interpolated between year-end filed anchors.`:""}${early ? " Before 2021 the ratio mostly reflects the legacy software business — Strategy held only 21–70k BTC against a ~$1.5bn market cap." : ""}${showEv ? "" : ` The EV-basis line appears once the daily job has recorded ${EV_MIN} days of capital-stack data (${evPts} so far) — debt, preferred and reserve balances were not captured daily before this site existed.`}`;
+  renderPriceChart(xs);
+  // hover
+  const hit = $("hit"), cross = $("cross"), tip = $("tip");
+  const move = ev => {
+    const r = svg.getBoundingClientRect(); const px = (ev.clientX - r.left) * (W / r.width);
+    let best = 0, bd = Infinity; xs.forEach((t,i)=>{ const d = Math.abs(X(t)-px); if (d<bd){bd=d;best=i;} });
+    const p = chartPts[best]; const cx = X(xs[best]);
+    cross.style.display = ""; cross.querySelector("line").setAttribute("x1",cx); cross.querySelector("line").setAttribute("x2",cx);
+    const cs = cross.querySelectorAll("circle");
+    cs[0].style.display = p.mc!=null?"":"none"; if(p.mc!=null){cs[0].setAttribute("cx",cx);cs[0].setAttribute("cy",Y(p.mc));}
+    cs[1].style.display = (showEv && p.ev!=null)?"":"none"; if(p.ev!=null){cs[1].setAttribute("cx",cx);cs[1].setAttribute("cy",Y(p.ev));}
+    tip.style.display = "block";
+    tip.innerHTML = `<div class="d">${fmt.date(p.d)}${p.live?" · live":p.res==="w"?" · weekly close":p.est?" · backfill":""}</div>
+      ${showEv?`<div class="r"><span><i style="background:var(--ev)"></i>EV mNAV</span><span class="num">${p.ev!=null?fmt.x(p.ev):"—"}</span></div>`:""}
+      <div class="r"><span><i style="background:var(--mcap)"></i>Mkt-cap mNAV</span><span class="num">${fmt.x(p.mc)}</span></div>
+      <div class="r"><span>MSTR</span><span class="num">${fmt.usd2(p.mstr)}</span></div>
+      <div class="r"><span>BTC</span><span class="num">${fmt.usd0(p.btc)}</span></div>
+      <div class="r"><span>BTC held</span><span class="num">${fmt.int(p.hold)}</span></div>`;
+    const left = (cx / W) * r.width; const tw = tip.offsetWidth || 200;
+    tip.style.left = Math.min(Math.max(0, left + 14), r.width - tw) + "px";
+    tip.style.top = "8px";
+  };
+  hit.addEventListener("pointermove", move);
+  hit.addEventListener("pointerleave", () => { cross.style.display="none"; tip.style.display="none"; });
+}
+// MSTR price vs market-cap mNAV, both rebased to 100 at the start of the selected range (one axis, no dual scale)
+function renderPriceChart(xs) {
+  const svg = $("chart2"); const W=1100, H=300, L=52, R=18, T=16, B=34;
+  const pts = chartPts;
+  const i0 = pts.findIndex(p => p.mstr>0 && p.mc!=null);
+  if (i0 < 0 || pts.length - i0 < 2) { svg.innerHTML = ""; $("chart2-note").textContent = ""; return; }
+  const base = pts[i0];
+  const idx = pts.map(p => ({ price: p.mstr>0 ? p.mstr/base.mstr*100 : null, mnav: p.mc!=null ? p.mc/base.mc*100 : null }));
+  const x0 = xs[0], x1 = xs[xs.length-1];
+  const vals = idx.flatMap(v => [v.price, v.mnav]).filter(v => v!=null && isFinite(v));
+  // log scale: a doubling is the same height everywhere, so a 10x stock move doesn't flatten the ratio line
+  let lo = Math.log(Math.min(100, ...vals)), hi = Math.log(Math.max(100, ...vals)); const pad = (hi-lo)*0.08 || 0.1; lo -= pad; hi += pad;
+  const X = t => L + (t-x0)/(x1-x0||1)*(W-L-R), Y = v => T + (hi-Math.log(v))/(hi-lo)*(H-T-B);
+  let g = "";
+  const ticks = []; for (let v = 100; Math.log(v) >= lo; v /= 2) ticks.unshift(v); for (let v = 200; Math.log(v) <= hi; v *= 2) ticks.push(v);
+  for (const v of ticks) if (v !== 100) g += `<line class="grid" x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${L-8}" y="${Y(v)+4}" text-anchor="end">${v>=10?Math.round(v):v.toFixed(1)}</text>`;
+  g += `<text x="${L-8}" y="${Y(100)+4}" text-anchor="end">100</text>`;
+  g += `<line class="ref" x1="${L}" x2="${W-R}" y1="${Y(100)}" y2="${Y(100)}"/><text class="ref-lbl" x="${W-R}" y="${Y(100)-6}" text-anchor="end">start of range = 100</text>`;
+  const months = [];
+  for (let d = new Date(x0); d.getTime() <= x1; d.setMonth(d.getMonth()+1)) { const m = new Date(d.getFullYear(), d.getMonth()+1, 1); if (m.getTime() >= x0 && m.getTime() <= x1) months.push(new Date(m)); }
+  const step = Math.max(1, Math.ceil(months.length/8));
+  const longRange = (x1-x0) > 400*86400000;
+  months.forEach((m,i) => { if (i%step===0) g += `<text x="${X(m.getTime())}" y="${H-10}" text-anchor="middle">${longRange ? m.toLocaleDateString("en-GB",{month:"short",year:"2-digit"}) : m.toLocaleDateString("en-GB",{month:"short", year: m.getMonth()===0?"2-digit":undefined})}</text>`; });
+  const path = key => { let s="", on=false; idx.forEach((v,i)=>{ const y=v[key]; if(y==null||!isFinite(y)){on=false;return;} s += (on?"L":"M") + X(xs[i]).toFixed(1)+" "+Y(y).toFixed(1)+" "; on=true; }); return s; };
+  g += `<path class="ln mcap" d="${path("mnav")}"/><path class="ln mstr" d="${path("price")}"/>`;
+  const last = idx[idx.length-1], lx = X(xs[xs.length-1]);
+  if (last.mnav!=null) g += `<circle class="pt" cx="${lx}" cy="${Y(last.mnav)}" r="4" fill="var(--mcap)"/>`;
+  if (last.price!=null) g += `<circle class="pt" cx="${lx}" cy="${Y(last.price)}" r="4" fill="var(--mstr)"/>`;
+  g += `<g id="cross2" style="display:none"><line class="cross" y1="${T}" y2="${H-B}"/><circle class="pt" r="4" fill="var(--mcap)"/><circle class="pt" r="4" fill="var(--mstr)"/></g>`;
+  g += `<rect x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}" fill="transparent" id="hit2"/>`;
+  svg.innerHTML = g;
+  const pc = (last.price-100), mc = (last.mnav-100);
+  $("chart2-note").textContent = `Since ${fmt.date(base.d)}: MSTR ${fmt.pct(pc/100)} (${fmt.usd2(base.mstr)} → ${fmt.usd2(pts[pts.length-1].mstr)}), market-cap mNAV ${fmt.pct(mc/100)} (${fmt.x(base.mc)} → ${fmt.x(pts[pts.length-1].mc)}). The gap between the two lines is what bitcoin's own move and share issuance did to the ratio.`;
+  const hit = $("hit2"), cross = $("cross2"), tip = $("tip2");
+  hit.addEventListener("pointermove", ev => {
+    const r = svg.getBoundingClientRect(); const px = (ev.clientX - r.left) * (W / r.width);
+    let best = 0, bd = Infinity; xs.forEach((t,i)=>{ const d = Math.abs(X(t)-px); if (d<bd){bd=d;best=i;} });
+    const p = pts[best], v = idx[best], cx = X(xs[best]);
+    cross.style.display = ""; const ln = cross.querySelector("line"); ln.setAttribute("x1",cx); ln.setAttribute("x2",cx);
+    const cs = cross.querySelectorAll("circle");
+    cs[0].style.display = v.mnav!=null?"":"none"; if(v.mnav!=null){cs[0].setAttribute("cx",cx);cs[0].setAttribute("cy",Y(v.mnav));}
+    cs[1].style.display = v.price!=null?"":"none"; if(v.price!=null){cs[1].setAttribute("cx",cx);cs[1].setAttribute("cy",Y(v.price));}
+    tip.style.display = "block";
+    tip.innerHTML = `<div class="d">${fmt.date(p.d)}${p.live?" · live":p.res==="w"?" · weekly close":""}</div>
+      <div class="r"><span><i style="background:var(--mstr)"></i>MSTR</span><span class="num">${fmt.usd2(p.mstr)} · ${v.price!=null?Math.round(v.price):"—"}</span></div>
+      <div class="r"><span><i style="background:var(--mcap)"></i>Mkt-cap mNAV</span><span class="num">${fmt.x(p.mc)} · ${v.mnav!=null?Math.round(v.mnav):"—"}</span></div>
+      <div class="r"><span>BTC</span><span class="num">${fmt.usd0(p.btc)}</span></div>`;
+    const left = (cx / W) * r.width; const tw = tip.offsetWidth || 200;
+    tip.style.left = Math.min(Math.max(0, left + 14), r.width - tw) + "px"; tip.style.top = "8px";
+  });
+  hit.addEventListener("pointerleave", () => { cross.style.display="none"; tip.style.display="none"; });
+}
+function niceTicks(lo, hi, n) {
+  const span = hi-lo, raw = span/n, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = [1,2,2.5,5,10].map(m=>m*mag).find(s => span/s <= n) || mag*10;
+  const out = []; for (let v = Math.ceil(lo/step)*step; v <= hi+1e-9; v += step) out.push(+v.toFixed(4)); return out;
+}
+
+// ---------- controls ----------
+$("btc-rng").addEventListener("input", ev => { S.kBtc = sliderToK(+ev.target.value); render(); });
+$("mstr-rng").addEventListener("input", ev => { S.kMstr = sliderToK(+ev.target.value); render(); });
+$("btc-in").addEventListener("change", ev => { const e = eff(); if (e.btcLive && +ev.target.value>0) { S.kBtc = Math.min(3, Math.max(0.3, +ev.target.value / e.btcLive)); render(); } });
+$("mstr-in").addEventListener("change", ev => { const e = eff(); if (e.mstrLive && +ev.target.value>0) { S.kMstr = Math.min(3, Math.max(0.3, +ev.target.value / e.mstrLive)); render(); } });
+$("tgt-rng").addEventListener("input", ev => { S.target = +ev.target.value/100; render(); });
+$("tgt-in").addEventListener("change", ev => { if (+ev.target.value>0) { S.target = +ev.target.value; render(); } });
+$("reset").addEventListener("click", () => { S.kBtc = 1; S.kMstr = 1; render(); });
+$("netcash").addEventListener("change", ev => { S.netCash = ev.target.checked; render(); });
+$("basis-dil").addEventListener("click", () => setBasis("dil"));
+$("basis-basic").addEventListener("click", () => setBasis("basic"));
+function setBasis(b){ S.basis=b; $("basis-dil").setAttribute("aria-pressed", b==="dil"); $("basis-basic").setAttribute("aria-pressed", b==="basic"); render(); try{localStorage.setItem("mstr.basis",b)}catch(_){} }
+try { const b = localStorage.getItem("mstr.basis"); if (b==="basic"||b==="dil") setBasis(b); } catch(_){}
+$("range").addEventListener("click", ev => { const b = ev.target.closest("button"); if(!b) return; S.range = +b.dataset.r; for (const x of $("range").querySelectorAll("button")) x.setAttribute("aria-pressed", x===b); renderChart(); });
+for (const inp of document.querySelectorAll("#fields input")) inp.readOnly = true;
+
+// ---------- data loading (static JSON, published by GitHub Actions) ----------
+const chip = (id, cls, html) => { const c = $(id); c.className = "chip " + cls; c.querySelector("span:last-child").innerHTML = html; };
+
+// Cache-bust so a viewer with the page already open gets the morning's numbers on reload
+// rather than yesterday's out of the browser cache.
+const bust = () => "?v=" + Math.floor(Date.now() / 60000);
+const grab = (name) => fetch(name + bust(), { cache: "no-cache" }).then(r => {
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  return r.json();
+});
+
+(async () => {
+  try {
+    const [cur, hist, ov] = await Promise.all([
+      grab("data/current.json"),
+      grab("data/history.json").catch(() => ({ points: [] })),
+      grab("data/overrides.json").catch(() => ({})),
+    ]);
+    S.data = cur;
+    S.history = Array.isArray(hist.points) ? hist.points : [];
+    // Strip the commentary keys out of the overrides file so they are not read as figures.
+    S.ov = Object.fromEntries(Object.entries(ov || {}).filter(([k, v]) => !k.startsWith("_") && typeof v === "number"));
+
+    const stamp = cur.mstrCloseDate ? fmt.date(cur.mstrCloseDate) : fmt.time(cur.pricesAsOf);
+    chip("chip-data", "live", `Filings data <b>${fmt.date(cur.holdingsAsOf)}</b>`);
+    chip("chip-prices", "stale", `MSTR <b>${stamp} close</b>`);
+    renderNotices(cur);
+    render();
+    liveBtc();
+  } catch (e) {
+    chip("chip-data", "off", "Data <b>could not be loaded</b>");
+    chip("chip-prices", "off", "Prices <b>unavailable</b>");
+    $("notices").innerHTML = `<div class="notice bad">The page could not load its data files (${e.message}). If this persists, check that the latest GitHub Action run succeeded.</div>`;
+    $("notices").hidden = false;
+  }
+})();
+
+// Anything the daily or filings job flagged gets surfaced here rather than buried in a log.
+function renderNotices(cur) {
+  const items = [...(cur.problems || []), ...(cur.review || [])];
+  const box = $("notices");
+  const stale = cur.mstrCloseDate && (Date.now() - new Date(cur.mstrCloseDate).getTime()) > 5 * 86400000;
+  const html = [];
+  if (stale) html.push(`<div class="notice bad">The last recorded close is ${fmt.date(cur.mstrCloseDate)} — the daily job may have stopped. Check the Actions tab of the repository.</div>`);
+  for (const t of items) html.push(`<div class="notice">${String(t).replace(/[<>]/g, "")}</div>`);
+  box.innerHTML = html.join("");
+  box.hidden = !html.length;
+}
+
+// Bitcoin trades around the clock and is the bigger driver of the ratio, so refresh it in
+// the browser. MSTR intraday would need a paid feed, so it stays at the last close.
+async function liveBtc() {
+  const sources = [
+    { name: "Coinbase", fn: async () => Number((await (await fetch("https://api.coinbase.com/v2/prices/BTC-USD/spot")).json()).data.amount) },
+    { name: "CoinGecko", fn: async () => Number((await (await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd")).json()).bitcoin.usd) },
+  ];
+  for (const src of sources) {
+    try {
+      const v = await src.fn();
+      if (!(v > 1000 && v < 10000000)) continue;
+      S.live.btc = v;
+      S.live.btcTs = Date.now();
+      chip("chip-prices", "live", `BTC <b>live</b> · MSTR ${fmt.date(S.data.mstrCloseDate)} close`);
+      render();
+      return;
+    } catch (_) { /* try the next one */ }
+  }
+  // No live quote: the page still works on the stored close, so say nothing alarming.
+}
+setInterval(() => { if (S.data) liveBtc(); }, 120000);
+
+render();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "mstr-nav-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Static MSTR mNAV tracker, refreshed by GitHub Actions",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node scripts/test.mjs",
+    "daily": "node scripts/daily.mjs",
+    "filings": "node scripts/filings.mjs",
+    "serve": "python3 -m http.server 8080"
+  }
+}
