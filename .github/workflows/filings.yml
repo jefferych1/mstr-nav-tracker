@@ -1,0 +1,51 @@
+name: Filings refresh
+
+on:
+  schedule:
+    # Tuesdays 12:00 UTC. Strategy files its 8-K on Mondays US time, so this picks up each
+    # week's bitcoin purchase and ATM share sales the morning after.
+    #
+    # The share count is the reason this is weekly rather than monthly: Strategy issues
+    # stock continuously, so a stale count quietly overstates mNAV. The job costs nothing
+    # and catches up correctly however long it has been, so if you would rather it ran
+    # monthly, change this to "0 12 1 * *" — nothing else needs to change.
+    - cron: "0 12 * * 2"
+  workflow_dispatch:
+
+concurrency:
+  group: data-write
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Read new SEC filings
+        env:
+          # SEC asks for a contact address in the User-Agent. Set a repository variable
+          # named SEC_USER_AGENT (Settings → Secrets and variables → Actions → Variables),
+          # e.g. "Jeff Hung mstr-tracker hung.jeffery@gmail.com".
+          SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
+        run: node scripts/filings.mjs
+
+      - name: Commit if anything changed
+        run: |
+          git config user.name  "mstr-tracker bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "no changes"
+          else
+            git commit -m "data: filings refresh $(date -u +%Y-%m-%d)"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push
+          fi
