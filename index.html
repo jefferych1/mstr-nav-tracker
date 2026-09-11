@@ -477,9 +477,13 @@ function render() {
   $("ev-formula").textContent = `(price × ${S.basis==="basic"?"basic":"diluted"} shares + converts + preferreds${S.netCash?" − USD reserve":""}) ÷ (BTC held × BTC price)`;
   // strip
   $("s-mstr").textContent = fmt.usd2(mstr);
-  $("s-mstr-sub").textContent = S.live.mstr!=null ? (S.live.mstrChg!=null ? `${fmt.pct(S.live.mstrChg/100)} today · IBKR live` : "IBKR live") : (S.data?.pricesAsOf ? `stored ${fmt.time(S.data.pricesAsOf)}` : "—");
+  // MSTR has no live intraday feed here, so label the tile with the session it actually
+  // came from rather than the time the job happened to run.
+  $("s-mstr-sub").textContent = S.data?.mstrCloseDate ? `${fmt.date(S.data.mstrCloseDate)} close` : (S.data?.pricesAsOf ? `recorded ${fmt.time(S.data.pricesAsOf)}` : "—");
   $("s-btc").textContent = fmt.usd0(btc);
-  $("s-btc-sub").textContent = S.live.btc!=null ? "IBKR live (OSL)" : (S.data?.pricesAsOf ? `stored ${fmt.time(S.data.pricesAsOf)}` : "—");
+  $("s-btc-sub").textContent = S.live.btc!=null
+    ? `live · ${S.live.btcSource || "Coinbase"}`
+    : (S.data?.pricesAsOf ? `recorded ${fmt.time(S.data.pricesAsOf)}` : "—");
   $("s-hold").textContent = fmt.int(e.hold);
   $("s-hold-sub").textContent = S.data?.holdingsAsOf ? `as of ${fmt.date(S.data.holdingsAsOf)}${e.isOverridden("btcHoldings")?" · overridden":""}` : "";
   $("s-bps").textContent = live ? live.bps.toFixed(3) + " BTC" : "—";
@@ -777,8 +781,9 @@ async function liveBtc() {
       const v = await src.fn();
       if (!(v > 1000 && v < 10000000)) continue;
       S.live.btc = v;
+      S.live.btcSource = src.name;
       S.live.btcTs = Date.now();
-      chip("chip-prices", "live", `BTC <b>live</b> · MSTR ${fmt.date(S.data.mstrCloseDate)} close`);
+      chip("chip-prices", "live", `BTC <b>live</b> (${src.name}) · MSTR ${fmt.date(S.data.mstrCloseDate)} close`);
       render();
       return;
     } catch (_) { /* try the next one */ }
