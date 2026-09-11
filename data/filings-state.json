@@ -2,6 +2,6 @@
   "_comment": "Bookkeeping for scripts/filings.mjs. 'since' is the high-water mark: filings before this date are treated as already reflected in current.json.",
   "since": "2026-09-10",
   "processed": [],
-  "lastRun": null,
+  "lastRun": "2026-09-11T06:11:44.943Z",
   "review": []
 }
