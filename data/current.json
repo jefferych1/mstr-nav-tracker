@@ -72,14 +72,17 @@
   ],
   "preferredsAsOf": "2026-06-30",
   "usdReserve": 5100000000,
-  "usdReserveAsOf": "2026-08-30",
+  "usdReserveAsOf": "2026-09-13",
   "mstrPrice": 136.94,
   "btcPrice": 78609.33,
   "pricesAsOf": "2026-09-14T22:41:38.743Z",
   "pricesSource": "MSTR 2026-09-14 close via yahoo; BTC via coinbase-candles",
   "mstrCloseDate": "2026-09-14",
-  "review": [],
+  "review": [
+    "8-K 2026-09-14: could not find the bitcoin holdings figure — https://www.sec.gov/Archives/edgar/data/1050446/000119312526389858/mstr-20260914.htm",
+    "8-K 2026-09-14: could not read ATM share sales — share count may drift. https://www.sec.gov/Archives/edgar/data/1050446/000119312526389858/mstr-20260914.htm"
+  ],
   "problems": [],
   "capitalStackStale": false,
-  "filingsCheckedAt": "2026-09-11T06:11:44.943Z"
+  "filingsCheckedAt": "2026-09-15T12:21:59.557Z"
 }
