@@ -2,11 +2,11 @@
   "_comment": "Bookkeeping for scripts/filings.mjs. 'since' is the high-water mark: filings before this date are treated as already reflected in current.json.",
   "since": "2026-09-10",
   "processed": [
-    "0001193125-26-389858"
+    "0001193125-26-389858",
+    "0001193125-26-396093"
   ],
-  "lastRun": "2026-09-15T12:21:59.557Z",
+  "lastRun": "2026-09-22T12:21:06.436Z",
   "review": [
-    "8-K 2026-09-14: could not find the bitcoin holdings figure — https://www.sec.gov/Archives/edgar/data/1050446/000119312526389858/mstr-20260914.htm",
-    "8-K 2026-09-14: could not read ATM share sales — share count may drift. https://www.sec.gov/Archives/edgar/data/1050446/000119312526389858/mstr-20260914.htm"
+    "8-K 2026-09-21: could not read ATM share sales — share count may drift. https://www.sec.gov/Archives/edgar/data/1050446/000119312526396093/mstr-20260914.htm"
   ]
 }
