@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-09-22T12:21:06.436Z",
-  "updatedBy": "filings refresh: holdings 845,050 → 846,000",
+  "updatedAt": "2026-09-22T22:39:41.859Z",
+  "updatedBy": "daily refresh",
   "btcHoldings": 846000,
   "holdingsAsOf": "2026-09-20",
   "holdingsSource": "Form 8-K filed 2026-09-21 (sec.gov)",
@@ -73,11 +73,11 @@
   "preferredsAsOf": "2026-06-30",
   "usdReserve": 5040000000,
   "usdReserveAsOf": "2026-09-20",
-  "mstrPrice": 168.5,
-  "btcPrice": 86490.61,
-  "pricesAsOf": "2026-09-21T22:39:37.980Z",
-  "pricesSource": "MSTR 2026-09-21 close via yahoo; BTC via coinbase-candles",
-  "mstrCloseDate": "2026-09-21",
+  "mstrPrice": 167.33,
+  "btcPrice": 86184.25,
+  "pricesAsOf": "2026-09-22T22:39:41.859Z",
+  "pricesSource": "MSTR 2026-09-22 close via yahoo; BTC via coinbase-candles",
+  "mstrCloseDate": "2026-09-22",
   "review": [
     "8-K 2026-09-21: could not read ATM share sales — share count may drift. https://www.sec.gov/Archives/edgar/data/1050446/000119312526396093/mstr-20260914.htm"
   ],
