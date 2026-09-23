@@ -44,6 +44,7 @@ pointing at `<you>.github.io`. GitHub issues the TLS certificate itself.
 | `data/history.json` | One point per day: prices, holdings, shares, debt, preferreds, reserve |
 | `data/overrides.json` | Your manual corrections, applied on top of `current.json` |
 | `data/filings-state.json` | Which filings have been processed (do not hand-edit) |
+| `data/events.json` | The filing log: one line per change, with the arithmetic of what it meant |
 
 ### Correcting a figure
 
@@ -71,6 +72,26 @@ fails. Common cases:
 - **A new 10-Q.** The convertible notes and preferred balances are the one thing that is not
   scraped, because those tables are too variable to parse safely. The job flags the filing
   and you update `data/current.json` or `data/overrides.json` by hand. Four times a year.
+
+### The filing log
+
+Every change the filings job applies is also written to `data/events.json` as a dated line
+with a plain-English reading of it — how much of the stack a purchase was, what it implies
+was paid per coin, and whether bitcoin per share went up or down as a result.
+
+Two things make that trustworthy without anyone checking it. The line describes the delta
+that was actually applied to `current.json`, not a second independent reading of the filing,
+so the log and the headline figures cannot disagree. And the interpretation is arithmetic
+rather than judgement — it is computed from the before/after snapshot, which is why a cron
+job can write it and it is still worth reading.
+
+Entries tagged **reconstructed** came from `scripts/backfill-events.mjs`, which derives the
+history from the price/holdings backfill rather than from filings: no purchase price, and
+Sep 2021–Sep 2025 is weekly, so a week's buying appears as one line. Decreases are not
+backfilled at all, because a step down in a reconstructed series cannot be told apart from a
+later revision to the record. Entries tagged **estimated** value preferred issuance at the
+$100 stated liquidation preference, because the ATM tables report shares rather than dollars;
+the exact balance arrives with the next 10-Q.
 
 ## Method
 

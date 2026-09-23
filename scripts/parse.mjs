@@ -47,9 +47,13 @@ export function parseAsOf(text) {
   return m ? parseLongDate(m[1]) : null;
 }
 
-/** Class A shares sold under the ATM during the period covered by this 8-K. */
-export function parseAtmShares(text) {
-  const m = /MSTR Stock/i.exec(text);
+/** Shares of one security sold under the ATM during the period covered by this 8-K.
+ *  The filings carry a row per security — "MSTR Stock", "STRK Stock", "STRC Stock" and so
+ *  on — with the share count first. Returns 0 for an explicit "no sales" dash, and null
+ *  when the row is absent or unreadable, so the caller can tell "nothing sold" apart from
+ *  "could not tell", and never silently treats the second as the first. */
+export function parseSecuritySales(text, ticker) {
+  const m = new RegExp(`\\b${ticker}\\s+Stock\\b`, "i").exec(text);
   if (!m) return null;
   const slice = text.slice(m.index + m[0].length, m.index + 160).trim();
   if (/^[—–-]/.test(slice)) return 0; // an explicit "no sales" dash
@@ -57,5 +61,22 @@ export function parseAtmShares(text) {
   if (!n) return null;
   const v = num(n[1]);
   return v >= 0 && v <= 200_000_000 ? v : null;
+}
+
+/** Class A common sold under the ATM. */
+export const parseAtmShares = (text) => parseSecuritySales(text, "MSTR");
+
+/** The perpetual preferred series, in the order they appear in the capital stack. */
+export const PREF_SERIES = ["STRC", "STRF", "STRK", "STRD", "STRE"];
+
+/** Preferred shares sold under the ATM, as [{ series, shares }] for the series that sold
+ *  anything. A series whose row is missing is simply left out rather than assumed zero. */
+export function parsePrefSales(text) {
+  const out = [];
+  for (const s of PREF_SERIES) {
+    const v = parseSecuritySales(text, s);
+    if (v != null && v > 0) out.push({ series: s, shares: v });
+  }
+  return out;
 }
 

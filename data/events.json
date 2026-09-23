@@ -1,0 +1,1752 @@
+{
+  "events": [
+    {
+      "d": "2026-08-31",
+      "asOf": "2026-08-31",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 4,603 BTC — holdings 845,050",
+      "meaning": "+0.55% of the stack. BTC per 1,000 shares 2.0378 → 2.0370 (-0.04%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 4603,
+        "hold": 845050,
+        "bpsBefore": 2.037758494024542,
+        "bpsAfter": 2.036976775017777
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-06-22",
+      "asOf": "2026-06-22",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 521 BTC — holdings 847,363",
+      "meaning": "+0.06% of the stack. BTC per 1,000 shares 2.3034 → 2.2966 (-0.30%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 521,
+        "hold": 847363,
+        "bpsBefore": 2.3033542224253103,
+        "bpsAfter": 2.296557182000753
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-06-15",
+      "asOf": "2026-06-15",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 1,586 BTC — holdings 846,842",
+      "meaning": "+0.19% of the stack. BTC per 1,000 shares 2.3135 → 2.3096 (-0.17%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 1586,
+        "hold": 846842,
+        "bpsBefore": 2.313532391960652,
+        "bpsAfter": 2.309554393744767
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-06-08",
+      "asOf": "2026-06-08",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 1,550 BTC — holdings 845,256",
+      "meaning": "+0.18% of the stack. BTC per 1,000 shares 2.3239 → 2.3198 (-0.18%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 1550,
+        "hold": 845256,
+        "bpsBefore": 2.323938851397879,
+        "bpsAfter": 2.3197993226590845
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-05-18",
+      "asOf": "2026-05-18",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 24,869 BTC — holdings 843,738",
+      "meaning": "+3.04% of the stack. BTC per 1,000 shares 2.2993 → 2.3604 (+2.66%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 24869,
+        "hold": 843738,
+        "bpsBefore": 2.299276693004476,
+        "bpsAfter": 2.360383597513554
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-05-11",
+      "asOf": "2026-05-11",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 535 BTC — holdings 818,869",
+      "meaning": "+0.07% of the stack. BTC per 1,000 shares 2.3127 → 2.3057 (-0.31%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 535,
+        "hold": 818869,
+        "bpsBefore": 2.3127298008416255,
+        "bpsAfter": 2.3056665399614253
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-04-27",
+      "asOf": "2026-04-27",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 3,273 BTC — holdings 818,334",
+      "meaning": "+0.40% of the stack. BTC per 1,000 shares 2.3339 → 2.3344 (+0.02%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 3273,
+        "hold": 818334,
+        "bpsBefore": 2.3338535194167807,
+        "bpsAfter": 2.3344287548138642
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-04-20",
+      "asOf": "2026-04-20",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 34,164 BTC — holdings 815,061",
+      "meaning": "+4.37% of the stack. BTC per 1,000 shares 2.2509 → 2.3405 (+3.98%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 34164,
+        "hold": 815061,
+        "bpsBefore": 2.25087121070184,
+        "bpsAfter": 2.3404681160211
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-04-13",
+      "asOf": "2026-04-13",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 13,927 BTC — holdings 780,897",
+      "meaning": "+1.82% of the stack. BTC per 1,000 shares 2.2255 → 2.2573 (+1.43%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 13927,
+        "hold": 780897,
+        "bpsBefore": 2.2254946623760627,
+        "bpsAfter": 2.2572930878986193
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-04-06",
+      "asOf": "2026-04-06",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 4,871 BTC — holdings 766,970",
+      "meaning": "+0.64% of the stack. BTC per 1,000 shares 2.2262 → 2.2319 (+0.25%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 4871,
+        "hold": 766970,
+        "bpsBefore": 2.226237563024719,
+        "bpsAfter": 2.231886672758278
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-03-23",
+      "asOf": "2026-03-23",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 1,031 BTC — holdings 762,099",
+      "meaning": "+0.14% of the stack. BTC per 1,000 shares 2.2535 → 2.2478 (-0.25%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 1031,
+        "hold": 762099,
+        "bpsBefore": 2.2535406444964927,
+        "bpsAfter": 2.2478409372456025
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-03-16",
+      "asOf": "2026-03-16",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 22,337 BTC — holdings 761,068",
+      "meaning": "+3.02% of the stack. BTC per 1,000 shares 2.2024 → 2.2601 (+2.62%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 22337,
+        "hold": 761068,
+        "bpsBefore": 2.2024190711291585,
+        "bpsAfter": 2.260145990603859
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-03-09",
+      "asOf": "2026-03-09",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 17,994 BTC — holdings 738,731",
+      "meaning": "+2.50% of the stack. BTC per 1,000 shares 2.1636 → 2.2089 (+2.09%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 17994,
+        "hold": 738731,
+        "bpsBefore": 2.1636281764555783,
+        "bpsAfter": 2.2089190296354104
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-03-02",
+      "asOf": "2026-03-02",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 3,015 BTC — holdings 720,737",
+      "meaning": "+0.42% of the stack. BTC per 1,000 shares 2.1696 → 2.1701 (+0.02%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 3015,
+        "hold": 720737,
+        "bpsBefore": 2.169576677992334,
+        "bpsAfter": 2.170057929472974
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-02-23",
+      "asOf": "2026-02-23",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 591 BTC — holdings 717,722",
+      "meaning": "+0.08% of the stack. BTC per 1,000 shares 2.1830 → 2.1761 (-0.32%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 591,
+        "hold": 717722,
+        "bpsBefore": 2.1829807311801774,
+        "bpsAfter": 2.1760625299400287
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-02-17",
+      "asOf": "2026-02-17",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 2,487 BTC — holdings 717,131",
+      "meaning": "+0.35% of the stack. BTC per 1,000 shares 2.1908 → 2.1874 (-0.16%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 2487,
+        "hold": 717131,
+        "bpsBefore": 2.190768438445527,
+        "bpsAfter": 2.1873619804057927
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-02-09",
+      "asOf": "2026-02-09",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 1,142 BTC — holdings 714,644",
+      "meaning": "+0.16% of the stack. BTC per 1,000 shares 2.2028 → 2.1974 (-0.25%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 1142,
+        "hold": 714644,
+        "bpsBefore": 2.202819353882632,
+        "bpsAfter": 2.1974171330176495
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-02-02",
+      "asOf": "2026-02-02",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 855 BTC — holdings 713,502",
+      "meaning": "+0.12% of the stack. BTC per 1,000 shares 2.2159 → 2.2095 (-0.29%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 855,
+        "hold": 713502,
+        "bpsBefore": 2.2159283835299535,
+        "bpsAfter": 2.2095454573606923
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-01-26",
+      "asOf": "2026-01-26",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 2,932 BTC — holdings 712,647",
+      "meaning": "+0.41% of the stack. BTC per 1,000 shares 2.2227 → 2.2228 (+0.00%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 2932,
+        "hold": 712647,
+        "bpsBefore": 2.2227285397072962,
+        "bpsAfter": 2.2227500272912994
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-01-20",
+      "asOf": "2026-01-20",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 22,305 BTC — holdings 709,715",
+      "meaning": "+3.24% of the stack. BTC per 1,000 shares 2.1685 → 2.2273 (+2.71%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 22305,
+        "hold": 709715,
+        "bpsBefore": 2.168513167358579,
+        "bpsAfter": 2.2273185183325435
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-01-12",
+      "asOf": "2026-01-12",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 13,627 BTC — holdings 687,410",
+      "meaning": "+2.02% of the stack. BTC per 1,000 shares 2.1411 → 2.1753 (+1.60%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 13627,
+        "hold": 687410,
+        "bpsBefore": 2.141073550814442,
+        "bpsAfter": 2.175286146913537
+      },
+      "estimated": true
+    },
+    {
+      "d": "2026-01-05",
+      "asOf": "2026-01-05",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 1,283 BTC — holdings 673,783",
+      "meaning": "+0.19% of the stack. BTC per 1,000 shares 2.1550 → 2.1478 (-0.33%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 1283,
+        "hold": 673783,
+        "bpsBefore": 2.155020476700143,
+        "bpsAfter": 2.147809899045925
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-12-29",
+      "asOf": "2025-12-29",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 1,229 BTC — holdings 672,497",
+      "meaning": "+0.18% of the stack. BTC per 1,000 shares 2.1599 → 2.1575 (-0.11%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 1229,
+        "hold": 672497,
+        "bpsBefore": 2.1598694942903753,
+        "bpsAfter": 2.15752055669091
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-12-15",
+      "asOf": "2025-12-15",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 10,644 BTC — holdings 671,268",
+      "meaning": "+1.61% of the stack. BTC per 1,000 shares 2.1419 → 2.1713 (+1.37%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 10644,
+        "hold": 671268,
+        "bpsBefore": 2.14189281198327,
+        "bpsAfter": 2.171292163179754
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-12-08",
+      "asOf": "2025-12-08",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 10,624 BTC — holdings 660,624",
+      "meaning": "+1.63% of the stack. BTC per 1,000 shares 2.1162 → 2.1457 (+1.39%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 10624,
+        "hold": 660624,
+        "bpsBefore": 2.1161678479224113,
+        "bpsAfter": 2.1456842652289008
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-11-17",
+      "asOf": "2025-11-17",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 8,178 BTC — holdings 649,870",
+      "meaning": "+1.27% of the stack. BTC per 1,000 shares 2.1154 → 2.1372 (+1.03%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 8178,
+        "hold": 649870,
+        "bpsBefore": 2.115386770838484,
+        "bpsAfter": 2.1372240785077214
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-09-22",
+      "asOf": "2025-09-22",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 850 BTC — holdings 639,835",
+      "meaning": "+0.13% of the stack. BTC per 1,000 shares 2.1795 → 2.1770 (-0.11%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 850,
+        "hold": 639835,
+        "bpsBefore": 2.179526973558545,
+        "bpsAfter": 2.1770352022102606
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-09-15",
+      "asOf": "2025-09-15",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 525 BTC — holdings 638,985",
+      "meaning": "+0.08% of the stack. BTC per 1,000 shares 2.1872 → 2.1836 (-0.17%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 525,
+        "hold": 638985,
+        "bpsBefore": 2.187225937294453,
+        "bpsAfter": 2.1835861545769246
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-09-10",
+      "asOf": "2025-09-10",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 1,955 BTC — holdings 638,460",
+      "meaning": "+0.31% of the stack. BTC per 1,000 shares 2.1887 → 2.1886 (-0.01%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 1955,
+        "hold": 638460,
+        "bpsBefore": 2.188693843164899,
+        "bpsAfter": 2.188583005111013
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-09-05",
+      "asOf": "2025-09-05",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 4,048 BTC — holdings 636,505",
+      "meaning": "+0.64% of the stack. BTC per 1,000 shares 2.1843 → 2.1887 (+0.20%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 4048,
+        "hold": 636505,
+        "bpsBefore": 2.184320863150333,
+        "bpsAfter": 2.188693843164899
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-08-29",
+      "asOf": "2025-08-29",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 3,081 BTC — holdings 632,457",
+      "meaning": "+0.49% of the stack. BTC per 1,000 shares 2.1833 → 2.1843 (+0.05%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 3081,
+        "hold": 632457,
+        "bpsBefore": 2.183271354831548,
+        "bpsAfter": 2.184320863150333
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-08-01",
+      "asOf": "2025-08-01",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 21,021 BTC — holdings 628,791",
+      "meaning": "+3.46% of the stack. BTC per 1,000 shares 2.1462 → 2.2105 (+3.00%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 21021,
+        "hold": 628791,
+        "bpsBefore": 2.1461714479427094,
+        "bpsAfter": 2.210480244956215
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-07-25",
+      "asOf": "2025-07-25",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 6,220 BTC — holdings 607,770",
+      "meaning": "+1.03% of the stack. BTC per 1,000 shares 2.1338 → 2.1462 (+0.58%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 6220,
+        "hold": 607770,
+        "bpsBefore": 2.133791625874374,
+        "bpsAfter": 2.1461714479427094
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-07-18",
+      "asOf": "2025-07-18",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 4,225 BTC — holdings 601,550",
+      "meaning": "+0.71% of the stack. BTC per 1,000 shares 2.1284 → 2.1338 (+0.25%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 4225,
+        "hold": 601550,
+        "bpsBefore": 2.12840064850612,
+        "bpsAfter": 2.133791625874374
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-07-04",
+      "asOf": "2025-07-04",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 4,980 BTC — holdings 597,325",
+      "meaning": "+0.84% of the stack. BTC per 1,000 shares 2.1299 → 2.1381 (+0.38%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 4980,
+        "hold": 597325,
+        "bpsBefore": 2.1299482565811947,
+        "bpsAfter": 2.1380837157358954
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-06-20",
+      "asOf": "2025-06-20",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 11,145 BTC — holdings 592,100",
+      "meaning": "+1.92% of the stack. BTC per 1,000 shares 2.1083 → 2.1388 (+1.45%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 11145,
+        "hold": 592100,
+        "bpsBefore": 2.1082704311220786,
+        "bpsAfter": 2.1388423303664315
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-06-06",
+      "asOf": "2025-06-06",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 705 BTC — holdings 580,955",
+      "meaning": "+0.12% of the stack. BTC per 1,000 shares 2.1253 → 2.1180 (-0.34%), so the shares issued outran the coins they bought. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 705,
+        "hold": 580955,
+        "bpsBefore": 2.125317744617571,
+        "bpsAfter": 2.1180397318157125
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-05-30",
+      "asOf": "2025-05-30",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 4,020 BTC — holdings 580,250",
+      "meaning": "+0.70% of the stack. BTC per 1,000 shares 2.1205 → 2.1253 (+0.23%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 4020,
+        "hold": 580250,
+        "bpsBefore": 2.1204649913338507,
+        "bpsAfter": 2.125317744617571
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-05-23",
+      "asOf": "2025-05-23",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 7,390 BTC — holdings 576,230",
+      "meaning": "+1.30% of the stack. BTC per 1,000 shares 2.1031 → 2.1205 (+0.83%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 7390,
+        "hold": 576230,
+        "bpsBefore": 2.1031071148641654,
+        "bpsAfter": 2.1204649913338507
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-05-16",
+      "asOf": "2025-05-16",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 13,390 BTC — holdings 568,840",
+      "meaning": "+2.41% of the stack. BTC per 1,000 shares 2.0633 → 2.1031 (+1.93%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 13390,
+        "hold": 568840,
+        "bpsBefore": 2.063305151483633,
+        "bpsAfter": 2.1031071148641654
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-05-09",
+      "asOf": "2025-05-09",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 1,895 BTC — holdings 555,450",
+      "meaning": "+0.34% of the stack. BTC per 1,000 shares 2.0660 → 2.0633 (-0.13%), so the shares issued outran the coins they bought. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 1895,
+        "hold": 555450,
+        "bpsBefore": 2.0660202364023843,
+        "bpsAfter": 2.063305151483633
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-05-02",
+      "asOf": "2025-05-02",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 15,355 BTC — holdings 553,555",
+      "meaning": "+2.85% of the stack. BTC per 1,000 shares 2.0183 → 2.0660 (+2.37%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 15355,
+        "hold": 553555,
+        "bpsBefore": 2.0182853199931,
+        "bpsAfter": 2.0660202364023843
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-04-25",
+      "asOf": "2025-04-25",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 6,556 BTC — holdings 538,200",
+      "meaning": "+1.23% of the stack. BTC per 1,000 shares 2.0032 → 2.0183 (+0.75%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 6556,
+        "hold": 538200,
+        "bpsBefore": 2.0032480378008297,
+        "bpsAfter": 2.0182853199931
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-04-18",
+      "asOf": "2025-04-18",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 3,459 BTC — holdings 531,644",
+      "meaning": "+0.65% of the stack. BTC per 1,000 shares 1.9998 → 2.0032 (+0.17%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 3459,
+        "hold": 531644,
+        "bpsBefore": 1.999791761320612,
+        "bpsAfter": 2.0032480378008297
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-04-04",
+      "asOf": "2025-04-04",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 22,048 BTC — holdings 528,185",
+      "meaning": "+4.36% of the stack. BTC per 1,000 shares 1.9349 → 2.0095 (+3.85%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 22048,
+        "hold": 528185,
+        "bpsBefore": 1.9349445861065766,
+        "bpsAfter": 2.0094693511078643
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-03-28",
+      "asOf": "2025-03-28",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 6,911 BTC — holdings 506,137",
+      "meaning": "+1.38% of the stack. BTC per 1,000 shares 1.9178 → 1.9349 (+0.89%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 6911,
+        "hold": 506137,
+        "bpsBefore": 1.917842846496047,
+        "bpsAfter": 1.9349445861065766
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-02-28",
+      "asOf": "2025-02-28",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 20,356 BTC — holdings 499,096",
+      "meaning": "+4.25% of the stack. BTC per 1,000 shares 1.8758 → 1.9459 (+3.74%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 20356,
+        "hold": 499096,
+        "bpsBefore": 1.8757860834335731,
+        "bpsAfter": 1.945854061725122
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-02-14",
+      "asOf": "2025-02-14",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 7,633 BTC — holdings 478,740",
+      "meaning": "+1.62% of the stack. BTC per 1,000 shares 1.8644 → 1.8852 (+1.11%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 7633,
+        "hold": 478740,
+        "bpsBefore": 1.864448569133169,
+        "bpsAfter": 1.8851742468989958
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-01-31",
+      "asOf": "2025-01-31",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 10,107 BTC — holdings 471,107",
+      "meaning": "+2.19% of the stack. BTC per 1,000 shares 1.8430 → 1.8739 (+1.68%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 10107,
+        "hold": 471107,
+        "bpsBefore": 1.8429974094092814,
+        "bpsAfter": 1.8738743397187043
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-01-24",
+      "asOf": "2025-01-24",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 11,000 BTC — holdings 461,000",
+      "meaning": "+2.44% of the stack. BTC per 1,000 shares 1.8082 → 1.8430 (+1.92%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 11000,
+        "hold": 461000,
+        "bpsBefore": 1.8082092700861914,
+        "bpsAfter": 1.8429974094092814
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-01-17",
+      "asOf": "2025-01-17",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 2,530 BTC — holdings 450,000",
+      "meaning": "+0.57% of the stack. BTC per 1,000 shares 1.8073 → 1.8082 (+0.05%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 2530,
+        "hold": 450000,
+        "bpsBefore": 1.8072731972503373,
+        "bpsAfter": 1.8082092700861914
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-01-10",
+      "asOf": "2025-01-10",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 1,070 BTC — holdings 447,470",
+      "meaning": "+0.24% of the stack. BTC per 1,000 shares 1.8123 → 1.8073 (-0.27%), so the shares issued outran the coins they bought. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 1070,
+        "hold": 447470,
+        "bpsBefore": 1.8122546412637066,
+        "bpsAfter": 1.8072731972503373
+      },
+      "estimated": true
+    },
+    {
+      "d": "2025-01-03",
+      "asOf": "2025-01-03",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 2,138 BTC — holdings 446,400",
+      "meaning": "+0.48% of the stack. BTC per 1,000 shares 1.8138 → 1.8123 (-0.08%), so the shares issued outran the coins they bought. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 2138,
+        "hold": 446400,
+        "bpsBefore": 1.8137954967644476,
+        "bpsAfter": 1.8122546412637066
+      },
+      "estimated": true
+    },
+    {
+      "d": "2024-12-27",
+      "asOf": "2024-12-27",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 5,262 BTC — holdings 444,262",
+      "meaning": "+1.20% of the stack. BTC per 1,000 shares 1.8032 → 1.8138 (+0.59%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 5262,
+        "hold": 444262,
+        "bpsBefore": 1.8031635457013648,
+        "bpsAfter": 1.8137954967644476
+      },
+      "estimated": true
+    },
+    {
+      "d": "2024-12-20",
+      "asOf": "2024-12-20",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 15,350 BTC — holdings 439,000",
+      "meaning": "+3.62% of the stack. BTC per 1,000 shares 1.7507 → 1.8032 (+3.00%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 15350,
+        "hold": 439000,
+        "bpsBefore": 1.7507211160976255,
+        "bpsAfter": 1.8031635457013648
+      },
+      "estimated": true
+    },
+    {
+      "d": "2024-12-13",
+      "asOf": "2024-12-13",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 21,550 BTC — holdings 423,650",
+      "meaning": "+5.36% of the stack. BTC per 1,000 shares 1.6719 → 1.7507 (+4.72%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 21550,
+        "hold": 423650,
+        "bpsBefore": 1.6718500532197977,
+        "bpsAfter": 1.7507211160976255
+      },
+      "estimated": true
+    },
+    {
+      "d": "2024-12-06",
+      "asOf": "2024-12-06",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 15,400 BTC — holdings 402,100",
+      "meaning": "+3.98% of the stack. BTC per 1,000 shares 1.6177 → 1.6719 (+3.34%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 15400,
+        "hold": 402100,
+        "bpsBefore": 1.6177411865108748,
+        "bpsAfter": 1.6718500532197977
+      },
+      "estimated": true
+    },
+    {
+      "d": "2024-11-29",
+      "asOf": "2024-11-29",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 55,500 BTC — holdings 386,700",
+      "meaning": "+16.76% of the stack. BTC per 1,000 shares 1.3942 → 1.6177 (+16.04%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 55500,
+        "hold": 386700,
+        "bpsBefore": 1.394156497434365,
+        "bpsAfter": 1.6177411865108748
+      },
+      "estimated": true
+    },
+    {
+      "d": "2024-11-22",
+      "asOf": "2024-11-22",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 51,780 BTC — holdings 331,200",
+      "meaning": "+18.53% of the stack. BTC per 1,000 shares 1.1835 → 1.3942 (+17.80%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 51780,
+        "hold": 331200,
+        "bpsBefore": 1.1835417302022975,
+        "bpsAfter": 1.394156497434365
+      },
+      "estimated": true
+    },
+    {
+      "d": "2024-11-15",
+      "asOf": "2024-11-15",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 27,200 BTC — holdings 279,420",
+      "meaning": "+10.78% of the stack. BTC per 1,000 shares 1.0750 → 1.1835 (+10.09%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 27200,
+        "hold": 279420,
+        "bpsBefore": 1.0750424100863547,
+        "bpsAfter": 1.1835417302022975
+      },
+      "estimated": true
+    },
+    {
+      "d": "2024-09-20",
+      "asOf": "2024-09-20",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 7,420 BTC — holdings 252,220",
+      "meaning": "+3.03% of the stack. BTC per 1,000 shares 1.0987 → 1.1245 (+2.35%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 7420,
+        "hold": 252220,
+        "bpsBefore": 1.0986594380141552,
+        "bpsAfter": 1.1245162555953845
+      },
+      "estimated": true
+    },
+    {
+      "d": "2024-09-13",
+      "asOf": "2024-09-13",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 18,300 BTC — holdings 244,800",
+      "meaning": "+8.08% of the stack. BTC per 1,000 shares 1.0233 → 1.0987 (+7.36%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 18300,
+        "hold": 244800,
+        "bpsBefore": 1.0232986812322955,
+        "bpsAfter": 1.0986594380141552
+      },
+      "estimated": true
+    },
+    {
+      "d": "2024-06-21",
+      "asOf": "2024-06-21",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 11,931 BTC — holdings 226,331",
+      "meaning": "+5.56% of the stack. BTC per 1,000 shares 1.0528 → 1.1034 (+4.81%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 11931,
+        "hold": 226331,
+        "bpsBefore": 1.0527969830295412,
+        "bpsAfter": 1.103391623562448
+      },
+      "estimated": true
+    },
+    {
+      "d": "2024-03-22",
+      "asOf": "2024-03-22",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 9,246 BTC — holdings 214,246",
+      "meaning": "+4.51% of the stack. BTC per 1,000 shares 1.1112 → 1.1521 (+3.68%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 9246,
+        "hold": 214246,
+        "bpsBefore": 1.1112315698178663,
+        "bpsAfter": 1.152145154177915
+      },
+      "estimated": true
+    },
+    {
+      "d": "2024-03-15",
+      "asOf": "2024-03-15",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 12,000 BTC — holdings 205,000",
+      "meaning": "+6.22% of the stack. BTC per 1,000 shares 1.0546 → 1.1112 (+5.37%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 12000,
+        "hold": 205000,
+        "bpsBefore": 1.0546159940985218,
+        "bpsAfter": 1.1112315698178663
+      },
+      "estimated": true
+    },
+    {
+      "d": "2024-03-01",
+      "asOf": "2024-03-01",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 3,000 BTC — holdings 193,000",
+      "meaning": "+1.58% of the stack. BTC per 1,000 shares 1.0552 → 1.0632 (+0.75%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 3000,
+        "hold": 193000,
+        "bpsBefore": 1.0552272626294044,
+        "bpsAfter": 1.0631851484603094
+      },
+      "estimated": true
+    },
+    {
+      "d": "2024-02-09",
+      "asOf": "2024-02-09",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 850 BTC — holdings 190,000",
+      "meaning": "+0.45% of the stack. BTC per 1,000 shares 1.0770 → 1.0728 (-0.39%), so the shares issued outran the coins they bought. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 850,
+        "hold": 190000,
+        "bpsBefore": 1.0769677507515714,
+        "bpsAfter": 1.072797800199879
+      },
+      "estimated": true
+    },
+    {
+      "d": "2023-12-29",
+      "asOf": "2023-12-29",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 14,620 BTC — holdings 189,150",
+      "meaning": "+8.38% of the stack. BTC per 1,000 shares 1.0428 → 1.1233 (+7.72%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 14620,
+        "hold": 189150,
+        "bpsBefore": 1.042785701055751,
+        "bpsAfter": 1.123285230714413
+      },
+      "estimated": true
+    },
+    {
+      "d": "2023-12-01",
+      "asOf": "2023-12-01",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 16,130 BTC — holdings 174,530",
+      "meaning": "+10.18% of the stack. BTC per 1,000 shares 0.9701 → 1.0622 (+9.50%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 16130,
+        "hold": 174530,
+        "bpsBefore": 0.9700592201556749,
+        "bpsAfter": 1.0622059655892253
+      },
+      "estimated": true
+    },
+    {
+      "d": "2023-09-29",
+      "asOf": "2023-09-29",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 5,445 BTC — holdings 158,245",
+      "meaning": "+3.56% of the stack. BTC per 1,000 shares 0.9915 → 1.0201 (+2.88%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 5445,
+        "hold": 158245,
+        "bpsBefore": 0.991512445817219,
+        "bpsAfter": 1.0200930844206075
+      },
+      "estimated": true
+    },
+    {
+      "d": "2023-08-04",
+      "asOf": "2023-08-04",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 467 BTC — holdings 152,800",
+      "meaning": "+0.31% of the stack. BTC per 1,000 shares 1.0438 → 1.0397 (-0.39%), so the shares issued outran the coins they bought. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 467,
+        "hold": 152800,
+        "bpsBefore": 1.0437627615693474,
+        "bpsAfter": 1.0396891819251939
+      },
+      "estimated": true
+    },
+    {
+      "d": "2023-06-30",
+      "asOf": "2023-06-30",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 12,333 BTC — holdings 152,333",
+      "meaning": "+8.81% of the stack. BTC per 1,000 shares 0.9940 → 1.0738 (+8.03%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 12333,
+        "hold": 152333,
+        "bpsBefore": 0.9939934396432984,
+        "bpsAfter": 1.0737808918274991
+      },
+      "estimated": true
+    },
+    {
+      "d": "2023-04-07",
+      "asOf": "2023-04-07",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 1,045 BTC — holdings 140,000",
+      "meaning": "+0.75% of the stack. BTC per 1,000 shares 1.0805 → 1.0800 (-0.04%), so the shares issued outran the coins they bought. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 1045,
+        "hold": 140000,
+        "bpsBefore": 1.0804873876395757,
+        "bpsAfter": 1.0800469048941554
+      },
+      "estimated": true
+    },
+    {
+      "d": "2023-03-31",
+      "asOf": "2023-03-31",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 6,455 BTC — holdings 138,955",
+      "meaning": "+4.87% of the stack. BTC per 1,000 shares 1.0385 → 1.0805 (+4.04%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 6455,
+        "hold": 138955,
+        "bpsBefore": 1.038531477301229,
+        "bpsAfter": 1.0804873876395757
+      },
+      "estimated": true
+    },
+    {
+      "d": "2022-12-30",
+      "asOf": "2022-12-30",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 810 BTC — holdings 132,500",
+      "meaning": "+0.62% of the stack. BTC per 1,000 shares 1.1409 → 1.1474 (+0.57%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 810,
+        "hold": 132500,
+        "bpsBefore": 1.1408645932599843,
+        "bpsAfter": 1.1473748928395149
+      },
+      "estimated": true
+    },
+    {
+      "d": "2022-12-23",
+      "asOf": "2022-12-23",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 1,690 BTC — holdings 131,690",
+      "meaning": "+1.30% of the stack. BTC per 1,000 shares 1.1267 → 1.1409 (+1.26%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 1690,
+        "hold": 131690,
+        "bpsBefore": 1.126711735136072,
+        "bpsAfter": 1.1408645932599843
+      },
+      "estimated": true
+    },
+    {
+      "d": "2022-09-23",
+      "asOf": "2022-09-23",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 301 BTC — holdings 130,000",
+      "meaning": "+0.23% of the stack. BTC per 1,000 shares 1.1305 → 1.1327 (+0.19%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 301,
+        "hold": 130000,
+        "bpsBefore": 1.1305405193378835,
+        "bpsAfter": 1.1326607071287924
+      },
+      "estimated": true
+    },
+    {
+      "d": "2022-07-01",
+      "asOf": "2022-07-01",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 481 BTC — holdings 129,699",
+      "meaning": "+0.37% of the stack. BTC per 1,000 shares 1.1323 → 1.1360 (+0.33%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 481,
+        "hold": 129699,
+        "bpsBefore": 1.132329100835108,
+        "bpsAfter": 1.1360363674584824
+      },
+      "estimated": true
+    },
+    {
+      "d": "2022-04-08",
+      "asOf": "2022-04-08",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 4,167 BTC — holdings 129,218",
+      "meaning": "+3.33% of the stack. BTC per 1,000 shares 1.1017 → 1.1379 (+3.29%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 4167,
+        "hold": 129218,
+        "bpsBefore": 1.1016641558967852,
+        "bpsAfter": 1.1378630175586903
+      },
+      "estimated": true
+    },
+    {
+      "d": "2022-02-04",
+      "asOf": "2022-02-04",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 660 BTC — holdings 125,051",
+      "meaning": "+0.53% of the stack. BTC per 1,000 shares 1.1003 → 1.1056 (+0.49%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 660,
+        "hold": 125051,
+        "bpsBefore": 1.1002503162121762,
+        "bpsAfter": 1.1055991229543707
+      },
+      "estimated": true
+    },
+    {
+      "d": "2021-12-31",
+      "asOf": "2021-12-31",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 1,913 BTC — holdings 124,391",
+      "meaning": "+1.56% of the stack. BTC per 1,000 shares 1.0884 → 1.1022 (+1.27%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 1913,
+        "hold": 124391,
+        "bpsBefore": 1.0884127647095416,
+        "bpsAfter": 1.102219662398653
+      },
+      "estimated": true
+    },
+    {
+      "d": "2021-12-10",
+      "asOf": "2021-12-10",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 1,434 BTC — holdings 122,478",
+      "meaning": "+1.18% of the stack. BTC per 1,000 shares 1.0851 → 1.0947 (+0.89%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 1434,
+        "hold": 122478,
+        "bpsBefore": 1.0850903614457832,
+        "bpsAfter": 1.0947460626754142
+      },
+      "estimated": true
+    },
+    {
+      "d": "2021-12-03",
+      "asOf": "2021-12-03",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 7,002 BTC — holdings 121,044",
+      "meaning": "+6.14% of the stack. BTC per 1,000 shares 1.0253 → 1.0851 (+5.83%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 7002,
+        "hold": 121044,
+        "bpsBefore": 1.0253178213727006,
+        "bpsAfter": 1.0850903614457832
+      },
+      "estimated": true
+    },
+    {
+      "d": "2021-09-17",
+      "asOf": "2021-09-17",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "w",
+      "kind": "btc",
+      "headline": "Added 8,957 BTC — holdings 114,042",
+      "meaning": "+8.52% of the stack. BTC per 1,000 shares 0.9762 → 1.0562 (+8.20%), so the coins bought outran the shares issued to pay for them. aggregated over the week, from the weekly backfill.",
+      "figs": {
+        "added": 8957,
+        "hold": 114042,
+        "bpsBefore": 0.9762362624601693,
+        "bpsAfter": 1.0562476266335707
+      },
+      "estimated": true
+    },
+    {
+      "d": "2021-06-21",
+      "asOf": "2021-06-21",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 13,006 BTC — holdings 105,085",
+      "meaning": "+14.12% of the stack. BTC per 1,000 shares 0.8876 → 1.0117 (+13.97%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 13006,
+        "hold": 105085,
+        "bpsBefore": 0.8876453236161721,
+        "bpsAfter": 1.0116583553150933
+      },
+      "estimated": true
+    },
+    {
+      "d": "2021-05-18",
+      "asOf": "2021-05-18",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 229 BTC — holdings 92,079",
+      "meaning": "+0.25% of the stack. BTC per 1,000 shares 0.8983 → 0.9002 (+0.20%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 229,
+        "hold": 92079,
+        "bpsBefore": 0.8983324367939753,
+        "bpsAfter": 0.900158370156024
+      },
+      "estimated": true
+    },
+    {
+      "d": "2021-05-13",
+      "asOf": "2021-05-13",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 271 BTC — holdings 91,850",
+      "meaning": "+0.30% of the stack. BTC per 1,000 shares 0.8977 → 0.9000 (+0.25%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 271,
+        "hold": 91850,
+        "bpsBefore": 0.897718918177095,
+        "bpsAfter": 0.8999696254127515
+      },
+      "estimated": true
+    },
+    {
+      "d": "2021-04-05",
+      "asOf": "2021-04-05",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 253 BTC — holdings 91,579",
+      "meaning": "+0.28% of the stack. BTC per 1,000 shares 0.9123 → 0.9131 (+0.09%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 253,
+        "hold": 91579,
+        "bpsBefore": 0.9123020828130463,
+        "bpsAfter": 0.9131327835997248
+      },
+      "estimated": true
+    },
+    {
+      "d": "2021-03-12",
+      "asOf": "2021-03-12",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 262 BTC — holdings 91,326",
+      "meaning": "+0.29% of the stack. BTC per 1,000 shares 0.9187 → 0.9209 (+0.24%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 262,
+        "hold": 91326,
+        "bpsBefore": 0.918659900935164,
+        "bpsAfter": 0.9208663561013976
+      },
+      "estimated": true
+    },
+    {
+      "d": "2021-03-05",
+      "asOf": "2021-03-05",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 205 BTC — holdings 91,064",
+      "meaning": "+0.23% of the stack. BTC per 1,000 shares 0.9196 → 0.9213 (+0.18%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 205,
+        "hold": 91064,
+        "bpsBefore": 0.9196068905487743,
+        "bpsAfter": 0.9212528326319197
+      },
+      "estimated": true
+    },
+    {
+      "d": "2021-03-01",
+      "asOf": "2021-03-01",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 328 BTC — holdings 90,859",
+      "meaning": "+0.36% of the stack. BTC per 1,000 shares 0.9189 → 0.9209 (+0.22%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 328,
+        "hold": 90859,
+        "bpsBefore": 0.9188912121150605,
+        "bpsAfter": 0.9209117998824269
+      },
+      "estimated": true
+    },
+    {
+      "d": "2021-02-24",
+      "asOf": "2021-02-24",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 19,452 BTC — holdings 90,531",
+      "meaning": "+27.37% of the stack. BTC per 1,000 shares 0.7225 → 0.9198 (+27.31%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 19452,
+        "hold": 90531,
+        "bpsBefore": 0.7224723783580497,
+        "bpsAfter": 0.919759420495992
+      },
+      "estimated": true
+    },
+    {
+      "d": "2021-02-02",
+      "asOf": "2021-02-02",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 295 BTC — holdings 71,079",
+      "meaning": "+0.42% of the stack. BTC per 1,000 shares 0.7270 → 0.7297 (+0.37%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 295,
+        "hold": 71079,
+        "bpsBefore": 0.7270411569551865,
+        "bpsAfter": 0.7297189084861303
+      },
+      "estimated": true
+    },
+    {
+      "d": "2021-01-22",
+      "asOf": "2021-01-22",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 314 BTC — holdings 70,784",
+      "meaning": "+0.45% of the stack. BTC per 1,000 shares 0.7276 → 0.7305 (+0.40%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 314,
+        "hold": 70784,
+        "bpsBefore": 0.7276425702396564,
+        "bpsAfter": 0.7305302701921688
+      },
+      "estimated": true
+    },
+    {
+      "d": "2020-12-21",
+      "asOf": "2020-12-21",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 29,646 BTC — holdings 70,470",
+      "meaning": "+72.62% of the stack. BTC per 1,000 shares 0.4258 → 0.7351 (+72.62%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 29646,
+        "hold": 70470,
+        "bpsBefore": 0.42582664024199435,
+        "bpsAfter": 0.7350578908939188
+      },
+      "estimated": true
+    },
+    {
+      "d": "2020-12-04",
+      "asOf": "2020-12-04",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 2,574 BTC — holdings 40,824",
+      "meaning": "+6.73% of the stack. BTC per 1,000 shares 0.3990 → 0.4258 (+6.73%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 2574,
+        "hold": 40824,
+        "bpsBefore": 0.3989777824136852,
+        "bpsAfter": 0.42582664024199435
+      },
+      "estimated": true
+    },
+    {
+      "d": "2020-09-14",
+      "asOf": "2020-09-14",
+      "form": null,
+      "url": null,
+      "src": "derived",
+      "res": "d",
+      "kind": "btc",
+      "headline": "Added 16,796 BTC — holdings 38,250",
+      "meaning": "+78.29% of the stack. BTC per 1,000 shares 0.2238 → 0.3990 (+78.29%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 16796,
+        "hold": 38250,
+        "bpsBefore": 0.22378220506936475,
+        "bpsAfter": 0.3989777824136852
+      },
+      "estimated": true
+    }
+  ],
+  "updatedAt": "2026-09-23T04:10:17.859Z",
+  "note": "Entries marked derived are reconstructed from the price/holdings backfill, not parsed from a filing: no purchase price, and Sep 2021–Sep 2025 is weekly so a week's buying shows as one line. Decreases are not backfilled at all, because a step down in the reconstructed series cannot be told apart from a later revision to the holdings record. Entries from the filings job carry a link to the filing they came from, and do report disposals."
+}

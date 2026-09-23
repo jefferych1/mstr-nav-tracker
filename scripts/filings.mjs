@@ -1,29 +1,48 @@
 // Filings refresh: walks every Strategy 8-K published since the last run and updates
 // bitcoin holdings, the USD reserve and the share count, then refreshes the capital stack
-// when a new 10-Q/10-K appears.
+// when a new 10-Q/10-K appears. Every change it makes is also written to data/events.json
+// as a one-line note with the arithmetic that says what the change meant.
 //
 // Design rules, because this runs with nobody watching:
 //   * Every figure written must have been parsed out of a filing in this run.
 //   * Every figure is sanity-checked against the stored one before it is accepted.
 //   * A parse that fails leaves the stored value alone and raises a review flag that the
 //     page displays, rather than guessing.
+//   * The log describes the delta that was actually applied, never a second independent
+//     reading, so the log and the headline figures cannot drift apart.
 //   * Catch-up is idempotent: it processes each accession number exactly once, so running
 //     it weekly, monthly or after a three-month gap all give the same answer.
 import {
   readJson, writeJson, secSubmissions, recentFilings, secDocText, log, warn,
 } from "./lib.mjs";
 import {
-  parseHoldings, parseAvgCost, parseUsdReserve, parseAsOf, parseAtmShares,
+  parseHoldings, parseAvgCost, parseUsdReserve, parseAsOf, parseAtmShares, parsePrefSales,
 } from "./parse.mjs";
+import {
+  btcEvent, sharesEvent, prefEvent, reserveEvent, stackEvent, mergeEvents,
+} from "./events.mjs";
 
 const current = await readJson("current.json");
 const state = await readJson("filings-state.json", {
   processed: [], lastRun: null, review: [], since: new Date().toISOString().slice(0, 10),
 });
+const eventsFile = await readJson("events.json", { events: [] });
 if (!current) throw new Error("data/current.json is missing — cannot run");
 
 const review = [];
 const changes = [];
+const fresh = [];
+
+const totalOf = (list, key) => Array.isArray(list) ? list.reduce((a, x) => a + (x[key] || 0), 0) : null;
+// The snapshot every event is computed against.
+const snap = () => ({
+  hold: current.btcHoldings,
+  avgCost: current.avgCostPerBtc,
+  shares: current.basicShares,
+  debt: totalOf(current.converts, "principal"),
+  pref: totalOf(current.preferreds, "notional"),
+  cash: current.usdReserve,
+});
 
 /* ---------------------------------------------------------------- */
 /* walk new filings                                                  */
@@ -52,8 +71,6 @@ const pending = filings
 
 log(`${pending.length} unprocessed filing(s)`);
 
-let atmSharesAdded = 0;
-
 for (const f of pending) {
   let text;
   try {
@@ -65,6 +82,8 @@ for (const f of pending) {
   }
 
   const asOf = parseAsOf(text) || f.reportDate || f.filingDate;
+  const meta = { d: f.filingDate, asOf, form: f.form, url: f.url, src: "filing" };
+  const before = snap();
 
   if (f.form === "8-K") {
     const holdings = parseHoldings(text);
@@ -94,6 +113,8 @@ for (const f of pending) {
       current.usdReserveAsOf = asOf;
     }
 
+    // Class A sold under the ATM. Applied per filing rather than in one lump at the end,
+    // so each event describes exactly the shares that filing added.
     const atm = parseAtmShares(text);
     if (atm == null) {
       review.push(`8-K ${f.filingDate}: could not read ATM share sales — share count may drift. ${f.url}`);
@@ -101,9 +122,30 @@ for (const f of pending) {
       // These sales are already inside the stored share count; counting them again would
       // inflate the share base and understate mNAV.
       log(`8-K ${f.filingDate}: ${atm.toLocaleString()} ATM shares already in the stored count — skipped`);
-    } else {
-      atmSharesAdded += atm;
+    } else if (atm > 0) {
+      // The diluted overhang (converts, options, RSUs, STRK conversion) moves slowly, so
+      // it is carried across and reset whenever a 10-Q gives an exact figure.
+      const gap = (current.dilutedShares || 0) - (current.basicShares || 0);
+      const prevBasic = current.basicShares;
+      current.basicShares = prevBasic + atm;
+      current.dilutedShares = current.basicShares + gap;
+      current.sharesAsOf = asOf;
+      current.sharesSource = `rolled forward from filed ATM sales (+${atm.toLocaleString()} shares, 8-K ${f.filingDate})`;
+      changes.push(`shares ${prevBasic.toLocaleString()} → ${current.basicShares.toLocaleString()}`);
     }
+
+    const after = snap();
+    // A purchase and the shares issued to fund it are one story, so they go in one line;
+    // a share sale with no coins bought gets its own.
+    const btc = btcEvent(meta, before, after);
+    if (btc) fresh.push(btc);
+    else { const sh = sharesEvent(meta, before, after); if (sh) fresh.push(sh); }
+
+    const res = reserveEvent(meta, before, after);
+    if (res) fresh.push(res);
+
+    const pref = prefEvent(meta, parsePrefSales(text), before);
+    if (pref) fresh.push(pref);
   }
 
   if (f.form === "10-Q" || f.form === "10-K") {
@@ -111,25 +153,10 @@ for (const f of pending) {
     // that is not safe to scrape blind, so flag it for a human rather than guess.
     review.push(`New ${f.form} filed ${f.filingDate}: check the convertible notes and preferred notional in data/overrides.json against ${f.url}`);
     current.capitalStackStale = true;
+    fresh.push(stackEvent(meta));
   }
 
   state.processed.push(f.accession);
-}
-
-/* ---------------------------------------------------------------- */
-/* share count                                                       */
-/* ---------------------------------------------------------------- */
-// Basic shares roll forward by the ATM sales disclosed in each 8-K — plain arithmetic on a
-// filed number. The diluted overhang (converts, options, RSUs, STRK conversion) moves
-// slowly, so it is carried across and reset whenever a 10-Q gives an exact figure.
-if (atmSharesAdded > 0) {
-  const prevBasic = current.basicShares;
-  const gap = (current.dilutedShares || 0) - (current.basicShares || 0);
-  current.basicShares = prevBasic + atmSharesAdded;
-  current.dilutedShares = current.basicShares + gap;
-  current.sharesAsOf = current.holdingsAsOf || current.sharesAsOf;
-  current.sharesSource = `rolled forward from filed ATM sales (+${atmSharesAdded.toLocaleString()} shares since last reset)`;
-  changes.push(`shares ${prevBasic.toLocaleString()} → ${current.basicShares.toLocaleString()}`);
 }
 
 /* ---------------------------------------------------------------- */
@@ -146,10 +173,15 @@ state.review = review;
 // Keep the processed list from growing without bound.
 state.processed = state.processed.slice(-400);
 
+eventsFile.events = mergeEvents(eventsFile.events, fresh);
+eventsFile.updatedAt = new Date().toISOString();
+
 await writeJson("current.json", current);
 await writeJson("filings-state.json", state);
+await writeJson("events.json", eventsFile);
 
 log(changes.length ? `changes: ${changes.join("; ")}` : "no changes");
+log(`${fresh.length} new log entr${fresh.length === 1 ? "y" : "ies"}`);
 if (review.length) {
   log("--- needs review ---");
   review.forEach((r) => log(" *", r));

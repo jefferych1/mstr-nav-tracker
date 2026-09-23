@@ -27,6 +27,11 @@ img{max-width:100%}
   --good:#1f7a3a; --bad:#b3362e; --warn:#b07500;
   --focus:#2a78d6;
   --radius:6px;
+  /* Explorer series. Six-slot categorical set, validated for both themes against the
+     surface colour: lightness band, chroma floor, adjacent-pair CVD separation, the
+     normal-vision floor and contrast all pass. Every line is also labelled at its end,
+     so identity never rests on colour alone. */
+  --s1:#70710b; --s2:#07769c; --s3:#a94e00; --s4:#047f62; --s5:#761eff; --s6:#be037d;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -36,6 +41,7 @@ img{max-width:100%}
     --accent:#e6884a; --accent-soft:#33261c;
     --ev:#3987e5; --mcap:#199e70; --btc:#d95926; --mstr:#9085e9;
     --good:#4fbf6f; --bad:#e66767; --warn:#d9a021;
+  --s1:#989900; --s2:#149fd1; --s3:#e26b09; --s4:#11ab86; --s5:#9476ff; --s6:#fe0ca9;
   }
 }
 :root[data-theme="dark"]{
@@ -45,6 +51,7 @@ img{max-width:100%}
   --accent:#e6884a; --accent-soft:#33261c;
   --ev:#3987e5; --mcap:#199e70; --btc:#d95926; --mstr:#9085e9;
   --good:#4fbf6f; --bad:#e66767; --warn:#d9a021;
+  --s1:#989900; --s2:#149fd1; --s3:#e26b09; --s4:#11ab86; --s5:#9476ff; --s6:#fe0ca9;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
@@ -165,6 +172,30 @@ svg.chart{width:100%;height:auto;display:block}
 .tip .r span:first-child{display:inline-flex;align-items:center;gap:6px}
 .tip i{width:8px;height:8px;border-radius:2px;display:inline-block}
 .chart-note{font-size:12.5px;color:var(--ink-3);margin:0}
+.chart .end-lbl{font-family:"IBM Plex Sans",sans-serif;font-size:11.5px;font-weight:600}
+
+/* explorer controls */
+.picks{display:flex;flex-wrap:wrap;gap:7px}
+.pick{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);font-size:12.5px;color:var(--ink-2)}
+.pick i{width:9px;height:9px;border-radius:2px;flex:none;opacity:.35}
+.pick:hover{background:var(--surface-2)}
+.pick[aria-pressed=true]{background:var(--surface-2);border-color:var(--ink-3);color:var(--ink);font-weight:500}
+.pick[aria-pressed=true] i{opacity:1}
+
+/* filing log */
+ol.log{list-style:none;margin:0;padding:0}
+ol.log li{display:grid;grid-template-columns:108px 1fr;gap:18px;padding:13px 0;border-top:1px solid var(--line)}
+ol.log li:first-child{border-top:0;padding-top:0}
+.log .when{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-3)}
+.log .what{display:grid;gap:3px;min-width:0}
+.log .hl{font-weight:500}
+.log .mn{font-size:13px;color:var(--ink-2)}
+.log .tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;padding:1px 6px;border-radius:3px;border:1px solid var(--line-strong);color:var(--ink-3);margin-left:7px;vertical-align:1.5px;font-weight:500}
+.log .tag.est{border-color:var(--warn);color:var(--warn)}
+.log .tag.rev{border-color:var(--accent);color:var(--accent)}
+.log a.src{color:var(--ev);text-decoration:none;font-size:12.5px}
+.log a.src:hover{text-decoration:underline}
+@media (max-width:560px){ol.log li{grid-template-columns:1fr;gap:4px}}
 
 /* inputs */
 details.inputs{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
@@ -351,19 +382,38 @@ details.inputs[open] summary{border-bottom:1px solid var(--line)}
   <section class="panel">
     <div class="chart-head">
       <div>
-        <h2>Share price against the ratio</h2>
-        <div class="legend" style="margin-top:6px">
-          <span><i style="background:var(--mstr)"></i>MSTR price</span>
-          <span><i style="background:var(--mcap)"></i>Market cap mNAV</span>
-          <span style="color:var(--ink-3)">shared time axis, separate scales · follows the range selected above</span>
-        </div>
+        <h2>Explore</h2>
+        <div class="hint" style="margin-top:6px">Pick any series. Follows the range selected above.</div>
+      </div>
+      <div class="seg" role="group" aria-label="Chart mode" id="ex-mode">
+        <button data-m="index" aria-pressed="true">Indexed</button>
+        <button data-m="panels" aria-pressed="false">Separate panels</button>
       </div>
     </div>
+    <div class="picks" id="ex-series"></div>
     <div class="chart-wrap">
-      <svg class="chart" id="chart2" viewBox="0 0 1100 460" role="img" aria-label="MSTR price and market-cap mNAV, indexed"></svg>
+      <svg class="chart" id="chart2" viewBox="0 0 1100 360" role="img" aria-label="Explorer chart"></svg>
       <div class="tip" id="tip2"></div>
     </div>
     <p class="chart-note" id="chart2-note"></p>
+  </section>
+
+  <section class="panel" id="log-panel" hidden>
+    <div class="chart-head">
+      <div>
+        <h2>Filing log</h2>
+        <div class="hint" style="margin-top:6px">What changed, and what it did to the numbers above.</div>
+      </div>
+      <div class="seg" role="group" aria-label="Log source" id="log-filter">
+        <button data-f="all" aria-pressed="true">All</button>
+        <button data-f="filing" aria-pressed="false">From filings only</button>
+      </div>
+    </div>
+    <ol class="log" id="log-list"></ol>
+    <div class="actions">
+      <button class="btn small" id="log-more" hidden>Show more</button>
+      <span class="status" id="log-note"></span>
+    </div>
   </section>
 
   <details class="inputs" id="inputs">
@@ -417,6 +467,11 @@ const S = {
   kBtc: 1, kMstr: 1,   // scenario multipliers on the live price
   target: 1.0,
   range: 365,
+  sel: new Set(["hold", "bps", "mstr"]),   // the flywheel question, as the default view
+  exMode: "index",
+  events: [],
+  logFilter: "all",
+  logShown: 12,
   history: [],         // [{d, mstr, btc, hold, basic, dil, debt, pref, cash, est}]
 };
 
@@ -662,7 +717,7 @@ function renderChart() {
   const wk = chartPts.filter(p=>p.res==="w").length;
   const early = chartPts.length && chartPts[0].d < "2021-06-01";
   $("chart-note").textContent = `${chartPts.length} points${wk? ` (${wk} weekly closes for Sep 2021–Sep 2025, daily elsewhere)`:""} · ${S.basis==="basic"?"basic":"assumed diluted"} shares${estCount? ` · backfilled points use actual split-adjusted MSTR and BTC closes with share counts interpolated between year-end filed anchors.`:""}${early ? " Before 2021 the ratio mostly reflects the legacy software business — Strategy held only 21–70k BTC against a ~$1.5bn market cap." : ""}${showEv ? "" : ` The EV-basis line appears once the daily job has recorded ${EV_MIN} days of capital-stack data (${evPts} so far) — debt, preferred and reserve balances were not captured daily before this site existed.`}`;
-  renderPriceChart(xs);
+  renderExplorer();
   // hover
   const hit = $("hit"), cross = $("cross"), tip = $("tip");
   const move = ev => {
@@ -687,131 +742,239 @@ function renderChart() {
   hit.addEventListener("pointermove", move);
   hit.addEventListener("pointerleave", () => { cross.style.display="none"; tip.style.display="none"; });
 }
-// MSTR price and market-cap mNAV, stacked on a shared time axis.
+// ---------- explorer ----------
+// One chart for every series on the page, because the alternative — a new panel per
+// question — turns into a scroll of near-identical rectangles that are hard to compare.
 //
-// These are different kinds of quantity — a price that has ranged from $13 to $422, and a
-// ratio that lives between about 0.7 and 8 — so they get separate panels rather than one
-// plot with two y-axes. Overlaying them would mean choosing where to put each axis, and
-// that choice alone decides whether the two lines appear to track or diverge. Stacked, each
-// series is read in its own real units and compared by looking up and down the same date.
-function renderPriceChart(xs) {
-  const svg = $("chart2");
-  const W = 1100, L = 64, R = 18;
-  const AT = 26, AH = 168;              // price panel top / height
-  const BT = AT + AH + 60, BH = 150;    // mNAV panel
-  const H = BT + BH + 44;
-  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+// The hard part is that these quantities are not commensurable: bitcoin held is ~845,000,
+// BTC per 1,000 shares is ~2, the share price is ~$135 and mNAV is ~0.85. Plotting them on
+// one axis makes five of the six a flat line on the floor, and giving each its own axis
+// (a dual- or multi-axis chart) is worse: where you put each axis silently decides whether
+// the lines appear to track or diverge, so the reader is being told a conclusion by the
+// layout rather than by the data. So there are exactly two honest ways to see them
+// together, and the chart offers both:
+//
+//   Indexed   every selected series rebased to 100 at the left edge. One axis, and the
+//             comparison is of *rates of change*, which is genuinely comparable across
+//             units — "has BTC per share grown faster than the share price?"
+//   Panels    each series alone in its own strip with its own real axis, stacked on a
+//             shared time axis. Levels in native units; compare by reading up and down.
+//
+// Colours are the six-slot categorical set validated for both themes; every line is also
+// labelled at its right-hand end, so identity never rests on colour alone.
+const SERIES = [
+  { k: "shares", name: "Shares outstanding",    short: "Shares",      c: "--s1",
+    v: p => S.basis === "basic" ? p.basic : p.dil,
+    fmt: v => fmt.int(v), ax: v => (v / 1e6).toFixed(0) + "m" },
+  { k: "mnav",   name: "mNAV, market-cap basis", short: "mNAV",       c: "--s2",
+    v: p => p.mc,
+    fmt: v => fmt.x(v), ax: v => v.toFixed(2) + "×" },
+  { k: "btc",    name: "Bitcoin price",          short: "BTC",        c: "--s3",
+    v: p => p.btc,
+    fmt: v => fmt.usd0(v), ax: v => "$" + (v >= 1000 ? (v / 1000).toFixed(v < 10000 ? 1 : 0) + "k" : v.toFixed(0)) },
+  { k: "hold",   name: "Bitcoin held",           short: "BTC held",   c: "--s4",
+    v: p => p.hold,
+    fmt: v => fmt.int(v) + " BTC", ax: v => (v / 1000).toFixed(v < 10000 ? 1 : 0) + "k" },
+  { k: "mstr",   name: "MSTR share price",       short: "MSTR",       c: "--s5",
+    v: p => p.mstr,
+    fmt: v => fmt.usd2(v), ax: v => "$" + v.toFixed(v < 10 ? 1 : 0) },
+  { k: "bps",    name: "BTC per 1,000 shares",   short: "BTC/1k sh",  c: "--s6",
+    v: p => { const sh = S.basis === "basic" ? p.basic : p.dil; return sh > 0 ? p.hold / sh * 1000 : null; },
+    fmt: v => v.toFixed(4), ax: v => v.toFixed(2) },
+];
+const SER = Object.fromEntries(SERIES.map(s => [s.k, s]));
 
-  const pts = chartPts.filter(p => p.mstr > 0 && p.mc != null);
-  if (pts.length < 2) { svg.innerHTML = ""; $("chart2-note").textContent = ""; return; }
+function explorerChips() {
+  const box = $("ex-series");
+  box.innerHTML = SERIES.map(s =>
+    `<button class="pick" data-k="${s.k}" aria-pressed="${S.sel.has(s.k)}">` +
+    `<i style="background:var(${s.c})"></i>${s.name}</button>`).join("");
+}
+
+// A line is drawn on a log axis when its range is wide enough that a linear one would
+// crush the early years into the baseline. Ratios like mNAV stay linear.
+const wantsLog = (lo, hi) => lo > 0 && hi / lo > 8;
+
+function renderExplorer() {
+  const svg = $("chart2"), tip = $("tip2"), note = $("chart2-note");
+  const sel = SERIES.filter(s => S.sel.has(s.k));
+  const W = 1100, L = 66, R = 96;           // right gutter holds the end-of-line labels
+
+  if (!sel.length) {
+    svg.setAttribute("viewBox", "0 0 1100 120");
+    svg.innerHTML = `<text x="550" y="64" text-anchor="middle">Pick a series above to plot it.</text>`;
+    note.textContent = "";
+    return;
+  }
+
+  // Points that have a value for at least one selected series.
+  const pts = chartPts.filter(p => sel.some(s => { const v = s.v(p); return v != null && isFinite(v) && v > 0; }));
+  if (pts.length < 2) {
+    svg.setAttribute("viewBox", "0 0 1100 120");
+    svg.innerHTML = `<text x="550" y="64" text-anchor="middle">Not enough history in this range.</text>`;
+    note.textContent = "";
+    return;
+  }
   const t = pts.map(p => new Date(p.d).getTime());
   const x0 = t[0], x1 = t[t.length - 1];
   const X = v => L + (v - x0) / (x1 - x0 || 1) * (W - L - R);
 
-  // Price: log, because a 30x range on a linear axis flattens everything before 2024.
-  const prices = pts.map(p => p.mstr);
-  const pLo = Math.log(Math.min(...prices) * 0.9), pHi = Math.log(Math.max(...prices) * 1.1);
-  const YA = v => AT + (pHi - Math.log(v)) / (pHi - pLo) * AH;
+  const vals = s => pts.map(p => { const v = s.v(p); return v != null && isFinite(v) ? v : null; });
+  const indexed = S.exMode === "index";
 
-  // mNAV: linear, and always include 1.0 so parity stays on screen.
-  const ms = pts.map(p => p.mc);
-  let mLo = Math.min(1, ...ms), mHi = Math.max(1, ...ms);
-  const pad = (mHi - mLo) * 0.1 || 0.1; mLo -= pad; mHi += pad;
-  const YB = v => BT + (mHi - v) / (mHi - mLo) * BH;
-
-  let g = "";
-
-  // price ticks on a 1/2/5 ladder
-  const ladder = [];
-  for (let e = -1; e <= 4; e++) for (const m of [1, 1.5, 2, 3, 5, 7]) ladder.push(m * Math.pow(10, e));
-  for (const v of ladder) {
-    if (Math.log(v) < pLo || Math.log(v) > pHi) continue;
-    g += `<line class="grid" x1="${L}" x2="${W - R}" y1="${YA(v).toFixed(1)}" y2="${YA(v).toFixed(1)}"/>`
-       + `<text x="${L - 8}" y="${(YA(v) + 4).toFixed(1)}" text-anchor="end">$${v >= 1 ? v : v.toFixed(1)}</text>`;
-  }
-  for (const v of niceTicks(mLo, mHi, 4)) {
-    g += `<line class="grid" x1="${L}" x2="${W - R}" y1="${YB(v).toFixed(1)}" y2="${YB(v).toFixed(1)}"/>`
-       + `<text x="${L - 8}" y="${(YB(v) + 4).toFixed(1)}" text-anchor="end">${v.toFixed(2)}×</text>`;
-  }
-  g += `<line class="ref" x1="${L}" x2="${W - R}" y1="${YB(1).toFixed(1)}" y2="${YB(1).toFixed(1)}"/>`
-     + `<text class="ref-lbl" x="${W - R}" y="${(YB(1) - 6).toFixed(1)}" text-anchor="end">parity 1.00×</text>`;
-
-  // shared month ticks, drawn once under the lower panel
+  // Month ticks are shared by every layout.
   const months = [];
   for (let d = new Date(x0); d.getTime() <= x1; d.setMonth(d.getMonth() + 1)) {
     const m = new Date(d.getFullYear(), d.getMonth() + 1, 1);
     if (m.getTime() >= x0 && m.getTime() <= x1) months.push(new Date(m));
   }
   const longRange = (x1 - x0) > 400 * 86400000;
-  const step = Math.max(1, Math.ceil(months.length / 9));
-  months.forEach((m, i) => {
-    if (i % step) return;
-    g += `<text x="${X(m.getTime()).toFixed(1)}" y="${H - 12}" text-anchor="middle">${
+  const mstep = Math.max(1, Math.ceil(months.length / 9));
+  const xAxis = y => months.map((m, i) => i % mstep ? "" :
+    `<text x="${X(m.getTime()).toFixed(1)}" y="${y}" text-anchor="middle">${
       longRange ? m.toLocaleDateString("en-GB", { month: "short", year: "2-digit" })
-                : m.toLocaleDateString("en-GB", { month: "short" })}</text>`;
-  });
+                : m.toLocaleDateString("en-GB", { month: "short" })}</text>`).join("");
 
-  const line = (key, Y) => {
+  const pathOf = (ys, Y) => {
     let d = "", on = false;
-    pts.forEach((p, i) => {
-      const v = key === "mstr" ? p.mstr : p.mc;
+    ys.forEach((v, i) => {
       if (v == null || !isFinite(v)) { on = false; return; }
       d += (on ? "L" : "M") + X(t[i]).toFixed(1) + " " + Y(v).toFixed(1) + " ";
       on = true;
     });
     return d;
   };
-  g += `<path class="ln mstr" d="${line("mstr", YA)}"/>`;
-  g += `<path class="ln mcap" d="${line("mc", YB)}"/>`;
 
-  const last = pts[pts.length - 1], lx = X(t[t.length - 1]);
-  g += `<circle class="pt" cx="${lx.toFixed(1)}" cy="${YA(last.mstr).toFixed(1)}" r="4" fill="var(--mstr)"/>`;
-  g += `<circle class="pt" cx="${lx.toFixed(1)}" cy="${YB(last.mc).toFixed(1)}" r="4" fill="var(--mcap)"/>`;
+  let g = "", H, layout = [];
 
-  // panel captions, so each scale is unambiguous without consulting the legend
-  g += `<text class="panel-lbl" x="${L}" y="${AT - 9}">MSTR share price (log scale)</text>`;
-  g += `<text class="panel-lbl" x="${L}" y="${BT - 9}">Market-cap mNAV</text>`;
+  if (indexed) {
+    /* ---- one panel, everything rebased to 100 at the left edge ---- */
+    const T = 34, PH = 300; H = T + PH + 34;
+    const rebased = sel.map(s => {
+      const raw = vals(s);
+      const base = raw.find(v => v != null && v > 0);
+      return { s, ys: base ? raw.map(v => v == null ? null : v / base * 100) : raw.map(() => null), base };
+    });
+    const flat = rebased.flatMap(r => r.ys).filter(v => v != null && isFinite(v) && v > 0);
+    let lo = Math.min(100, ...flat), hi = Math.max(100, ...flat);
+    const useLog = wantsLog(lo, hi);
+    if (useLog) { lo /= 1.15; hi *= 1.15; } else { const p = (hi - lo) * 0.08 || 5; lo -= p; hi += p; }
+    const Y = useLog
+      ? v => T + (Math.log(hi) - Math.log(Math.max(v, 1e-9))) / (Math.log(hi) - Math.log(lo)) * PH
+      : v => T + (hi - v) / (hi - lo) * PH;
 
-  g += `<g id="cross3" style="display:none">`
-     + `<line class="cross" y1="${AT}" y2="${BT + BH}"/>`
-     + `<circle class="pt" r="4" fill="var(--mstr)"/><circle class="pt" r="4" fill="var(--mcap)"/></g>`;
-  g += `<rect x="${L}" y="${AT}" width="${W - L - R}" height="${BT + BH - AT}" fill="transparent" id="hit3"/>`;
+    const ticks = useLog ? logTicks(lo, hi) : niceTicks(lo, hi, 6);
+    for (const v of ticks) {
+      if (v < lo || v > hi) continue;
+      g += `<line class="grid" x1="${L}" x2="${W - R}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/>`
+         + `<text x="${L - 8}" y="${(Y(v) + 4).toFixed(1)}" text-anchor="end">${v >= 100 ? Math.round(v) : v.toFixed(v < 10 ? 1 : 0)}</text>`;
+    }
+    g += `<line class="ref" x1="${L}" x2="${W - R}" y1="${Y(100).toFixed(1)}" y2="${Y(100).toFixed(1)}"/>`;
+    g += `<text class="panel-lbl" x="${L}" y="${T - 8}">Indexed — each series = 100 at the left edge</text>`;
+    g += xAxis(H - 12);
+
+    // Stagger the end labels so they never sit on top of each other.
+    const ends = rebased.map(r => {
+      const last = [...r.ys].reverse().find(v => v != null);
+      return { r, y: last == null ? null : Y(last), last };
+    }).filter(e => e.y != null).sort((a, b) => a.y - b.y);
+    let prev = -Infinity;
+    for (const e of ends) { e.ly = Math.max(e.y, prev + 13); prev = e.ly; }
+
+    for (const r of rebased) g += `<path class="ln" style="stroke:var(${r.s.c})" d="${pathOf(r.ys, Y)}"/>`;
+    for (const e of ends) {
+      g += `<circle class="pt" cx="${X(t[t.length - 1]).toFixed(1)}" cy="${e.y.toFixed(1)}" r="3.5" fill="var(${e.r.s.c})"/>`
+         + `<text class="end-lbl" style="fill:var(${e.r.s.c})" x="${W - R + 8}" y="${(e.ly + 4).toFixed(1)}">${e.r.s.short}</text>`;
+    }
+    layout.push({ T, PH, Y, sel });
+  } else {
+    /* ---- one strip per series, each in its own units ---- */
+    const PH = sel.length <= 2 ? 150 : sel.length <= 4 ? 108 : 84;
+    const GAP = 42, T0 = 24;
+    H = T0 + sel.length * (PH + GAP) - GAP + 34;
+    sel.forEach((s, i) => {
+      const top = T0 + i * (PH + GAP);
+      const ys = vals(s);
+      const fin = ys.filter(v => v != null && isFinite(v));
+      let lo = Math.min(...fin), hi = Math.max(...fin);
+      if (!(isFinite(lo) && isFinite(hi))) return;
+      const useLog = wantsLog(lo, hi);
+      if (lo === hi) { lo *= 0.98; hi *= 1.02; }
+      else if (useLog) { lo /= 1.1; hi *= 1.1; }
+      else { const p = (hi - lo) * 0.1; lo -= p; hi += p; if (s.k === "mnav" && lo < 0) lo = 0; }
+      const Y = useLog
+        ? v => top + (Math.log(hi) - Math.log(Math.max(v, 1e-9))) / (Math.log(hi) - Math.log(lo)) * PH
+        : v => top + (hi - v) / (hi - lo) * PH;
+      const ticks = (useLog ? logTicks(lo, hi) : niceTicks(lo, hi, 4)).filter(v => v >= lo && v <= hi);
+      for (const v of ticks) {
+        g += `<line class="grid" x1="${L}" x2="${W - R}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/>`
+           + `<text x="${L - 8}" y="${(Y(v) + 4).toFixed(1)}" text-anchor="end">${s.ax(v)}</text>`;
+      }
+      if (s.k === "mnav" && lo < 1 && hi > 1) {
+        g += `<line class="ref" x1="${L}" x2="${W - R}" y1="${Y(1).toFixed(1)}" y2="${Y(1).toFixed(1)}"/>`
+           + `<text class="ref-lbl" x="${L + 4}" y="${(Y(1) - 5).toFixed(1)}">parity</text>`;
+      }
+      g += `<path class="ln" style="stroke:var(${s.c})" d="${pathOf(ys, Y)}"/>`;
+      g += `<text class="panel-lbl" style="fill:var(${s.c})" x="${L}" y="${top - 8}">${s.name}${useLog ? " (log)" : ""}</text>`;
+      const last = [...ys].reverse().find(v => v != null);
+      if (last != null) {
+        g += `<circle class="pt" cx="${X(t[t.length - 1]).toFixed(1)}" cy="${Y(last).toFixed(1)}" r="3.5" fill="var(${s.c})"/>`
+           + `<text class="end-lbl" style="fill:var(${s.c})" x="${W - R + 8}" y="${(Y(last) + 4).toFixed(1)}">${s.ax(last)}</text>`;
+      }
+      layout.push({ top, PH, Y, s });
+    });
+    g += xAxis(H - 12);
+  }
+
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const top0 = indexed ? 34 : 24;
+  g += `<g id="cross2" style="display:none"><line class="cross" y1="${top0}" y2="${H - 34}"/></g>`;
+  g += `<rect x="${L}" y="${top0}" width="${W - L - R}" height="${H - 34 - top0}" fill="transparent" id="hit2"/>`;
   svg.innerHTML = g;
 
-  const first = pts[0];
-  const shFirst = S.basis === "basic" ? first.basic : first.dil;
-  const shLast = S.basis === "basic" ? last.basic : last.dil;
-  $("chart2-note").textContent =
-    `Since ${fmt.date(first.d)}: MSTR ${fmt.usd2(first.mstr)} → ${fmt.usd2(last.mstr)} (${fmt.pct(last.mstr / first.mstr - 1)}), `
-    + `bitcoin ${fmt.usd0(first.btc)} → ${fmt.usd0(last.btc)} (${fmt.pct(last.btc / first.btc - 1)}), `
-    + `shares ${fmt.pct(shLast / shFirst - 1)}, holdings ${fmt.pct(last.hold / first.hold - 1)} — `
-    + `market-cap mNAV ${fmt.x(first.mc)} → ${fmt.x(last.mc)} (${fmt.pct(last.mc / first.mc - 1)}). `
-    + `The panels share a time axis but not a scale. The ratio moves with the bitcoin price and the share count `
-    + `as well as the stock, which is why the two lines need not travel together.`;
+  /* ---- caption: say what actually happened over the window ---- */
+  const first = pts[0], last = pts[pts.length - 1];
+  const moves = sel.map(s => {
+    const a = s.v(first), b = s.v(last);
+    if (a == null || b == null || !(a > 0)) return null;
+    return `${s.short} ${s.fmt(a)} → ${s.fmt(b)} (${fmt.pct(b / a - 1)})`;
+  }).filter(Boolean);
+  note.textContent = `${fmt.date(first.d)} → ${fmt.date(last.d)}. ${moves.join(" · ")}.`
+    + (indexed
+      ? " Indexed to 100 at the left edge, so the lines compare rates of change, not levels."
+      : " Each strip has its own axis in its own units; only the time axis is shared.");
 
-  const hit = $("hit3"), cross = $("cross3"), tip = $("tip2");
+  /* ---- crosshair ---- */
+  const hit = $("hit2"), cross = $("cross2");
   hit.addEventListener("pointermove", ev => {
     const r = svg.getBoundingClientRect();
     const px = (ev.clientX - r.left) * (W / r.width);
     let best = 0, bd = Infinity;
-    t.forEach((v, i) => { const dd = Math.abs(X(v) - px); if (dd < bd) { bd = dd; best = i; } });
+    t.forEach((v, i) => { const d = Math.abs(X(v) - px); if (d < bd) { bd = d; best = i; } });
     const p = pts[best], cx = X(t[best]);
     cross.style.display = "";
     const ln = cross.querySelector("line"); ln.setAttribute("x1", cx); ln.setAttribute("x2", cx);
-    const cs = cross.querySelectorAll("circle");
-    cs[0].setAttribute("cx", cx); cs[0].setAttribute("cy", YA(p.mstr));
-    cs[1].setAttribute("cx", cx); cs[1].setAttribute("cy", YB(p.mc));
     tip.style.display = "block";
-    tip.innerHTML = `<div class="d">${fmt.date(p.d)}${p.live ? " · live" : p.res === "w" ? " · weekly close" : ""}</div>
-      <div class="r"><span><i style="background:var(--mstr)"></i>MSTR</span><span class="num">${fmt.usd2(p.mstr)}</span></div>
-      <div class="r"><span><i style="background:var(--mcap)"></i>Mkt-cap mNAV</span><span class="num">${fmt.x(p.mc)}</span></div>
-      <div class="r"><span>BTC</span><span class="num">${fmt.usd0(p.btc)}</span></div>
-      <div class="r"><span>BTC held</span><span class="num">${fmt.int(p.hold)}</span></div>`;
-    const left = (cx / W) * r.width, tw = tip.offsetWidth || 200;
+    tip.innerHTML = `<div class="d">${fmt.date(p.d)}${p.live ? " · live" : p.res === "w" ? " · weekly close" : p.est ? " · backfill" : ""}</div>`
+      + sel.map(s => {
+        const v = s.v(p);
+        return `<div class="r"><span><i style="background:var(${s.c})"></i>${s.short}</span><span class="num">${v == null ? "—" : s.fmt(v)}</span></div>`;
+      }).join("");
+    const left = (cx / W) * r.width, tw = tip.offsetWidth || 220;
     tip.style.left = Math.min(Math.max(0, left + 14), r.width - tw) + "px";
     tip.style.top = "8px";
   });
   hit.addEventListener("pointerleave", () => { cross.style.display = "none"; tip.style.display = "none"; });
+}
+
+// Ticks on a 1/2/5 ladder, for the log axes.
+function logTicks(lo, hi) {
+  const out = [];
+  for (let e = -4; e <= 9; e++) for (const m of [1, 2, 5]) {
+    const v = m * Math.pow(10, e);
+    if (v >= lo && v <= hi) out.push(v);
+  }
+  return out.length > 9 ? out.filter((_, i) => i % 2 === 0) : out;
 }
 
 function niceTicks(lo, hi, n) {
@@ -833,8 +996,80 @@ $("basis-dil").addEventListener("click", () => setBasis("dil"));
 $("basis-basic").addEventListener("click", () => setBasis("basic"));
 function setBasis(b){ S.basis=b; $("basis-dil").setAttribute("aria-pressed", b==="dil"); $("basis-basic").setAttribute("aria-pressed", b==="basic"); render(); try{localStorage.setItem("mstr.basis",b)}catch(_){} }
 try { const b = localStorage.getItem("mstr.basis"); if (b==="basic"||b==="dil") setBasis(b); } catch(_){}
+$("ex-series").addEventListener("click", ev => {
+  const b = ev.target.closest("button"); if (!b) return;
+  const k = b.dataset.k;
+  // Keep at least one series on screen; an empty chart is never what the click meant.
+  if (S.sel.has(k)) { if (S.sel.size > 1) S.sel.delete(k); } else S.sel.add(k);
+  b.setAttribute("aria-pressed", S.sel.has(k));
+  saveSel(); renderExplorer();
+});
+$("ex-mode").addEventListener("click", ev => {
+  const b = ev.target.closest("button"); if (!b) return;
+  S.exMode = b.dataset.m;
+  for (const x of $("ex-mode").querySelectorAll("button")) x.setAttribute("aria-pressed", x === b);
+  try { localStorage.setItem("mstr.exMode", S.exMode); } catch (_) {}
+  renderExplorer();
+});
+function saveSel(){ try { localStorage.setItem("mstr.sel", [...S.sel].join(",")); } catch(_){} }
+try {
+  const raw = localStorage.getItem("mstr.sel");
+  if (raw) { const keep = raw.split(",").filter(k => SER[k]); if (keep.length) S.sel = new Set(keep); }
+  const m = localStorage.getItem("mstr.exMode");
+  if (m === "index" || m === "panels") S.exMode = m;
+} catch (_) {}
+for (const b of $("ex-mode").querySelectorAll("button")) b.setAttribute("aria-pressed", b.dataset.m === S.exMode);
+
+$("log-filter").addEventListener("click", ev => {
+  const b = ev.target.closest("button"); if (!b) return;
+  S.logFilter = b.dataset.f; S.logShown = 12;
+  for (const x of $("log-filter").querySelectorAll("button")) x.setAttribute("aria-pressed", x === b);
+  renderLog();
+});
+$("log-more").addEventListener("click", () => { S.logShown += 25; renderLog(); });
+
+const KIND = { btc:"bitcoin", shares:"equity", pref:"preferred", reserve:"reserve", stack:"review" };
+const esc = t => String(t == null ? "" : t).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function renderLog() {
+  const all = S.events || [];
+  const evs = all.filter(e => S.logFilter === "all" || e.src === "filing");
+  $("log-panel").hidden = !all.length;
+  if (!all.length) return;
+  const show = evs.slice(0, S.logShown);
+  if (!show.length) {
+    // Filtering to filings alone is empty until the filings job has actually run against a
+    // new 8-K. Say that, rather than showing a blank panel that reads like a bug.
+    $("log-list").innerHTML = `<li><div class="when"></div><div class="what"><div class="mn">`
+      + `No entries from a filing yet — the log fills as the filings job reads each new 8-K. `
+      + `Everything so far is reconstructed from the backfill; switch to <b>All</b> to see it.`
+      + `</div></div></li>`;
+    $("log-more").hidden = true;
+    $("log-note").textContent = `0 of ${all.length} entries`;
+    return;
+  }
+  $("log-list").innerHTML = show.map(e => {
+    const tags = [`<span class="tag">${KIND[e.kind] || e.kind}</span>`];
+    // A derived line was reconstructed from the backfill, not read from a filing. Say so
+    // on the line itself rather than in a footnote nobody reads.
+    if (e.src === "derived") tags.push(`<span class="tag est">reconstructed</span>`);
+    else if (e.estimated) tags.push(`<span class="tag est">estimated</span>`);
+    if (e.review) tags.push(`<span class="tag rev">needs a look</span>`);
+    const src = e.url ? ` <a class="src" href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.form || "filing")} &#8599;</a>` : "";
+    return `<li><div class="when">${fmt.date(e.d)}</div><div class="what">` +
+      `<div class="hl">${esc(e.headline)}${tags.join("")}</div>` +
+      `<div class="mn">${esc(e.meaning)}${src}</div></div></li>`;
+  }).join("");
+  const more = evs.length - show.length;
+  $("log-more").hidden = more <= 0;
+  $("log-more").textContent = `Show ${Math.min(25, more)} more`;
+  const derived = all.filter(e => e.src === "derived").length;
+  $("log-note").textContent = `${evs.length} entr${evs.length === 1 ? "y" : "ies"}`
+    + (derived ? ` · ${derived} reconstructed from the price/holdings backfill rather than parsed from a filing, so they carry no purchase price, and Sep 2021–Sep 2025 is weekly` : "");
+}
+
 $("range").addEventListener("click", ev => { const b = ev.target.closest("button"); if(!b) return; S.range = +b.dataset.r; for (const x of $("range").querySelectorAll("button")) x.setAttribute("aria-pressed", x===b); renderChart(); });
 for (const inp of document.querySelectorAll("#fields input")) inp.readOnly = true;
+explorerChips();
 
 // ---------- data loading (static JSON, published by GitHub Actions) ----------
 const chip = (id, cls, html) => { const c = $(id); c.className = "chip " + cls; c.querySelector("span:last-child").innerHTML = html; };
@@ -849,13 +1084,15 @@ const grab = (name) => fetch(name + bust(), { cache: "no-cache" }).then(r => {
 
 (async () => {
   try {
-    const [cur, hist, ov] = await Promise.all([
+    const [cur, hist, ov, evs] = await Promise.all([
       grab("data/current.json"),
       grab("data/history.json").catch(() => ({ points: [] })),
       grab("data/overrides.json").catch(() => ({})),
+      grab("data/events.json").catch(() => ({ events: [] })),
     ]);
     S.data = cur;
     S.history = Array.isArray(hist.points) ? hist.points : [];
+    S.events = Array.isArray(evs.events) ? evs.events : [];
     // Strip the commentary keys out of the overrides file so they are not read as figures.
     S.ov = Object.fromEntries(Object.entries(ov || {}).filter(([k, v]) => !k.startsWith("_") && typeof v === "number"));
 
@@ -863,6 +1100,7 @@ const grab = (name) => fetch(name + bust(), { cache: "no-cache" }).then(r => {
     chip("chip-data", "live", `Filings data <b>${fmt.date(cur.holdingsAsOf)}</b>`);
     chip("chip-prices", "stale", `MSTR <b>${stamp} close</b>`);
     renderNotices(cur);
+    renderLog();
     render();
     liveBtc();
   } catch (e) {
