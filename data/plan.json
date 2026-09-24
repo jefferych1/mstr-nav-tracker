@@ -1,46 +1,28 @@
 {
-  "_comment": "Your deployment plan. Hand-edited here so it follows you across devices instead of living in one browser. The page reads it and does the arithmetic; it never edits this file itself. Set 'fired' on a reserve tranche to the date you actually bought, and add each completed DCA buy to 'done' \u2014 the panel only tells you the truth if this is kept current.",
+  "_comment": "Your deployment plan. Hand-edited here so it follows you across devices instead of living in one browser. The page reads it and does the arithmetic; it never edits this file itself.",
   "dca": {
     "startDate": "2026-09-16",
-    "_startDate": "Anchor for the fortnightly schedule. Change it if your first buy was a different day and every later date shifts with it.",
     "trancheUsd": 50000,
     "everyDays": 14,
     "tranches": 13,
     "done": [
       {
         "d": "2026-09-16",
-        "usd": 51652.0,
+        "usd": 51652.00,
         "price": 129.13,
         "shares": 400,
-        "commission": 2.0,
+        "commission": 2.00,
         "src": "IBKR trades, 7 fills on order 507627679, BLUEOCEAN overnight session"
       }
     ]
   },
   "reserve": {
     "totalUsd": 250000,
-    "_rule": "Drawdown is measured from the highest close SINCE startDate, not from an all-time high and not from today. Backed by the 2022-24 backtest: demanding triggers (-35% and worse) left the reserve idle and it ended up deployed later at higher prices.",
     "backstopMonths": 9,
-    "_backstop": "Anything still unfired at this point goes in regardless. This is what stops a reserve turning into a permanent forecast.",
     "tranches": [
-      {
-        "id": 1,
-        "usd": 125000,
-        "triggerDd": -0.15,
-        "fired": null
-      },
-      {
-        "id": 2,
-        "usd": 125000,
-        "triggerDd": -0.25,
-        "fired": null
-      }
+      { "id": 1, "usd": 125000, "triggerDd": -0.15, "fired": null },
+      { "id": 2, "usd": 125000, "triggerDd": -0.25, "fired": null }
     ]
   },
-  "tilt": {
-    "_comment": "Optional sizing overlay on the CORE tranches only, never on the reserve. Scales a tranche by (median mNAV over the window so far) / (today's mNAV), clamped. Backtested at roughly +1-2% on median return \u2014 small, but it improved the worst case in every test, and it enforces judging entries by what you pay per dollar of attributable bitcoin rather than by the share price.",
-    "enabled": true,
-    "min": 0.5,
-    "max": 2.0
-  }
+  "tilt": { "enabled": true, "min": 0.5, "max": 2.0 }
 }
