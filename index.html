@@ -222,6 +222,12 @@ ol.log li:first-child{border-top:0;padding-top:0}
 .log .tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;padding:1px 6px;border-radius:3px;border:1px solid var(--line-strong);color:var(--ink-3);margin-left:7px;vertical-align:1.5px;font-weight:500}
 .log .tag.est{border-color:var(--warn);color:var(--warn)}
 .log .tag.rev{border-color:var(--accent);color:var(--accent)}
+#pos-panel .strip{grid-template-columns:repeat(5,1fr) 2.1fr}
+#pos-panel .strip .v{font-size:19px}
+#pos-panel .v.up{color:var(--good)} #pos-panel .v.down{color:var(--bad)}
+ol.sched.tight{max-height:92px;border:0;margin-top:2px}
+ol.sched.tight li{grid-template-columns:14px auto 1fr auto 44px;gap:8px;padding:2px 0;font-size:11.5px;border-bottom:0;white-space:nowrap}
+@media (max-width:900px){#pos-panel .strip{grid-template-columns:1fr 1fr}}
 .log a.src{color:var(--ev);text-decoration:none;font-size:12.5px}
 .log a.src:hover{text-decoration:underline}
 @media (max-width:560px){ol.log li{grid-template-columns:1fr;gap:4px}}
@@ -394,8 +400,7 @@ details.inputs[open] summary{border-bottom:1px solid var(--line)}
         <div><div class="k">Progress</div><div class="v" id="dca-prog">—</div><div class="s" id="dca-prog-sub"></div></div>
       </div>
       <ol class="sched" id="dca-list"></ol>
-      <div class="scenario-out">
-        <div><div class="k">Blended cost</div><div class="v num" id="dca-cost">—</div><div class="s" id="dca-cost-sub"></div></div>
+      <div class="scenario-out" style="grid-template-columns:1fr">
         <div><div class="k">Size the next tranche</div><div class="v num" id="dca-tilt">—</div><div class="s" id="dca-tilt-sub"></div></div>
       </div>
     </div>
@@ -412,6 +417,23 @@ details.inputs[open] summary{border-bottom:1px solid var(--line)}
       <table class="res"><tbody id="res-body"></tbody></table>
       <p class="chart-note" id="res-note"></p>
     </div>
+  </section>
+
+  <section class="panel" id="pos-panel" hidden>
+    <div class="panel-head">
+      <h2>Position</h2>
+      <span class="hint">record each fill in <code>data/plan.json</code></span>
+    </div>
+    <div class="strip" style="border-radius:var(--radius);border-top:1px solid var(--line)">
+      <div><div class="k">Shares</div><div class="v num" id="pos-shares">—</div><div class="s" id="pos-shares-sub"></div></div>
+      <div><div class="k">Average entry</div><div class="v num" id="pos-avg">—</div><div class="s" id="pos-avg-sub"></div></div>
+      <div><div class="k">Cost</div><div class="v num" id="pos-cost">—</div><div class="s" id="pos-cost-sub"></div></div>
+      <div><div class="k">Value</div><div class="v num" id="pos-value">—</div><div class="s" id="pos-value-sub"></div></div>
+      <div><div class="k">Profit / loss</div><div class="v num" id="pos-pl">—</div><div class="s" id="pos-pl-sub"></div></div>
+      <div><div class="k">Buys</div><div class="v"><ol class="sched tight" id="pos-buys"></ol></div></div>
+    </div>
+    <table class="res"><tbody id="pos-bench"></tbody></table>
+    <p class="chart-note" id="pos-note"></p>
   </section>
 
   <section class="panel">
@@ -513,7 +535,8 @@ const fmt = {
   int: n => n==null||!isFinite(n) ? "—" : Math.round(n).toLocaleString("en-US"),
   pct: n => n==null||!isFinite(n) ? "" : (n>=0?"+":"") + (n*100).toFixed(1) + "%",
   date: s => { if(!s) return "—"; const d = new Date(s); if(isNaN(d)) return s; return d.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}); },
-  time: s => { const d = new Date(s); return isNaN(d)?"":d.toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}); }
+  time: s => { const d = new Date(s); return isNaN(d)?"":d.toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}); },
+  short: s => { if(!s) return "—"; const d = new Date(s); return isNaN(d)?s:d.toLocaleDateString("en-GB",{day:"2-digit",month:"short"}); }
 };
 
 // ---------- state ----------
@@ -661,7 +684,7 @@ function render() {
   }
   renderStack(e, live);
   renderChart();
-  try { renderPlan(); } catch (e) { console.error('plan panel:', e); }
+  try { renderPlan(); renderPosition(); } catch (e) { console.error('plan panel:', e); }
   renderInputs(e);
 }
 function kToSlider(k){ // 0.3x..3x on a log scale, 0..1000, 500 = 1x
@@ -829,11 +852,6 @@ function renderPlan() {
   }).join("");
 
   // Blended cost only over buys where a price was recorded — silent about the rest.
-  const blended = st.shares > 0 ? st.filledUsd / st.shares : null;
-  $("dca-cost").textContent = blended ? fmt.usd2(blended) : "—";
-  $("dca-cost-sub").textContent = blended
-    ? `over ${fmt.usd0(st.filledUsd)} with a fill price recorded · ${fmt.pct(st.live / blended - 1)} vs today`
-    : "add a fill price to each buy in data/plan.json to see blended cost";
 
   $("dca-tilt").textContent = st.tilt ? st.tilt.toFixed(2) + "×" : "—";
   $("dca-tilt-sub").textContent = st.tilt
@@ -899,6 +917,115 @@ function renderPlan() {
     "Drawdown is measured from the highest close since " + fmt.date(st.p.dca.startDate)
     + " — not from an all-time high, which would read as triggered on day one, and not from your entry, which would ratchet with every buy. "
     + "Triggers were set at −15% and −25% because in the 2022–24 analogue deeper ones left the reserve idle and it ended up deployed later at higher prices.";
+}
+
+/* ---------- position & P&L ----------
+ * Where the price for each buy comes from, in order:
+ *   1. the fill you recorded in plan.json  -> marked "actual"
+ *   2. the MSTR close on that date, which the daily job already stores -> marked "close"
+ * The two are never averaged together silently: the panel says how many of each it used,
+ * because a close is a reasonable stand-in for a scheduled buy and a bad one for a fill you
+ * got somewhere else in the session.
+ *
+ * The benchmark that matters is the last one. Given a 40% spot bitcoin position, the real
+ * question is not whether MSTR went up, it is whether routing the same dollars through the
+ * equity beat holding the coins directly. That comparison uses the same dates and the same
+ * amounts, so it isolates the wrapper.
+ */
+function closeOn(iso) {
+  let best = null;
+  for (const h of S.history) {
+    if (h.d <= iso && h.mstr > 0) best = h; else if (h.d > iso) break;
+  }
+  return best;
+}
+function positionState() {
+  const p = S.plan; if (!p?.dca) return null;
+  const e = eff(); const live = e.mstrLive; const btcLive = e.btcLive;
+  const buys = [];
+  for (const b of (p.dca.done || [])) {
+    const usd = b.usd || 0; if (!usd) continue;
+    let px = b.price > 0 ? b.price : null, src = px ? "actual" : null, btcPx = null;
+    const h = closeOn(b.d);
+    // The fallback is the nearest close at or before the buy date. If history has not
+    // caught up to that date yet, that is an older close — say which one rather than
+    // presenting a stale price as though it were the price on the day.
+    if (!px && h) { px = h.mstr; src = h.d === b.d ? "close" : "close " + fmt.short(h.d); }
+    if (h) btcPx = h.btc;
+    if (!px) continue;
+    buys.push({ ...b, usd, px, src, shares: usd / px, btcPx, btc: btcPx ? usd / btcPx : null,
+                mnav: h ? seriesFor(h, S.basis, S.netCash).mc : null });
+  }
+  if (!buys.length) return { buys: [] };
+  const cost = buys.reduce((a, b) => a + b.usd, 0);
+  const shares = buys.reduce((a, b) => a + b.shares, 0);
+  const avg = cost / shares;
+  const value = live > 0 ? shares * live : null;
+  const pl = value != null ? value - cost : null;
+  const nActual = buys.filter((b) => b.src === "actual").length;
+  const stale = buys.some((b) => b.src && b.src.startsWith("close "));
+
+  // same money, same dates, spot bitcoin instead
+  const btcBought = buys.every((b) => b.btc != null) ? buys.reduce((a, b) => a + b.btc, 0) : null;
+  const btcValue = btcBought != null && btcLive > 0 ? btcBought * btcLive : null;
+
+  // same money, all on day one
+  const first = buys[0];
+  const lumpShares = first.px > 0 ? cost / first.px : null;
+  const lumpValue = lumpShares && live > 0 ? lumpShares * live : null;
+
+  const mn = buys.filter((b) => b.mnav > 0);
+  const avgMnav = mn.length ? mn.reduce((a, b) => a + b.mnav * b.usd, 0) / mn.reduce((a, b) => a + b.usd, 0) : null;
+  const bpsBought = e.hold > 0 && e.basic > 0 ? shares * (e.hold / e.basic) : null;
+
+  return { buys, cost, shares, avg, value, pl, nActual, stale, btcBought, btcValue, lumpValue, avgMnav, bpsBought, live };
+}
+function renderPosition() {
+  const st = positionState(); const sec = $("pos-panel");
+  if (!st || !st.buys.length) { sec.hidden = true; return; }
+  sec.hidden = false;
+  const set = (id, v, s) => { $(id).textContent = v; if (s != null) $(id + "-sub").textContent = s; };
+  set("pos-shares", fmt.int(st.shares), `across ${st.buys.length} buy${st.buys.length > 1 ? "s" : ""}`);
+  set("pos-avg", fmt.usd2(st.avg),
+      st.nActual === st.buys.length ? "all from your recorded fills"
+      : st.nActual === 0 ? `from the recorded close — no fills entered yet`
+      : `${st.nActual} of ${st.buys.length} from your fills, the rest from the close`);
+  set("pos-cost", fmt.usd0(st.cost), `at ${fmt.usd2(st.live)} today`);
+  set("pos-value", st.value == null ? "—" : fmt.usd0(st.value), "");
+  const up = st.pl >= 0;
+  $("pos-pl").textContent = st.pl == null ? "—" : (up ? "+" : "−") + fmt.usd0(Math.abs(st.pl));
+  $("pos-pl").className = "v num " + (up ? "up" : "down");
+  $("pos-pl-sub").textContent = st.pl == null ? "" : fmt.pct(st.value / st.cost - 1);
+
+  const rows = [];
+  if (st.btcValue != null) {
+    const diff = st.value / st.btcValue - 1;
+    rows.push(["Same money into spot bitcoin", fmt.usd0(st.btcValue),
+      `${st.btcBought.toFixed(4)} BTC on the same dates`,
+      `${diff >= 0 ? "MSTR ahead" : "bitcoin ahead"} by ${fmt.pct(Math.abs(diff)).replace("+", "")}`]);
+  }
+  if (st.lumpValue != null && st.buys.length > 1) {
+    const diff = st.value / st.lumpValue - 1;
+    rows.push(["All of it on day one instead", fmt.usd0(st.lumpValue), `at ${fmt.usd2(st.buys[0].px)}`,
+      `${diff >= 0 ? "DCA ahead" : "lump sum ahead"} by ${fmt.pct(Math.abs(diff)).replace("+", "")}`]);
+  }
+  if (st.avgMnav) rows.push(["Average mNAV paid", fmt.x(st.avgMnav), "weighted by tranche size",
+      st.avgMnav < 1 ? "bought below the bitcoin backing" : "bought above the bitcoin backing"]);
+  if (st.bpsBought) rows.push(["Bitcoin behind your shares", st.bpsBought.toFixed(4) + " BTC",
+      "at today's holdings and share count", "before the claims ranking ahead of you"]);
+  $("pos-bench").innerHTML = rows.map((r) =>
+    `<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="rule">${r[2]}</td><td class="st">${r[3]}</td></tr>`).join("");
+
+  $("pos-buys").innerHTML = st.buys.map((b, i) =>
+    `<li><span class="n">${i + 1}</span><span class="d">${fmt.short(b.d)}</span>`
+    + `<span class="u num">${fmt.usd0(b.usd)}</span>`
+    + `<span class="u num">${fmt.usd2(b.px)}</span>`
+    + `<span class="s">${b.src === "actual" ? "your fill" : b.src}</span></li>`).join("");
+  $("pos-note").textContent =
+    (st.stale ? "One or more buys are priced from an earlier close because the daily history has not reached that date yet — it corrects itself once it does. " : "")
+    + (st.nActual < st.buys.length
+      ? "Buys without a recorded fill price use the MSTR close on that date. That is close enough for a scheduled buy and wrong for anything else — put your actual fill in data/plan.json and it takes precedence."
+      : "Every buy is priced from a fill you recorded.");
 }
 
 // ---------- chart ----------
