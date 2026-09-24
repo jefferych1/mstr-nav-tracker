@@ -172,6 +172,35 @@ svg.chart{width:100%;height:auto;display:block}
 .tip .r span:first-child{display:inline-flex;align-items:center;gap:6px}
 .tip i{width:8px;height:8px;border-radius:2px;display:inline-block}
 .chart-note{font-size:12.5px;color:var(--ink-3);margin:0}
+
+/* deployment plan */
+.big.status-go{color:var(--good)}
+.big.status-warn{color:var(--warn)}
+.big.status-hold{color:var(--ink-2)}
+.big.status-ok{color:var(--ink-2)}
+#plan-panel .big{font-size:34px;letter-spacing:0;line-height:1.1;margin:8px 0 6px}
+#plan-panel .scenario-out .v{font-size:17px;line-height:1.25}
+#plan-panel .scenario-out .s{margin-top:3px;line-height:1.35}
+.pill{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;padding:2px 8px;border-radius:999px;border:1px solid var(--line-strong);color:var(--ink-3)}
+.pill.go{border-color:var(--good);color:var(--good);background:color-mix(in oklab,var(--good) 12%,transparent)}
+.pill.no{border-color:var(--line-strong);color:var(--ink-3)}
+.pill.done{border-color:var(--ink-3);color:var(--ink-3);opacity:.8}
+table.res{width:100%;border-collapse:collapse;font-size:13.5px;table-layout:auto}
+table.res td:first-child{white-space:nowrap;font-weight:500}
+table.res td{padding:9px 0;border-bottom:1px solid var(--line);vertical-align:baseline}
+table.res td:nth-child(2){text-align:right;white-space:nowrap;padding-left:10px}
+table.res td.rule{color:var(--ink-3);font-size:12px;text-align:right;padding-left:12px}
+table.res td.st{text-align:right;padding-left:12px;white-space:nowrap}
+table.res tr:last-child td{border-bottom:0}
+ol.sched{list-style:none;margin:0;padding:0;max-height:270px;overflow:auto;border:1px solid var(--line);border-radius:var(--radius)}
+ol.sched li{display:grid;grid-template-columns:26px 1fr auto 52px;gap:10px;align-items:baseline;padding:6px 12px;font-size:13px;border-bottom:1px solid var(--line)}
+ol.sched li:last-child{border-bottom:0}
+ol.sched li.done{color:var(--ink-3)}
+ol.sched li.next{background:var(--accent-soft);font-weight:500}
+ol.sched .n{color:var(--ink-3);font-size:11.5px;font-family:"IBM Plex Mono",monospace}
+ol.sched .u{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-2)}
+ol.sched .s{font-size:11px;color:var(--ink-3);text-align:right}
+ol.sched li.next .s{color:var(--accent)}
 .chart .end-lbl{font-family:"IBM Plex Sans",sans-serif;font-size:11.5px;font-weight:600}
 
 /* explorer controls */
@@ -354,6 +383,37 @@ details.inputs[open] summary{border-bottom:1px solid var(--line)}
     </div>
   </section>
 
+  <section class="cols" id="plan-panel" hidden>
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Deployment schedule</h2>
+        <span class="hint">edit <code>data/plan.json</code> to change it</span>
+      </div>
+      <div class="scenario-out">
+        <div><div class="k">Next buy</div><div class="v" id="dca-next">—</div><div class="s" id="dca-next-sub"></div></div>
+        <div><div class="k">Progress</div><div class="v" id="dca-prog">—</div><div class="s" id="dca-prog-sub"></div></div>
+      </div>
+      <ol class="sched" id="dca-list"></ol>
+      <div class="scenario-out">
+        <div><div class="k">Blended cost</div><div class="v num" id="dca-cost">—</div><div class="s" id="dca-cost-sub"></div></div>
+        <div><div class="k">Size the next tranche</div><div class="v num" id="dca-tilt">—</div><div class="s" id="dca-tilt-sub"></div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Reserve readiness</h2>
+        <span class="hint">your pre-committed rules, not a forecast</span>
+      </div>
+      <div>
+        <div class="big" id="res-status">—</div>
+        <div class="sub" id="res-line" style="font-size:13.5px;color:var(--ink-2)"></div>
+      </div>
+      <table class="res"><tbody id="res-body"></tbody></table>
+      <p class="chart-note" id="res-note"></p>
+    </div>
+  </section>
+
   <section class="panel">
     <div class="chart-head">
       <div>
@@ -470,6 +530,7 @@ const S = {
   sel: new Set(["hold", "bps", "mstr"]),   // the flywheel question, as the default view
   exMode: "index",
   events: [],
+  plan: null,
   logFilter: "all",
   logShown: 12,
   history: [],         // [{d, mstr, btc, hold, basic, dil, debt, pref, cash, est}]
@@ -600,6 +661,7 @@ function render() {
   }
   renderStack(e, live);
   renderChart();
+  try { renderPlan(); } catch (e) { console.error('plan panel:', e); }
   renderInputs(e);
 }
 function kToSlider(k){ // 0.3x..3x on a log scale, 0..1000, 500 = 1x
@@ -649,6 +711,194 @@ function renderInputs(e) {
   $("src-pref").textContent = d.preferredsAsOf ? `Sum of ${d.preferreds?.length||0} series · as of ${fmt.date(d.preferredsAsOf)}` : "";
   $("src-cash").textContent = d.usdReserveAsOf ? `8-K USD Reserve · as of ${fmt.date(d.usdReserveAsOf)}` : "";
   $("sources").innerHTML = d.updatedAt ? `Store last updated ${fmt.time(d.updatedAt)}${d.updatedBy?" by "+d.updatedBy:""}.${S.ov?.savedAt ? ` Overrides saved ${fmt.time(S.ov.savedAt)}${S.ov.note?" — "+S.ov.note:""}.`:""}` : "";
+}
+
+// ---------- deployment plan ----------
+// Two jobs: say when the next scheduled buy is, and say whether the reserve rules are met.
+//
+// The design rule here is that this panel reports, it does not advise. Every line shows the
+// rule you pre-committed to, the value today, and whether one has met the other. A green
+// status means "the condition you set has been met", never "this will go up" — the whole
+// point of writing the rules down in advance is that the decision was made when you were
+// calm, and this page's job is only to tell you the truth about whether they have fired.
+//
+// Drawdown is measured from the highest close SINCE the plan start, not from an all-time
+// high and not from your entry. From the all-time high the trigger could already be "met"
+// on day one and mean nothing; from your entry it would ratchet with every new buy.
+
+const DAY = 86400000;
+const addMonths = (d, n) => { const x = new Date(d); x.setMonth(x.getMonth() + n); return x; };
+
+function planState() {
+  const p = S.plan;
+  if (!p || !p.dca) return null;
+  const e = eff();
+  const start = new Date(p.dca.startDate + "T00:00:00Z");
+  const now = Date.now();
+  const live = e.mstrLive;
+
+  /* ---- schedule ---- */
+  const all = [];
+  for (let i = 0; i < (p.dca.tranches || 0); i++) {
+    all.push(new Date(start.getTime() + i * (p.dca.everyDays || 14) * DAY));
+  }
+  const done = (p.dca.done || []).length;
+  const next = all.find((d, i) => i >= done) || null;
+  const deployed = (p.dca.done || []).reduce((a, x) => a + (x.usd || 0), 0);
+  const core = (p.dca.tranches || 0) * (p.dca.trancheUsd || 0);
+
+  // Blended cost, but only over the buys where a fill price was actually recorded.
+  const filled = (p.dca.done || []).filter((x) => x.price > 0);
+  const shares = filled.reduce((a, x) => a + x.usd / x.price, 0);
+  const filledUsd = filled.reduce((a, x) => a + x.usd, 0);
+
+  /* ---- drawdown since start ---- */
+  const hist = S.history.filter((h) => h.d >= p.dca.startDate && h.mstr > 0);
+  let high = 0, highD = null;
+  for (const h of hist) if (h.mstr > high) { high = h.mstr; highD = h.d; }
+  if (live > high) { high = live; highD = "today"; }
+  const dd = high > 0 && live > 0 ? live / high - 1 : null;
+
+  /* ---- reserve tranches ---- */
+  const backstop = addMonths(start, p.reserve?.backstopMonths || 9);
+  const rows = (p.reserve?.tranches || []).map((t) => {
+    const met = dd != null && dd <= t.triggerDd;
+    return {
+      ...t,
+      met,
+      fired: t.fired || null,
+      // how much further the price has to fall for this one to arm
+      gap: dd == null ? null : (1 + t.triggerDd) / (1 + dd) - 1,
+    };
+  });
+  const armed = rows.filter((r) => !r.fired && r.met);
+  const unfired = rows.filter((r) => !r.fired);
+  const backstopDays = Math.ceil((backstop.getTime() - now) / DAY);
+  const backstopDue = unfired.length > 0 && backstopDays <= 0;
+
+  /* ---- mNAV tilt on the next core tranche ---- */
+  let tilt = null, mnavNow = null, mnavMed = null, tiltWin = null;
+  if (p.tilt?.enabled) {
+    const c = calc(e, live, e.btcLive, S.basis, S.netCash);
+    mnavNow = c ? c.mc : null;
+    // Early in the plan there is barely any history since the start date, so the median
+    // would be computed off two or three points and mean nothing. Fall back to a trailing
+    // 90-day window until the plan's own window is long enough to stand on its own.
+    let src = hist, label = "since " + fmt.date(p.dca.startDate);
+    if (src.length < 10) {
+      const cut = new Date(Date.now() - 90 * DAY).toISOString().slice(0, 10);
+      src = S.history.filter((h) => h.d >= cut && h.mstr > 0);
+      label = "trailing 90 days";
+    }
+    const win = src.map((h) => seriesFor(h, S.basis, S.netCash).mc).filter((v) => v > 0).sort((a, b) => a - b);
+    if (win.length) { mnavMed = win[Math.floor(win.length / 2)]; tiltWin = label; }
+    if (mnavNow > 0 && mnavMed > 0) {
+      tilt = Math.max(p.tilt.min ?? 0.5, Math.min(p.tilt.max ?? 2, mnavMed / mnavNow));
+    }
+  }
+
+  return { p, all, done, next, deployed, core, shares, filledUsd, high, highD, dd,
+           rows, armed, unfired, backstop, backstopDays, backstopDue, tilt, mnavNow, mnavMed, tiltWin, live };
+}
+
+function renderPlan() {
+  const st = planState();
+  const sec = $("plan-panel");
+  if (!st) { sec.hidden = true; return; }
+  sec.hidden = false;
+
+  /* ---------- left: the schedule ---------- */
+  const daysTo = st.next ? Math.ceil((st.next.getTime() - Date.now()) / DAY) : null;
+  $("dca-next").textContent = st.next ? fmt.date(st.next.toISOString().slice(0, 10)) : "complete";
+  $("dca-next-sub").textContent = st.next
+    ? (daysTo <= 0 ? "due now" : daysTo === 1 ? "tomorrow" : `in ${daysTo} days`)
+    : "every scheduled tranche has been made";
+  $("dca-prog").textContent = `${st.done} of ${st.p.dca.tranches}`;
+  $("dca-prog-sub").textContent = `${fmt.usd0(st.deployed)} of ${fmt.usd0(st.core)} core · ${fmt.usd0(st.core - st.deployed)} to go`;
+
+  const upcoming = st.all.slice(st.done, st.done + 6);
+  $("dca-list").innerHTML = st.all.map((d, i) => {
+    const iso = d.toISOString().slice(0, 10);
+    const isDone = i < st.done;
+    const isNext = i === st.done;
+    return `<li class="${isDone ? "done" : isNext ? "next" : ""}">`
+      + `<span class="n">${i + 1}</span>`
+      + `<span class="d">${d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" })}</span>`
+      + `<span class="u num">${fmt.usd0(st.p.dca.trancheUsd)}</span>`
+      + `<span class="s">${isDone ? "done" : isNext ? "next" : ""}</span></li>`;
+  }).join("");
+
+  // Blended cost only over buys where a price was recorded — silent about the rest.
+  const blended = st.shares > 0 ? st.filledUsd / st.shares : null;
+  $("dca-cost").textContent = blended ? fmt.usd2(blended) : "—";
+  $("dca-cost-sub").textContent = blended
+    ? `over ${fmt.usd0(st.filledUsd)} with a fill price recorded · ${fmt.pct(st.live / blended - 1)} vs today`
+    : "add a fill price to each buy in data/plan.json to see blended cost";
+
+  $("dca-tilt").textContent = st.tilt ? st.tilt.toFixed(2) + "×" : "—";
+  $("dca-tilt-sub").textContent = st.tilt
+    ? `${fmt.usd0(st.p.dca.trancheUsd * st.tilt)} — mNAV ${fmt.x(st.mnavNow)} vs median ${fmt.x(st.mnavMed)} (${st.tiltWin})`
+    : "needs a live price and some history since the start date";
+
+  /* ---------- right: reserve readiness ---------- */
+  let status, tone, line;
+  if (st.unfired.length === 0) {
+    status = "FULLY DEPLOYED"; tone = "ok";
+    line = "Both reserve tranches have been recorded as bought.";
+  } else if (st.backstopDue) {
+    status = "BACKSTOP DUE"; tone = "warn";
+    line = `The ${st.p.reserve.backstopMonths}-month backstop has passed with ${st.unfired.length} tranche${st.unfired.length > 1 ? "s" : ""} unfired. The rule you set says it goes in regardless.`;
+  } else if (st.armed.length) {
+    status = st.armed.length > 1 ? "BOTH TRANCHES MET" : `TRANCHE ${st.armed[0].id} MET`;
+    tone = "go";
+    line = `The drawdown condition you pre-committed to has been met. This says your rule fired, not that the price will rise.`;
+  } else {
+    status = "HOLD"; tone = "hold";
+    const nearest = st.unfired.reduce((a, b) => (Math.abs(a.gap) < Math.abs(b.gap) ? a : b));
+    line = `No trigger met. MSTR would need to fall a further ${fmt.pct(nearest.gap)} to arm tranche ${nearest.id}.`;
+  }
+  $("res-status").textContent = status;
+  $("res-status").className = "big status-" + tone;
+  $("res-line").textContent = line;
+
+  const chip = (ok, txt) => `<span class="pill ${ok}">${txt}</span>`;
+  const rows = [];
+  const fresh = st.highD === "today";
+  rows.push([
+    "Drawdown since start",
+    st.dd == null ? "—" : fmt.pct(st.dd),
+    fresh
+      // On day one the only observation IS today, so a 0% drawdown is arithmetic, not a signal.
+      ? "today is the high so far"
+      : `high ${fmt.usd2(st.high)} on ${fmt.date(st.highD)}`,
+    "",
+  ]);
+  for (const r of st.rows) {
+    const val = r.fired ? `bought ${fmt.date(r.fired)}` : fmt.pct(r.gap) + " to go";
+    rows.push([
+      `Tranche ${r.id}`,
+      val,
+      `${fmt.usd0(r.usd)} · fires at ${fmt.pct(r.triggerDd)}`,
+      r.fired ? chip("done", "deployed") : r.met ? chip("go", "GO") : chip("no", "not yet"),
+    ]);
+  }
+  rows.push([
+    "Backstop",
+    fmt.date(st.backstop.toISOString().slice(0, 10)),
+    st.unfired.length ? `${fmt.usd0(st.unfired.reduce((a, r) => a + r.usd, 0))} still unfired` : "nothing outstanding",
+    st.unfired.length === 0 ? chip("done", "n/a")
+      : st.backstopDays <= 0 ? chip("go", "DUE")
+      : chip("no", `${st.backstopDays} days`),
+  ]);
+
+  $("res-body").innerHTML = rows.map(
+    (r) => `<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="rule">${r[2]}</td><td class="st">${r[3]}</td></tr>`
+  ).join("");
+
+  $("res-note").textContent =
+    "Drawdown is measured from the highest close since " + fmt.date(st.p.dca.startDate)
+    + " — not from an all-time high, which would read as triggered on day one, and not from your entry, which would ratchet with every buy. "
+    + "Triggers were set at −15% and −25% because in the 2022–24 analogue deeper ones left the reserve idle and it ended up deployed later at higher prices.";
 }
 
 // ---------- chart ----------
@@ -1028,7 +1278,7 @@ $("log-filter").addEventListener("click", ev => {
 });
 $("log-more").addEventListener("click", () => { S.logShown += 25; renderLog(); });
 
-const KIND = { btc:"bitcoin", shares:"equity", pref:"preferred", reserve:"reserve", stack:"review" };
+const KIND = { btc:"bitcoin", shares:"equity", pref:"preferred", buyback:"buyback", reserve:"reserve", stack:"review" };
 const esc = t => String(t == null ? "" : t).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function renderLog() {
   const all = S.events || [];
@@ -1084,15 +1334,17 @@ const grab = (name) => fetch(name + bust(), { cache: "no-cache" }).then(r => {
 
 (async () => {
   try {
-    const [cur, hist, ov, evs] = await Promise.all([
+    const [cur, hist, ov, evs, plan] = await Promise.all([
       grab("data/current.json"),
       grab("data/history.json").catch(() => ({ points: [] })),
       grab("data/overrides.json").catch(() => ({})),
       grab("data/events.json").catch(() => ({ events: [] })),
+      grab("data/plan.json").catch(() => null),
     ]);
     S.data = cur;
     S.history = Array.isArray(hist.points) ? hist.points : [];
     S.events = Array.isArray(evs.events) ? evs.events : [];
+    S.plan = plan && plan.dca ? plan : null;
     // Strip the commentary keys out of the overrides file so they are not read as figures.
     S.ov = Object.fromEntries(Object.entries(ov || {}).filter(([k, v]) => !k.startsWith("_") && typeof v === "number"));
 
