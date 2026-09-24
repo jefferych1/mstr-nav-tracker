@@ -1,5 +1,13 @@
 {
   "_comment": "Hand-edited corrections applied on top of data/current.json. Edit this file on github.com and the site updates in about a minute. Delete a key to go back to the filed figure.",
+
+  "_why_these_are_here": "The share counts in current.json are stale because the 8-K parser broke when Strategy changed its filing layout in Sep 2026 — it could not read the new prose format, so the count has not rolled forward since 7 Sep. These two figures are the ones Strategy itself published at strategy.com/shares as of 20 Sep 2026 (Class A 400,867k + Class B 19,640k = 420,507k basic; ADSO 450,108k). DELETE BOTH KEYS once the fixed filings job has run and sharesAsOf in current.json has moved past 2026-09-20 — otherwise these frozen numbers will override the live ones.",
+
+  "basicShares": 420507000,
+  "dilutedShares": 450108000,
+
+  "_not_overridden": "btcHoldings needs no override: the 14 Sep 8-K confirmed 845,050, unchanged from the stored figure. Only the as-of date was stale, and that corrects itself on the next filings run.",
+
   "_example": {
     "btcHoldings": 850000,
     "dilutedShares": 455000000
