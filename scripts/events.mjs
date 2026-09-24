@@ -131,6 +131,57 @@ export function prefEvent(meta, sales, before) {
   };
 }
 
+/**
+ * Shares bought back — the mirror of an issuance, and the reason the section a row sits in
+ * has to be established before the row is read. Retiring preferred removes a claim ranking
+ * ahead of the common and pulls the wipeout price DOWN; retiring common lifts bitcoin per
+ * share. Reading either as an issuance would move both in the wrong direction.
+ * `rows`: [{ security, shares }]
+ */
+export function repurchaseEvent(meta, rows, before) {
+  const list = (rows || []).filter((r) => r.shares > 0);
+  if (!list.length) return null;
+
+  const common = list.filter((r) => r.security === "MSTR");
+  const prefs = list.filter((r) => r.security !== "MSTR" && STATED_VALUE[r.security]);
+  const parts = [], bits = [];
+
+  if (common.length) {
+    const n = common.reduce((a, r) => a + r.shares, 0);
+    parts.push(`${int(n)} MSTR`);
+    const after = (before.shares || 0) - n;
+    const b0 = bps(before.hold, before.shares), b1 = bps(before.hold, after);
+    if (b0 != null && b1 != null) {
+      bits.push(`${pct(-n / before.shares)} shares outstanding, lifting BTC per 1,000 shares `
+        + `${sig(b0)} → ${sig(b1)} (${pct(b1 / b0 - 1)})`);
+    }
+  }
+
+  if (prefs.length) {
+    const est = prefs.reduce((a, r) => a + r.shares * STATED_VALUE[r.security], 0);
+    parts.push(prefs.map((r) => `${int(r.shares)} ${r.security}`).join(", "));
+    const seniorBefore = (before.debt || 0) + (before.pref || 0) - (before.cash || 0);
+    const seniorAfter = seniorBefore - est;
+    const w0 = wipeout(before.hold, before.debt, before.pref, before.cash);
+    const w1 = before.hold > 0 ? seniorAfter / before.hold : null;
+    bits.push(`removes roughly ${bn(est)} of claim ranking ahead of the common at the $100 `
+      + `stated value, taking senior claims net of the reserve ${bn(seniorBefore)} → about ${bn(seniorAfter)}`);
+    if (w0 != null && w1 != null) {
+      bits.push(`which pulls the wipeout bitcoin price down from ${usd(w0)} to about ${usd(w1)}`);
+    }
+    bits.push("estimated from the share count — the exact balance is picked up at the next 10-Q");
+  }
+
+  return {
+    ...meta,
+    kind: "buyback",
+    headline: `Repurchased ${parts.join(" and ")}`,
+    meaning: bits.join(", ") + ".",
+    figs: { rows: list },
+    estimated: prefs.length > 0,
+  };
+}
+
 /** A move in the USD reserve, which sits in front of the common in the same way cash does. */
 export function reserveEvent(meta, before, after) {
   const d = (after.cash || 0) - (before.cash || 0);

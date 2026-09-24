@@ -17,9 +17,10 @@ import {
 } from "./lib.mjs";
 import {
   parseHoldings, parseAvgCost, parseUsdReserve, parseAsOf, parseAtmShares, parsePrefSales,
+  parseRepurchases, parseAmbiguousRows,
 } from "./parse.mjs";
 import {
-  btcEvent, sharesEvent, prefEvent, reserveEvent, stackEvent, mergeEvents,
+  btcEvent, sharesEvent, prefEvent, reserveEvent, stackEvent, repurchaseEvent, mergeEvents,
 } from "./events.mjs";
 
 const current = await readJson("current.json");
@@ -113,25 +114,60 @@ for (const f of pending) {
       current.usdReserveAsOf = asOf;
     }
 
-    // Class A sold under the ATM. Applied per filing rather than in one lump at the end,
-    // so each event describes exactly the shares that filing added.
+    // Class A sold under the ATM, net of any Class A bought back. Both are applied per
+    // filing rather than in one lump at the end, so each log entry describes exactly the
+    // shares that filing moved.
+    //
+    // The sign here is the whole ballgame. Strategy's newer 8-Ks carry a single
+    // "Repurchase Program Updates" table and state ATM activity in prose, so a naive read
+    // of the "MSTR Stock" row adds shares the company actually retired. parseAtmShares and
+    // parseRepurchases both attribute a row to its section before reading it.
     const atm = parseAtmShares(text);
+    const buybacks = parseRepurchases(text);
+    const mstrBought = buybacks.filter((r) => r.security === "MSTR").reduce((a, r) => a + r.shares, 0);
+
+    const ambiguous = parseAmbiguousRows(text);
+    if (ambiguous.length) {
+      review.push(`8-K ${f.filingDate}: ${[...new Set(ambiguous)].join(", ")} row(s) could not be attributed to a sale or a repurchase — left out rather than guessed. ${f.url}`);
+    }
+
     if (atm == null) {
       review.push(`8-K ${f.filingDate}: could not read ATM share sales — share count may drift. ${f.url}`);
-    } else if (current.sharesAsOf && asOf <= current.sharesAsOf) {
-      // These sales are already inside the stored share count; counting them again would
-      // inflate the share base and understate mNAV.
-      log(`8-K ${f.filingDate}: ${atm.toLocaleString()} ATM shares already in the stored count — skipped`);
-    } else if (atm > 0) {
+    }
+    const netShares = (atm || 0) - mstrBought;
+    if (current.sharesAsOf && asOf <= current.sharesAsOf) {
+      // Already inside the stored share count; counting it again would move the share base
+      // twice and misstate mNAV.
+      if (netShares) log(`8-K ${f.filingDate}: net ${netShares.toLocaleString()} shares already in the stored count — skipped`);
+    } else if (netShares) {
       // The diluted overhang (converts, options, RSUs, STRK conversion) moves slowly, so
       // it is carried across and reset whenever a 10-Q gives an exact figure.
       const gap = (current.dilutedShares || 0) - (current.basicShares || 0);
       const prevBasic = current.basicShares;
-      current.basicShares = prevBasic + atm;
+      current.basicShares = prevBasic + netShares;
       current.dilutedShares = current.basicShares + gap;
       current.sharesAsOf = asOf;
-      current.sharesSource = `rolled forward from filed ATM sales (+${atm.toLocaleString()} shares, 8-K ${f.filingDate})`;
+      current.sharesSource = `rolled forward from filed ATM sales and buybacks (${netShares >= 0 ? "+" : ""}${netShares.toLocaleString()} shares, 8-K ${f.filingDate})`;
       changes.push(`shares ${prevBasic.toLocaleString()} → ${current.basicShares.toLocaleString()}`);
+    }
+
+    // Preferred retired under the buyback programme reduces the claims ranking ahead of the
+    // common. Valued at the $100 stated preference and reset exactly at the next 10-Q, the
+    // same way ATM shares are. Not applying it at all would leave senior claims permanently
+    // overstated, which is the wrong answer even though it errs in the cautious direction.
+    for (const r of buybacks) {
+      if (r.security === "MSTR") continue;
+      const row = (current.preferreds || []).find((x) => x.series === r.security);
+      if (!row) {
+        review.push(`8-K ${f.filingDate}: buyback of ${r.security} but no such series in the stored capital stack — ignored. ${f.url}`);
+        continue;
+      }
+      if (current.preferredsAsOf && asOf <= current.preferredsAsOf) continue;
+      const cut = r.shares * 100;
+      const prevNotional = row.notional;
+      row.notional = Math.max(0, (row.notional || 0) - cut);
+      row.note = `${(row.note || "").replace(/ \(less buybacks[^)]*\)/, "")} (less buybacks to ${asOf}, at $100 stated value)`.trim();
+      changes.push(`${r.security} notional ${(prevNotional / 1e9).toFixed(2)}bn → ${(row.notional / 1e9).toFixed(2)}bn`);
     }
 
     const after = snap();
@@ -146,6 +182,9 @@ for (const f of pending) {
 
     const pref = prefEvent(meta, parsePrefSales(text), before);
     if (pref) fresh.push(pref);
+
+    const buy = repurchaseEvent(meta, buybacks, before);
+    if (buy) fresh.push(buy);
   }
 
   if (f.form === "10-Q" || f.form === "10-K") {
