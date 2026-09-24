@@ -37,6 +37,13 @@ jobs:
           SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
         run: node scripts/filings.mjs
 
+      # The issuer's own share table, as a second reading of the same facts. Never
+      # overwrites a filed figure — it reconciles against one and flags a divergence.
+      # continue-on-error so a redesign of their page can never fail the filings run.
+      - name: Cross-check against strategy.com/shares
+        continue-on-error: true
+        run: node scripts/shares.mjs
+
       - name: Commit if anything changed
         run: |
           git config user.name  "mstr-tracker bot"
