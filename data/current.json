@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-24T22:39:08.243Z",
+  "updatedAt": "2026-09-25T22:40:04.791Z",
   "updatedBy": "daily refresh",
   "btcHoldings": 845050,
   "holdingsAsOf": "2026-08-30",
@@ -73,11 +73,11 @@
   "preferredsAsOf": "2026-06-30",
   "usdReserve": 5100000000,
   "usdReserveAsOf": "2026-08-30",
-  "mstrPrice": 161.61,
-  "btcPrice": 84098.36,
-  "pricesAsOf": "2026-09-24T22:39:08.243Z",
-  "pricesSource": "MSTR 2026-09-24 close via yahoo; BTC via coinbase-candles",
-  "mstrCloseDate": "2026-09-24",
+  "mstrPrice": 158.61,
+  "btcPrice": 84051.54,
+  "pricesAsOf": "2026-09-25T22:40:04.791Z",
+  "pricesSource": "MSTR 2026-09-25 close via yahoo; BTC via coinbase-candles",
+  "mstrCloseDate": "2026-09-25",
   "review": [],
   "problems": [],
   "capitalStackStale": false
