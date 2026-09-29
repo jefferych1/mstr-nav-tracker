@@ -1,0 +1,8 @@
+{
+  "anchors": [],
+  "checkedAt": "2026-09-29T12:23:00.648Z",
+  "review": [
+    "Could not read strategy.com/shares this run (HTTP 403 for https://www.strategy.com/shares). Anchors unchanged."
+  ],
+  "note": "Quarter-end and year-end share/holdings anchors published by the issuer at https://www.strategy.com/shares. Used to reconcile against the filed figures and to anchor the interpolated history — never to overwrite a figure parsed from an SEC filing."
+}

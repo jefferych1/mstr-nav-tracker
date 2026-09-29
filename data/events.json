@@ -1,6 +1,70 @@
 {
   "events": [
     {
+      "d": "2026-09-28",
+      "asOf": "2026-09-27",
+      "form": "8-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/1050446/000119312526403417/mstr-20260914.htm",
+      "src": "filing",
+      "kind": "btc",
+      "headline": "Added 1,666 BTC — holdings now 847,666",
+      "meaning": "+0.20% of the stack. paid about $3,138,086 a coin against a $85,681 lifetime average (+3562.52%). BTC per 1,000 shares 2.0119 → 2.0088 (-0.15%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 1666,
+        "hold": 847666,
+        "paid": 3138085.5618247297,
+        "avgCost": 85681,
+        "bpsBefore": 2.0119049600829495,
+        "bpsAfter": 2.00884826867576
+      }
+    },
+    {
+      "d": "2026-09-28",
+      "asOf": "2026-09-27",
+      "form": "8-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/1050446/000119312526403417/mstr-20260914.htm",
+      "src": "filing",
+      "kind": "reserve",
+      "headline": "USD reserve $5.04bn → $5.02bn",
+      "meaning": "Removes $0.02bn of the cash netted off enterprise value, raising EV-basis mNAV and raising the wipeout price.",
+      "figs": {
+        "delta": -20000000,
+        "cash": 5020000000
+      }
+    },
+    {
+      "d": "2026-09-21",
+      "asOf": "2026-09-20",
+      "form": "8-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/1050446/000119312526396093/mstr-20260914.htm",
+      "src": "filing",
+      "kind": "btc",
+      "headline": "Added 950 BTC — holdings now 846,000",
+      "meaning": "+0.11% of the stack. paid about $3,867,273 a coin against a $79,670 lifetime average (+4754.11%). BTC per 1,000 shares 2.0096 → 2.0119 (+0.11%), so the coins bought outran the shares issued to pay for them.",
+      "figs": {
+        "added": 950,
+        "hold": 846000,
+        "paid": 3867273.052631579,
+        "avgCost": 79670,
+        "bpsBefore": 2.009645728744795,
+        "bpsAfter": 2.0119049600829495
+      }
+    },
+    {
+      "d": "2026-09-21",
+      "asOf": "2026-09-20",
+      "form": "8-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/1050446/000119312526396093/mstr-20260914.htm",
+      "src": "filing",
+      "kind": "reserve",
+      "headline": "USD reserve $5.10bn → $5.04bn",
+      "meaning": "Removes $0.06bn of the cash netted off enterprise value, raising EV-basis mNAV and raising the wipeout price.",
+      "figs": {
+        "delta": -60000000,
+        "cash": 5040000000
+      }
+    },
+    {
       "d": "2026-08-31",
       "asOf": "2026-08-31",
       "form": null,
@@ -1747,6 +1811,6 @@
       "estimated": true
     }
   ],
-  "updatedAt": "2026-09-23T04:10:17.859Z",
+  "updatedAt": "2026-09-29T12:22:53.967Z",
   "note": "Entries marked derived are reconstructed from the price/holdings backfill, not parsed from a filing: no purchase price, and Sep 2021–Sep 2025 is weekly so a week's buying shows as one line. Decreases are not backfilled at all, because a step down in the reconstructed series cannot be told apart from a later revision to the holdings record. Entries from the filings job carry a link to the filing they came from, and do report disposals."
 }

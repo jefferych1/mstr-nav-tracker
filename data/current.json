@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-09-28T22:39:34.949Z",
-  "updatedBy": "daily refresh",
-  "btcHoldings": 845050,
-  "holdingsAsOf": "2026-08-30",
-  "holdingsSource": "Form 8-K filed 31 Aug 2026 (sec.gov)",
-  "avgCostPerBtc": 75412,
-  "basicShares": 420497000,
-  "dilutedShares": 450121000,
-  "sharesAsOf": "2026-09-07",
-  "sharesSource": "strategy.com/shares (Class A 400,857k + Class B 19,640k; ADSO 450,121k)",
+  "updatedAt": "2026-09-29T12:22:53.967Z",
+  "updatedBy": "filings refresh: holdings 845,050 → 846,000; holdings 846,000 → 847,666; shares 420,497,000 → 421,966,165",
+  "btcHoldings": 847666,
+  "holdingsAsOf": "2026-09-27",
+  "holdingsSource": "Form 8-K filed 2026-09-28 (sec.gov)",
+  "avgCostPerBtc": 85681,
+  "basicShares": 421966165,
+  "dilutedShares": 451590165,
+  "sharesAsOf": "2026-09-27",
+  "sharesSource": "rolled forward from filed ATM sales and buybacks (+1,469,165 shares, 8-K 2026-09-28)",
   "converts": [
     {
       "name": "0.625% Conv. Notes due 2028",
@@ -71,14 +71,19 @@
     }
   ],
   "preferredsAsOf": "2026-06-30",
-  "usdReserve": 5100000000,
-  "usdReserveAsOf": "2026-08-30",
+  "usdReserve": 5020000000,
+  "usdReserveAsOf": "2026-09-27",
   "mstrPrice": 157.14,
   "btcPrice": 83302.16,
   "pricesAsOf": "2026-09-28T22:39:34.949Z",
   "pricesSource": "MSTR 2026-09-28 close via yahoo; BTC via coinbase-candles",
   "mstrCloseDate": "2026-09-28",
-  "review": [],
+  "review": [
+    "8-K 2026-09-25: could not find the bitcoin holdings figure — https://www.sec.gov/Archives/edgar/data/1050446/000119312526401636/mstr-20260924.htm",
+    "8-K 2026-09-25: could not read ATM share sales — share count may drift. https://www.sec.gov/Archives/edgar/data/1050446/000119312526401636/mstr-20260924.htm",
+    "Could not read strategy.com/shares this run (HTTP 403 for https://www.strategy.com/shares). Anchors unchanged."
+  ],
   "problems": [],
-  "capitalStackStale": false
+  "capitalStackStale": false,
+  "filingsCheckedAt": "2026-09-29T12:22:53.967Z"
 }
