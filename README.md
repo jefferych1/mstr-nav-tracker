@@ -4,6 +4,10 @@ A static web page showing Strategy Inc. (Nasdaq: MSTR) market value against the 
 its balance sheet, with scenario sliders and history back to the first bitcoin purchase in
 August 2020. It refreshes itself and needs no accounts, keys, logins or approvals once set up.
 
+NAV Desk maintains this repository. A data correction, and a change to the plan in
+`data/plan.json`, goes in only after Jeffery confirms it. Code changes go in through a
+pull request.
+
 ## How it runs
 
 | Piece | What it does | When |
@@ -48,8 +52,9 @@ pointing at `<you>.github.io`. GitHub issues the TLS certificate itself.
 
 ### Correcting a figure
 
-Open `data/overrides.json` on github.com, press the pencil icon, add the key you want to
-override and commit. The site picks it up within about a minute.
+Corrections live in `data/overrides.json` and are applied on top of `current.json`. A
+correction goes in only after Jeffery confirms it. The site picks it up within about a
+minute of that commit.
 
 ```json
 { "btcHoldings": 850000, "dilutedShares": 455000000 }
@@ -68,10 +73,12 @@ fails. Common cases:
   Coinbase, CoinGecko then Kraken for bitcoin, so one failing is invisible. If all fail the
   run goes red and the stored values stay put — nothing is corrupted.
 - **Strategy changes the layout of its 8-K.** The filings job leaves the stored figure alone
-  and puts the filing's URL in the banner so you can enter the number in `overrides.json`.
+  and puts the filing's URL in the banner. Entering that number in `overrides.json` is a
+  data correction, and it goes in only after Jeffery confirms it.
 - **A new 10-Q.** The convertible notes and preferred balances are the one thing that is not
-  scraped, because those tables are too variable to parse safely. The job flags the filing
-  and you update `data/current.json` or `data/overrides.json` by hand. Four times a year.
+  scraped, because those tables are too variable to parse safely. The job flags the filing.
+  A correction to `data/current.json` or `data/overrides.json` goes in only after Jeffery
+  confirms it. Four times a year.
 
 ### The filing log
 
