@@ -79,11 +79,11 @@
   "pricesSource": "MSTR 2026-10-12 close via yahoo; BTC via coinbase-candles",
   "mstrCloseDate": "2026-10-12",
   "review": [
-    "8-K 2026-10-01: could not find the bitcoin holdings figure — https://www.sec.gov/Archives/edgar/data/1050446/000119312526409863/mstr-20260930.htm",
-    "8-K 2026-10-01: could not read ATM share sales — share count may drift. https://www.sec.gov/Archives/edgar/data/1050446/000119312526409863/mstr-20260930.htm",
+    "8-K 2026-10-13: could not find the bitcoin holdings figure — https://www.sec.gov/Archives/edgar/data/1050446/000119312526419726/mstr-20261012.htm",
+    "8-K 2026-10-13: could not read ATM share sales — share count may drift. https://www.sec.gov/Archives/edgar/data/1050446/000119312526419726/mstr-20261012.htm",
     "Could not read strategy.com/shares this run (HTTP 403 for https://www.strategy.com/shares). Anchors unchanged."
   ],
   "problems": [],
   "capitalStackStale": false,
-  "filingsCheckedAt": "2026-10-06T12:21:47.845Z"
+  "filingsCheckedAt": "2026-10-13T12:25:39.282Z"
 }
