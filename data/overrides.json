@@ -1,9 +1,12 @@
 {
   "_comment": "Hand-edited corrections applied on top of data/current.json. Edit this file on github.com and the site updates in about a minute. Delete a key to go back to the filed figure.",
 
-  "_why_these_are_here": "basicShares and dilutedShares were removed after sharesAsOf in current.json moved to 2026-09-30, past 2026-09-20, and Jeffery confirmed. Those two filed share counts are no longer overridden.",
+  "_why_these_are_here": "As of 11 Oct 2026, from the Nasdaq press release of 12 Oct 2026, Strategy Acquires 250 BTC and Repurchases $192 Million of STRC (https://www.nasdaq.com/press-release/strategy-acquires-250-btc-and-repurchases-192-million-strc-2026-10-12). The 13 Oct 8-K (accession 0001193125-26-419726) was marked processed without these figures, so the filings job will not apply them. Jeffery confirmed. Holdings are 848,250 BTC at a $75,444 average cost, and 125,183 MSTR shares were sold under the ATM (basic 422,059,059 → 422,184,242; diluted 451,683,059 → 451,808,242). Delete these keys once current.json itself reflects the 11 Oct figures, or they will keep overriding later filings. STRC face is not a key here: this file has no per-series preferred field, so data/current.json STRC notional is reduced by 1,932,145 × $100 = $193,214,500. The USD reserve is already $4.88bn and is left unchanged.",
 
-  "_not_overridden": "btcHoldings needs no override: the 14 Sep 8-K confirmed 845,050, unchanged from the stored figure. Only the as-of date was stale, and that corrects itself on the next filings run.",
+  "btcHoldings": 848250,
+  "avgCostPerBtc": 75444,
+  "basicShares": 422184242,
+  "dilutedShares": 451808242,
 
   "_example": {
     "btcHoldings": 850000,

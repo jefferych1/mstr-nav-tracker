@@ -46,8 +46,8 @@
     {
       "series": "STRC",
       "label": "Variable Rate Series A Perpetual Stretch",
-      "notional": 10200000000,
-      "note": "$10.49bn at 30 Jun 2026 less disclosed buybacks to 30 Aug"
+      "notional": 10006785500,
+      "note": "$10.49bn at 30 Jun 2026 less disclosed buybacks to 30 Aug, less 1,932,145 shares repurchased as of 11 Oct 2026 ($193,214,500 face at $100 par; Nasdaq release 12 Oct 2026)"
     },
     {
       "series": "STRF",
