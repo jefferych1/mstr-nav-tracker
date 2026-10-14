@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-12T22:44:47.688Z",
+  "updatedAt": "2026-10-14T01:19:37.528Z",
   "updatedBy": "daily refresh",
   "btcHoldings": 847666,
   "holdingsAsOf": "2026-09-30",
@@ -74,8 +74,8 @@
   "usdReserve": 4880000000,
   "usdReserveAsOf": "2026-09-30",
   "mstrPrice": 152.68,
-  "btcPrice": 82434.09,
-  "pricesAsOf": "2026-10-12T22:44:47.688Z",
+  "btcPrice": 83201.03,
+  "pricesAsOf": "2026-10-14T01:19:37.528Z",
   "pricesSource": "MSTR 2026-10-12 close via yahoo; BTC via coinbase-candles",
   "mstrCloseDate": "2026-10-12",
   "review": [
