@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-10-20T01:09:17.080Z",
-  "updatedBy": "daily refresh",
-  "btcHoldings": 847666,
-  "holdingsAsOf": "2026-09-30",
-  "holdingsSource": "Form 8-K filed 2026-10-05 (sec.gov)",
-  "avgCostPerBtc": 75436,
-  "basicShares": 422059059,
-  "dilutedShares": 451683059,
-  "sharesAsOf": "2026-09-30",
-  "sharesSource": "rolled forward from filed ATM sales and buybacks (+92,894 shares, 8-K 2026-10-05)",
+  "updatedAt": "2026-10-20T16:44:32.832Z",
+  "updatedBy": "filings refresh: holdings 847,666 → 848,517; shares 422,059,059 → 422,199,931",
+  "btcHoldings": 848517,
+  "holdingsAsOf": "2026-10-18",
+  "holdingsSource": "Form 8-K filed 2026-10-19 (sec.gov)",
+  "avgCostPerBtc": 82900,
+  "basicShares": 422199931,
+  "dilutedShares": 451823931,
+  "sharesAsOf": "2026-10-18",
+  "sharesSource": "rolled forward from filed ATM sales and buybacks (+140,872 shares, 8-K 2026-10-19)",
   "converts": [
     {
       "name": "0.625% Conv. Notes due 2028",
@@ -71,19 +71,19 @@
     }
   ],
   "preferredsAsOf": "2026-06-30",
-  "usdReserve": 4880000000,
-  "usdReserveAsOf": "2026-09-30",
+  "usdReserve": 4830000000,
+  "usdReserveAsOf": "2026-10-18",
   "mstrPrice": 136.83,
   "btcPrice": 81403.75,
   "pricesAsOf": "2026-10-20T01:09:17.080Z",
   "pricesSource": "MSTR 2026-10-16 close via yahoo; BTC via coinbase-candles",
   "mstrCloseDate": "2026-10-16",
   "review": [
-    "8-K 2026-10-13: could not find the bitcoin holdings figure — https://www.sec.gov/Archives/edgar/data/1050446/000119312526419726/mstr-20261012.htm",
-    "8-K 2026-10-13: could not read ATM share sales — share count may drift. https://www.sec.gov/Archives/edgar/data/1050446/000119312526419726/mstr-20261012.htm",
+    "8-K 2026-10-16: could not find the bitcoin holdings figure — https://www.sec.gov/Archives/edgar/data/1050446/000119312526423400/mstr-20261015.htm",
+    "8-K 2026-10-16: could not read ATM share sales — share count may drift. https://www.sec.gov/Archives/edgar/data/1050446/000119312526423400/mstr-20261015.htm",
     "Could not read strategy.com/shares this run (HTTP 403 for https://www.strategy.com/shares). Anchors unchanged."
   ],
   "problems": [],
   "capitalStackStale": false,
-  "filingsCheckedAt": "2026-10-13T12:25:39.282Z"
+  "filingsCheckedAt": "2026-10-20T16:44:32.832Z"
 }
