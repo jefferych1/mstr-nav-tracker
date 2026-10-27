@@ -10,11 +10,9 @@
     "0001193125-26-413164",
     "0001193125-26-419726",
     "0001193125-26-423400",
-    "0001193125-26-424688"
+    "0001193125-26-424688",
+    "0001193125-26-431146"
   ],
-  "lastRun": "2026-10-20T16:44:32.832Z",
-  "review": [
-    "8-K 2026-10-16: could not find the bitcoin holdings figure — https://www.sec.gov/Archives/edgar/data/1050446/000119312526423400/mstr-20261015.htm",
-    "8-K 2026-10-16: could not read ATM share sales — share count may drift. https://www.sec.gov/Archives/edgar/data/1050446/000119312526423400/mstr-20261015.htm"
-  ]
+  "lastRun": "2026-10-27T17:51:15.012Z",
+  "review": []
 }

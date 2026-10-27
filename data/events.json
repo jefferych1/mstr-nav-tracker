@@ -1873,6 +1873,6 @@
       "estimated": true
     }
   ],
-  "updatedAt": "2026-10-20T16:44:32.832Z",
+  "updatedAt": "2026-10-27T17:51:15.013Z",
   "note": "Entries marked derived are reconstructed from the price/holdings backfill, not parsed from a filing: no purchase price, and Sep 2021–Sep 2025 is weekly so a week's buying shows as one line. Decreases are not backfilled at all, because a step down in the reconstructed series cannot be told apart from a later revision to the holdings record. Entries from the filings job carry a link to the filing they came from, and do report disposals."
 }
