@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-11-03T03:37:14.620Z",
-  "updatedBy": "daily refresh",
-  "btcHoldings": 848517,
-  "holdingsAsOf": "2026-10-25",
-  "holdingsSource": "Form 8-K filed 2026-10-26 (sec.gov)",
-  "avgCostPerBtc": 75446,
-  "basicShares": 422199931,
-  "dilutedShares": 451823931,
-  "sharesAsOf": "2026-10-18",
-  "sharesSource": "rolled forward from filed ATM sales and buybacks (+140,872 shares, 8-K 2026-10-19)",
+  "updatedAt": "2026-11-03T19:23:05.631Z",
+  "updatedBy": "filings refresh: holdings 848,517 → 849,327; shares 422,199,931 → 423,378,483",
+  "btcHoldings": 849327,
+  "holdingsAsOf": "2026-11-01",
+  "holdingsSource": "Form 8-K filed 2026-11-02 (sec.gov)",
+  "avgCostPerBtc": 80846,
+  "basicShares": 423378483,
+  "dilutedShares": 453002483,
+  "sharesAsOf": "2026-11-01",
+  "sharesSource": "rolled forward from filed ATM sales and buybacks (+1,178,552 shares, 8-K 2026-11-02)",
   "converts": [
     {
       "name": "0.625% Conv. Notes due 2028",
@@ -71,17 +71,26 @@
     }
   ],
   "preferredsAsOf": "2026-06-30",
-  "usdReserve": 4830000000,
-  "usdReserveAsOf": "2026-10-25",
+  "usdReserve": 4790000000,
+  "usdReserveAsOf": "2026-11-01",
   "mstrPrice": 130.76,
   "btcPrice": 76630.97,
   "pricesAsOf": "2026-11-03T03:37:14.620Z",
   "pricesSource": "MSTR 2026-11-02 close via yahoo; BTC via coinbase-candles",
   "mstrCloseDate": "2026-11-02",
   "review": [
+    "8-K 2026-10-28: could not find the bitcoin holdings figure — https://www.sec.gov/Archives/edgar/data/1050446/000119312526435451/mstr-20261028.htm",
+    "8-K 2026-10-28: STRC, STRF, STRK, STRD row(s) could not be attributed to a sale or a repurchase — left out rather than guessed. https://www.sec.gov/Archives/edgar/data/1050446/000119312526435451/mstr-20261028.htm",
+    "8-K 2026-10-28: could not read ATM share sales — share count may drift. https://www.sec.gov/Archives/edgar/data/1050446/000119312526435451/mstr-20261028.htm",
+    "8-K 2026-10-29: could not find the bitcoin holdings figure — https://www.sec.gov/Archives/edgar/data/1050446/000119312526437776/mstr-20261028.htm",
+    "8-K 2026-10-29: STRC, STRF, STRK, STRD row(s) could not be attributed to a sale or a repurchase — left out rather than guessed. https://www.sec.gov/Archives/edgar/data/1050446/000119312526437776/mstr-20261028.htm",
+    "8-K 2026-10-29: could not read ATM share sales — share count may drift. https://www.sec.gov/Archives/edgar/data/1050446/000119312526437776/mstr-20261028.htm",
+    "8-K 2026-10-29: could not find the bitcoin holdings figure — https://www.sec.gov/Archives/edgar/data/1050446/000105044626000047/mstr-20261026.htm",
+    "8-K 2026-10-29: could not read ATM share sales — share count may drift. https://www.sec.gov/Archives/edgar/data/1050446/000105044626000047/mstr-20261026.htm",
+    "New 10-Q filed 2026-11-02: check the convertible notes and preferred notional in data/overrides.json against https://www.sec.gov/Archives/edgar/data/1050446/000105044626000060/mstr-20260930.htm",
     "Could not read strategy.com/shares this run (HTTP 403 for https://www.strategy.com/shares). Anchors unchanged."
   ],
   "problems": [],
-  "capitalStackStale": false,
-  "filingsCheckedAt": "2026-10-27T17:51:15.012Z"
+  "capitalStackStale": true,
+  "filingsCheckedAt": "2026-11-03T19:23:05.631Z"
 }

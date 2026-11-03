@@ -1,6 +1,50 @@
 {
   "events": [
     {
+      "d": "2026-11-02",
+      "asOf": "2026-10-25",
+      "form": "10-Q",
+      "url": "https://www.sec.gov/Archives/edgar/data/1050446/000105044626000060/mstr-20260930.htm",
+      "src": "filing",
+      "kind": "stack",
+      "headline": "New 10-Q — capital stack needs checking",
+      "meaning": "Convertible principal and preferred notional are laid out in a way that is not safe to scrape blind, so they are left alone until checked against the filing and corrected in data/overrides.json.",
+      "figs": {},
+      "review": true
+    },
+    {
+      "d": "2026-11-02",
+      "asOf": "2026-11-01",
+      "form": "8-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/1050446/000119312526442707/mstr-20261102.htm",
+      "src": "filing",
+      "kind": "btc",
+      "headline": "Added 810 BTC — holdings now 849,327",
+      "meaning": "+0.10% of the stack. paid about $5,737,626 a coin against a $80,846 lifetime average (+6996.98%). BTC per 1,000 shares 2.0098 → 2.0061 (-0.18%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 810,
+        "hold": 849327,
+        "paid": 5737626,
+        "avgCost": 80846,
+        "bpsBefore": 2.0097516311531565,
+        "bpsAfter": 2.0060702990425705
+      }
+    },
+    {
+      "d": "2026-11-02",
+      "asOf": "2026-11-01",
+      "form": "8-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/1050446/000119312526442707/mstr-20261102.htm",
+      "src": "filing",
+      "kind": "reserve",
+      "headline": "USD reserve $4.83bn → $4.79bn",
+      "meaning": "Removes $0.04bn of the cash netted off enterprise value, raising EV-basis mNAV and raising the wipeout price.",
+      "figs": {
+        "delta": -40000000,
+        "cash": 4790000000
+      }
+    },
+    {
       "d": "2026-10-19",
       "asOf": "2026-10-18",
       "form": "8-K",
@@ -1873,6 +1917,6 @@
       "estimated": true
     }
   ],
-  "updatedAt": "2026-10-27T17:51:15.013Z",
+  "updatedAt": "2026-11-03T19:23:05.631Z",
   "note": "Entries marked derived are reconstructed from the price/holdings backfill, not parsed from a filing: no purchase price, and Sep 2021–Sep 2025 is weekly so a week's buying shows as one line. Decreases are not backfilled at all, because a step down in the reconstructed series cannot be told apart from a later revision to the holdings record. Entries from the filings job carry a link to the filing they came from, and do report disposals."
 }
