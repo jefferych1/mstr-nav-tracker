@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-07T02:11:47.953Z",
+  "updatedAt": "2026-11-10T04:14:59.579Z",
   "updatedBy": "daily refresh",
   "btcHoldings": 849327,
   "holdingsAsOf": "2026-11-01",
@@ -73,11 +73,11 @@
   "preferredsAsOf": "2026-06-30",
   "usdReserve": 4790000000,
   "usdReserveAsOf": "2026-11-01",
-  "mstrPrice": 128.93,
-  "btcPrice": 75967.88,
-  "pricesAsOf": "2026-11-07T02:11:47.953Z",
-  "pricesSource": "MSTR 2026-11-06 close via yahoo; BTC via coinbase-candles",
-  "mstrCloseDate": "2026-11-06",
+  "mstrPrice": 125.59,
+  "btcPrice": 74462.18,
+  "pricesAsOf": "2026-11-10T04:14:59.579Z",
+  "pricesSource": "MSTR 2026-11-09 close via yahoo; BTC via coinbase-candles",
+  "mstrCloseDate": "2026-11-09",
   "review": [
     "8-K 2026-10-28: could not find the bitcoin holdings figure — https://www.sec.gov/Archives/edgar/data/1050446/000119312526435451/mstr-20261028.htm",
     "8-K 2026-10-28: STRC, STRF, STRK, STRD row(s) could not be attributed to a sale or a repurchase — left out rather than guessed. https://www.sec.gov/Archives/edgar/data/1050446/000119312526435451/mstr-20261028.htm",
