@@ -1,6 +1,38 @@
 {
   "events": [
     {
+      "d": "2026-11-09",
+      "asOf": "2026-11-08",
+      "form": "8-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/1050446/000119312526452693/mstr-20261109.htm",
+      "src": "filing",
+      "kind": "btc",
+      "headline": "Added 1,037 BTC — holdings now 850,364",
+      "meaning": "+0.12% of the stack. BTC per 1,000 shares 2.0061 → 1.9988 (-0.36%), so the shares issued outran the coins they bought.",
+      "figs": {
+        "added": 1037,
+        "hold": 850364,
+        "paid": null,
+        "avgCost": 79012,
+        "bpsBefore": 2.0060702990425705,
+        "bpsAfter": 1.998834914799381
+      }
+    },
+    {
+      "d": "2026-11-09",
+      "asOf": "2026-11-08",
+      "form": "8-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/1050446/000119312526452693/mstr-20261109.htm",
+      "src": "filing",
+      "kind": "reserve",
+      "headline": "USD reserve $4.79bn → $4.77bn",
+      "meaning": "Removes $0.02bn of the cash netted off enterprise value, raising EV-basis mNAV and raising the wipeout price.",
+      "figs": {
+        "delta": -20000000,
+        "cash": 4770000000
+      }
+    },
+    {
       "d": "2026-11-02",
       "asOf": "2026-10-25",
       "form": "10-Q",
@@ -1917,6 +1949,6 @@
       "estimated": true
     }
   ],
-  "updatedAt": "2026-11-03T19:23:05.631Z",
+  "updatedAt": "2026-11-10T19:35:29.138Z",
   "note": "Entries marked derived are reconstructed from the price/holdings backfill, not parsed from a filing: no purchase price, and Sep 2021–Sep 2025 is weekly so a week's buying shows as one line. Decreases are not backfilled at all, because a step down in the reconstructed series cannot be told apart from a later revision to the holdings record. Entries from the filings job carry a link to the filing they came from, and do report disposals."
 }

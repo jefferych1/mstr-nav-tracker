@@ -16,18 +16,9 @@
     "0001193125-26-437776",
     "0001050446-26-000047",
     "0001050446-26-000060",
-    "0001193125-26-442707"
+    "0001193125-26-442707",
+    "0001193125-26-452693"
   ],
-  "lastRun": "2026-11-03T19:23:05.631Z",
-  "review": [
-    "8-K 2026-10-28: could not find the bitcoin holdings figure — https://www.sec.gov/Archives/edgar/data/1050446/000119312526435451/mstr-20261028.htm",
-    "8-K 2026-10-28: STRC, STRF, STRK, STRD row(s) could not be attributed to a sale or a repurchase — left out rather than guessed. https://www.sec.gov/Archives/edgar/data/1050446/000119312526435451/mstr-20261028.htm",
-    "8-K 2026-10-28: could not read ATM share sales — share count may drift. https://www.sec.gov/Archives/edgar/data/1050446/000119312526435451/mstr-20261028.htm",
-    "8-K 2026-10-29: could not find the bitcoin holdings figure — https://www.sec.gov/Archives/edgar/data/1050446/000119312526437776/mstr-20261028.htm",
-    "8-K 2026-10-29: STRC, STRF, STRK, STRD row(s) could not be attributed to a sale or a repurchase — left out rather than guessed. https://www.sec.gov/Archives/edgar/data/1050446/000119312526437776/mstr-20261028.htm",
-    "8-K 2026-10-29: could not read ATM share sales — share count may drift. https://www.sec.gov/Archives/edgar/data/1050446/000119312526437776/mstr-20261028.htm",
-    "8-K 2026-10-29: could not find the bitcoin holdings figure — https://www.sec.gov/Archives/edgar/data/1050446/000105044626000047/mstr-20261026.htm",
-    "8-K 2026-10-29: could not read ATM share sales — share count may drift. https://www.sec.gov/Archives/edgar/data/1050446/000105044626000047/mstr-20261026.htm",
-    "New 10-Q filed 2026-11-02: check the convertible notes and preferred notional in data/overrides.json against https://www.sec.gov/Archives/edgar/data/1050446/000105044626000060/mstr-20260930.htm"
-  ]
+  "lastRun": "2026-11-10T19:35:29.138Z",
+  "review": []
 }
