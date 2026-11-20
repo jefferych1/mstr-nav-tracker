@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-19T03:45:33.479Z",
+  "updatedAt": "2026-11-20T03:39:07.269Z",
   "updatedBy": "daily refresh",
   "btcHoldings": 850849,
   "holdingsAsOf": "2026-11-15",
@@ -73,11 +73,11 @@
   "preferredsAsOf": "2026-06-30",
   "usdReserve": 4750000000,
   "usdReserveAsOf": "2026-11-15",
-  "mstrPrice": 90.32,
-  "btcPrice": 62928.04,
-  "pricesAsOf": "2026-11-19T03:45:33.479Z",
-  "pricesSource": "MSTR 2026-11-18 close via yahoo; BTC via coinbase-candles",
-  "mstrCloseDate": "2026-11-18",
+  "mstrPrice": 86.13,
+  "btcPrice": 61969.17,
+  "pricesAsOf": "2026-11-20T03:39:07.269Z",
+  "pricesSource": "MSTR 2026-11-19 close via yahoo; BTC via coinbase-candles",
+  "mstrCloseDate": "2026-11-19",
   "review": [
     "Could not read strategy.com/shares this run (HTTP 403 for https://www.strategy.com/shares). Anchors unchanged."
   ],
