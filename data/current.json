@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-11-24T06:16:19.700Z",
-  "updatedBy": "daily refresh",
-  "btcHoldings": 850849,
-  "holdingsAsOf": "2026-11-15",
-  "holdingsSource": "Form 8-K filed 2026-11-16 (sec.gov)",
-  "avgCostPerBtc": 68887,
-  "basicShares": 427516871,
-  "dilutedShares": 457140871,
-  "sharesAsOf": "2026-11-15",
-  "sharesSource": "rolled forward from filed ATM sales and buybacks (+2,087,040 shares, 8-K 2026-11-16)",
+  "updatedAt": "2026-11-24T22:15:06.127Z",
+  "updatedBy": "filings refresh: holdings 850,849 → 851,305; shares 427,516,871 → 429,442,547",
+  "btcHoldings": 851305,
+  "holdingsAsOf": "2026-11-22",
+  "holdingsSource": "Form 8-K filed 2026-11-23 (sec.gov)",
+  "avgCostPerBtc": 64898,
+  "basicShares": 429442547,
+  "dilutedShares": 459066547,
+  "sharesAsOf": "2026-11-22",
+  "sharesSource": "rolled forward from filed ATM sales and buybacks (+1,925,676 shares, 8-K 2026-11-23)",
   "converts": [
     {
       "name": "0.625% Conv. Notes due 2028",
@@ -71,8 +71,8 @@
     }
   ],
   "preferredsAsOf": "2026-06-30",
-  "usdReserve": 4750000000,
-  "usdReserveAsOf": "2026-11-15",
+  "usdReserve": 3730000000,
+  "usdReserveAsOf": "2026-11-22",
   "mstrPrice": 84.4,
   "btcPrice": 60432.18,
   "pricesAsOf": "2026-11-24T06:16:19.700Z",
@@ -83,5 +83,5 @@
   ],
   "problems": [],
   "capitalStackStale": true,
-  "filingsCheckedAt": "2026-11-17T20:44:01.966Z"
+  "filingsCheckedAt": "2026-11-24T22:15:06.127Z"
 }
